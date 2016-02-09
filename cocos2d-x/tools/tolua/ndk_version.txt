@@ -1,0 +1,4 @@
+androidndkdir = C:\Users\Alexander\Downloads\android-ndk-r9d-windows-x86\android-ndk-r9d
+clangllvmdir = C:\Users\Alexander\Downloads\android-ndk-r9d-windows-x86\android-ndk-r9d\toolchains\llvm-3.3\prebuilt\windows
+
+http://dl.google.com/android/ndk/android-ndk-r9d-windows-x86.zip
