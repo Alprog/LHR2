@@ -1,0 +1,16 @@
+**.sdf
+**.suo
+**.user
+**.filters
+**.opensdf
+**.pdb
+**.udf
+**/obj
+**.lnk
+**/cocosstudio
+**/Debug.win32/
+**/Release.win32/
+**/proj.ios_mac/build
+**/xcuserdata
+game/settings.lua
+game/data/labsettings.lua
