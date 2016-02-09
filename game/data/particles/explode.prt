@@ -1,0 +1,40 @@
+data = {
+    ParticleLifetime = {
+        {0},
+        {0.5}
+    },
+    additive = false,
+    OverLifeSpeed = {
+        {0},
+        {8.7616299473962}
+    },
+    texturePath = 'particles/sphere.png',
+    EmissionFrequency = {
+        {
+            0,
+            0.11,
+            0.11
+        },
+        {
+            199.00001525879,
+            199.90699235783,
+            0
+        }
+    },
+    OverLifeSize = {
+        {
+            0,
+            0.21063828975596,
+            0.5,
+            0.5,
+            1
+        },
+        {
+            0,
+            1.8255814840627,
+            0,
+            11.010495674871,
+            10.33833527487
+        }
+    }
+}
