@@ -29,6 +29,8 @@ function Unit:loadModel(name)
     model:setCameraMask(ARENA_LAYER)
     model:play('idle', true)
     model:setRotation3D(Vec(0, 0, 0))
+    model:setTexture('models/WarriorTexture.png')
+    model:setShaders('skin', 'default')
     
     local silhouette = model:copy()
     silhouette:setCameraMask(ARENA_LAYER)

@@ -10,6 +10,7 @@ uniform vec4 u_matrixPalette[SKINNING_JOINT_COUNT * 3];
 
 varying vec2 v_texCoord;
 varying vec4 v_pos;
+varying vec3 v_normal;
 
 vec4 Skinned(vec4 vec)
 {
@@ -60,6 +61,8 @@ vec4 Skinned(vec4 vec)
 void main()
 {
     gl_Position = CC_MVPMatrix * Skinned(vec4(a_position, 1.0));
-	v_texCoord = a_texCoord;
+	v_texCoord = vec2(a_texCoord.x, 1 - a_texCoord.y);
 	v_pos = gl_Position;
+	
+	v_normal = a_normal;
 }

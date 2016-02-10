@@ -9,10 +9,9 @@ function Mechanic:init()
 end
 
 function Mechanic:initGfx()
-    local model = self:loadModel('dark_templar_knight')
+    local model = self:loadModel('warrior')
     self.gfx = model
-    local scale = 0.00001
-    self:setScale(scale, scale * 1.3)
-    self:setScaleZ(scale)
+    local scale = 0.0003
+    self:setScale(scale)
     self.gfx:setPosition3D(Vec(0, 0, 0))
 end

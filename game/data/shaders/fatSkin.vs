@@ -70,6 +70,6 @@ void main()
 		
     gl_Position = pos;
 	
-	v_texCoord = a_texCoord;
+	v_texCoord = vec2(a_texCoord.x, 1 - a_texCoord.y);
 	v_pos = gl_Position;
 }
