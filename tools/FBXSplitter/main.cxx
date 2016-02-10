@@ -210,12 +210,18 @@ void Process(std::string fbxFile, std::string txtFile, bool textFormat)
 
 int main(int argc, char** argv)
 {
-
 	std::string fbxFile;
 	std::string txtFile;
+	bool textFormat = false;
+
 	for (int i = 1; i < argc; i++)
 	{
 		std::string arg = argv[i];
+		if (arg == "-t")
+		{
+			textFormat = true;
+		}
+		
 		auto len = arg.size();
 		auto extension = arg.substr(len - 4, 4);
 		std::transform(std::begin(extension), std::end(extension), std::begin(extension), ::tolower);
@@ -232,7 +238,7 @@ int main(int argc, char** argv)
 	//fbxFile = "C:\\Users\\Alexander.ALPROGPC\\Desktop\\tortuga_gears_export\\tortuga_gears_export\\tortuga_gears_done.fbx";
 	//txtFile = "C:\\Users\\Alexander.ALPROGPC\\Desktop\\tortuga_gears_export\\tortuga_gears_export\\time.txt";
 
-	Process(fbxFile, txtFile, true);
+	Process(fbxFile, txtFile, textFormat);
 
 	PressEnterToContinue();
 	return 0;
