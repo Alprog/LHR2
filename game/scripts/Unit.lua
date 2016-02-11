@@ -5,7 +5,8 @@ require 'Points.lua'
 
 Unit = Derive('Unit', Object)
 
-local walkTime = 0.5
+local walkTime = 0.33
+local jumpTime = 0.4
 local rotationSpeed = math.pi * 2
 
 function Unit:init()
@@ -167,7 +168,6 @@ end
 
 function Unit:jumpTo(cell)
     local pos = cell:getPosition3D()
-    local jumpTime = 0.5
     self.gfx:play('jump')
     
     self.arena.tasks:run(function()
