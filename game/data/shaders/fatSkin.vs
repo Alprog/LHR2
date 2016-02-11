@@ -64,7 +64,7 @@ void main()
     vec4 normal = CC_MVPMatrix * vec4(Skinned(vec4(a_normal, 0.0)).xyz, 0.0);
     normal = normalize(normal);
     
-	float shift = (0.005 * (pos.z + 1));
+	float shift = (0.003 * (pos.z + 1));
 	//float shift = 0.1;
 	pos += normal * shift;
 		

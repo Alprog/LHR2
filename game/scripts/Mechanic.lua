@@ -11,10 +11,10 @@ end
 function Mechanic:initGfx()
     local model = self:loadModel('soldier')
     self.gfx = model
-    local scale = 0.01
+    local scale = 0.0001
     self:setScale(scale)
     
     local children = self.gfx:getChildren()
     self.gfx:setTexture('models/soldier4.png')
-    self.gfx:setShaders('default3d', 'default')
+    self.gfx:setShaders('skin', 'default')
 end
