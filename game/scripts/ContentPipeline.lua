@@ -24,10 +24,12 @@ end
 function processFbx(filePath)    
     local convPath = '..\\..\\tools\\fbx-conv.exe'
     local fullPath = theFileUtils:fullPathForFilename(filePath)
-    local command = convPath..' -a "'..fullPath..'"'
     
+    theFileUtils:removeFile(changeExtension(fullPath, 'c3b'))
+    theFileUtils:removeFile(changeExtension(fullPath, 'c3t'))
+    
+    local command = convPath..' -a "'..fullPath..'"'
     os.execute(command)
-    --io.popen(command)
 end
 
 function contentPipeline()

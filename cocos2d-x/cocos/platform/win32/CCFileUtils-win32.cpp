@@ -672,10 +672,11 @@ int FileUtilsWin32::getFileModificationTime(const std::string& filename)
 	
 	FILETIME creation, lastAccess, lastWrite;
 	GetFileTime(fileHandle, &creation, &lastAccess, &lastWrite);
+	CloseHandle(fileHandle);
 
 	SYSTEMTIME sysTime;
 	FileTimeToSystemTime(&lastWrite, &sysTime);
-
+	
 	struct tm tmtime = { 0 };
 	tmtime.tm_year = sysTime.wYear - 1900;
 	tmtime.tm_mon = sysTime.wMonth - 1;
