@@ -30,8 +30,8 @@ end
 
 function Model:copy()
     local copy = Model:create(self.modelPath)
-    copy:setPosition3D(Vec(0, 0, 0))
-    copy:setRotation3D(Vec(0, 0, 0))
+    copy:setPosition3D(self:getPosition3D())
+    copy:setRotation3D(self:getRotation3D())
     copy:shareSkin(self)
     copy:unscheduleUpdate()
     return copy

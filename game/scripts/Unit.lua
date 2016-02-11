@@ -27,15 +27,13 @@ function Unit:loadModel(name)
     local model = Model:create(fileName)
     model:setForceDepthWrite(true)
     model:setCameraMask(ARENA_LAYER)
-    model:play('idle', true)
-    model:setRotation3D(Vec(0, 0, 0))
-    
+    model:play('idle', true)   
     
     --model:setShaders('skin', 'default')
     
     local silhouette = model:copy()
     silhouette:setCameraMask(ARENA_LAYER)
-    silhouette:setShaders('fatskin', 'color')
+    silhouette:setShaders('default3d', 'color')
     silhouette:setUniformVec4('color', Vec(1, 1, 1, 1))
     silhouette:setVisible(false)
     
@@ -49,16 +47,16 @@ function Unit:loadModel(name)
     --self.silhouette:setPosition3D(Vec(100, 0, 0))
     
     local mask = model:copy()
-    mask:setShaders('skin', 'color')
+    mask:setShaders('default3d', 'color')
     local r, g, b = indexToBytes(self.index)
     local color = Vec(r / 255, g / 255, b / 255, 1)
     mask:setUniformVec4('color', color)
     mask:setCameraMask(MASK_LAYER)
     mask:setForceDepthWrite(true)
-    self:addChild(mask)
         
     self:addChild(model)
     self:addChild(silhouette)
+    self:addChild(mask)
     
     self.model = model
     return model
