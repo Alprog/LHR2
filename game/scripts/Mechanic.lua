@@ -9,9 +9,22 @@ function Mechanic:init()
 end
 
 function Mechanic:initGfx()
-    local model = self:loadModel('warrior')
+    local model = self:loadModel('soldier')
     self.gfx = model
-    local scale = 0.0003
+    local scale = 0.005
     self:setScale(scale)
     self.gfx:setPosition3D(Vec(0, 0, 0))
+
+    local children = self.gfx:getChildren()
+    for i = 1, #children do
+        local child = children[i]
+        if child.setTexture then
+            child:setTexture('models/soldier.png')
+            child:setForceDepthWrite(true)
+        end
+        --print(i, child.setSkeleton)
+        child:setVisible(false)
+    end
+    children[12]:setVisible(true)
+    
 end

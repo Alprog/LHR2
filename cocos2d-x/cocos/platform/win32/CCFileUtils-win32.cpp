@@ -618,6 +618,78 @@ bool FileUtilsWin32::removeDirectory(const std::string& dirPath)
     return false;
 }
 
+std::vector<std::string> FileUtilsWin32::list(const std::string directory, FileType type)
+{
+	std::vector<std::string> list;
+
+	auto fullPath = fullPathForFilename(directory);
+	std::wstring searchPath = StringUtf8ToWideChar(fullPath) + L"\\*";
+
+	if (searchPath.size() >= MAX_PATH)
+		throw "Directory path is too long.";
+
+	WIN32_FIND_DATA data;
+	HANDLE fileHandle = FindFirstFile(searchPath.c_str(), &data);
+
+	if (fileHandle == INVALID_HANDLE_VALUE)
+		return list;
+
+	do
+	{
+		bool isDirectory = data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
+
+		if (type == FileType::Directory)
+		{
+			if (!isDirectory)
+				continue;
+		}
+		else if (type == FileType::File)
+		{
+			if (isDirectory)
+				continue;
+		}
+
+		auto name = StringWideCharToUtf8(data.cFileName);
+		list.push_back(name);
+	} 
+	while (FindNextFile(fileHandle, &data) != 0);
+
+	auto dwError = GetLastError();
+	if (dwError != ERROR_NO_MORE_FILES)
+	{
+		throw TEXT("FindFirstFile");
+	}
+
+	FindClose(fileHandle);
+	return list;
+}
+
+int FileUtilsWin32::getFileModificationTime(const std::string& filename)
+{
+	auto fullPath = fullPathForFilename(filename);
+	auto wpath = StringUtf8ToWideChar(fullPath);
+	auto fileHandle = CreateFile(wpath.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	
+	FILETIME creation, lastAccess, lastWrite;
+	GetFileTime(fileHandle, &creation, &lastAccess, &lastWrite);
+
+	SYSTEMTIME sysTime;
+	FileTimeToSystemTime(&lastWrite, &sysTime);
+
+	struct tm tmtime = { 0 };
+	tmtime.tm_year = sysTime.wYear - 1900;
+	tmtime.tm_mon = sysTime.wMonth - 1;
+	tmtime.tm_mday = sysTime.wDay;
+	tmtime.tm_hour = sysTime.wHour;
+	tmtime.tm_min = sysTime.wMinute;
+	tmtime.tm_sec = sysTime.wSecond;
+	tmtime.tm_wday = 0;
+	tmtime.tm_yday = 0;
+	tmtime.tm_isdst = -1;
+	
+	return mktime(&tmtime);
+}
+
 NS_CC_END
 
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_WIN32

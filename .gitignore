@@ -7,6 +7,8 @@
 **.udf
 **/obj
 **.lnk
+**.c3t
+**.c3b
 **/cocosstudio
 **/Debug.win32/
 **/Release.win32/

@@ -5,10 +5,10 @@
 
 --------------------------------
 -- 
--- @function [parent=#FileUtils] getFiles 
+-- @function [parent=#FileUtils] getFileModificationTime 
 -- @param self
--- @param #string directoryPath
--- @return array_table#array_table ret (return value: array_table)
+-- @param #string filename
+-- @return int#int ret (return value: int)
         
 --------------------------------
 --  Returns the fullpath for a given filename.<br>
@@ -348,6 +348,14 @@
 -- @param self
 -- @param #bool notify
 -- @return FileUtils#FileUtils self (return value: cc.FileUtils)
+        
+--------------------------------
+-- 
+-- @function [parent=#FileUtils] list 
+-- @param self
+-- @param #string directory
+-- @param #int type
+-- @return array_table#array_table ret (return value: array_table)
         
 --------------------------------
 -- Checks whether the path is a directory.<br>

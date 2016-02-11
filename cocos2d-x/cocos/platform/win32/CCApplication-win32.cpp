@@ -71,7 +71,7 @@ int Application::run()
     initGLContextAttrs();
 
     // Initialize instance and cocos2d.
-    if (!applicationDidFinishLaunching())
+    if (!applicationDidFinishLaunching()) 
     {
         return 1;
     }

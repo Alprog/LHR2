@@ -1,6 +1,8 @@
 
 require 'Bits.lua'
 
+theFileUtils = cc.FileUtils:getInstance()
+
 cclog = function(...)
     print(string.format(...))
 end
@@ -11,6 +13,12 @@ function __G__TRACKBACK__(msg)
     cclog(debug.traceback())
     cclog("----------------------------------------")
 end
+
+FileType = {
+    File = 0,
+    Directory = 1,
+    Both = 2
+}
 
 function emptyFunction()
 end
@@ -366,21 +374,18 @@ function loadTableFromFile(path, name)
     end
 end
 
-function changeExtension(path, extension)
-    path = path:gsub('[.][^./\\]*$', '')
-    return path .. '.' .. extension
+local extensionPattern = '[.]([^./\\]*)$'
+local extensionWithDotPattern = '[.][^./\\]*$'
+
+function getExtension(filePath)
+    return filePath:match(extensionPattern)
 end
 
--- work only on windows
-function scandir(path)
-    path = '../data/'..path
-    
-    local cmd = 'dir "'..path..'"'
-    cmd = cmd .. ' /b'    -- bare format
-    cmd = cmd .. ' /A:-D' -- no folders
-    local names = {}
-    for name in io.popen(cmd):lines() do
-        table.insert(names, name)
-    end
-    return names
+function removeExtension(filePath)
+    return filePath:gsub(extensionWithDotPattern, '')
 end
+
+function changeExtension(filePath, extension)
+    return removeExtension(filePath) .. '.' .. extension
+end
+

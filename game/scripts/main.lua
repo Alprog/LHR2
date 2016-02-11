@@ -29,6 +29,9 @@ require 'Carcase.lua'
 require 'Vector.lua'
 require 'ParticlesEffect.lua'
 
+require 'ContentPipeline.lua'
+contentPipeline()
+
 local function main()
     collectgarbage("setpause", 100)
     collectgarbage("setstepmul", 5000)

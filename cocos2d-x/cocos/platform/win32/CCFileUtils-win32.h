@@ -150,6 +150,8 @@ protected:
      */
     virtual std::string getFullPathForDirectoryAndFilename(const std::string& directory, const std::string& filename) const override;
 
+	virtual std::vector<std::string> list(const std::string directory, FileType type) override;
+	virtual int getFileModificationTime(const std::string& filename) override;
 };
 
 // end of platform group

@@ -17,12 +17,12 @@ end
 
 function FileListView:refresh()
     if self.direction then
-        local fileNames = scandir(self.direction)
+        local fileUtils = cc.FileUtils:getInstance()
+        local fileNames = fileUtils:list(self.direction, FileType.File)
         if self.extension then
-            local ending = '.' .. self.extension
-            local index = -#ending
             for i = #fileNames, 1, -1 do
-                if fileNames[i]:sub(index) ~= ending then
+                local extension = getExtension(fileNames[i])
+                if extension ~= self.extension then
                     table.remove(fileNames, i)
                 end
             end

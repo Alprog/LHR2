@@ -33,7 +33,7 @@ void AppDelegate::initGLContextAttrs()
     GLView::setGLContextAttrs(glContextAttrs);
 }
 
-void setIcon()
+void setIcon() 
 {
 	auto view = Director::getInstance()->getOpenGLView();
 	auto hwnd = view->getWin32Window();

@@ -45,6 +45,13 @@ NS_CC_BEGIN
 class CC_DLL FileUtils
 {
 public:
+	enum class FileType
+	{
+		File,
+		Directory,
+		All
+	};
+
     /**
      *  Gets the instance of FileUtils.
      */
@@ -475,6 +482,16 @@ public:
 
     /** Returns the full path cache. */
     const std::unordered_map<std::string, std::string>& getFullPathCache() const { return _fullPathCache; }
+
+	virtual std::vector<std::string> list(std::string directory, FileType type)
+	{
+		throw "not implemented";
+	}
+	
+	virtual int getFileModificationTime(const std::string& filename)
+	{
+		throw "not implemented";
+	}
 
 protected:
     /**

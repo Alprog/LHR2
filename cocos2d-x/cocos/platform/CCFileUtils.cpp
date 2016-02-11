@@ -998,9 +998,10 @@ std::string FileUtils::getFullPathForDirectoryAndFilename(const std::string& dir
     ret += filename;
 
     // if the file doesn't exist, return an empty string
-    if (!isFileExistInternal(ret)) {
+    if (!isFileExistInternal(ret) && !isDirectoryExistInternal(ret)) {
         ret = "";
     }
+
     return ret;
 }
 
