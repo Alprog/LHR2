@@ -60,6 +60,9 @@ function App:run(sceneManager)
     self.sceneManager = SceneManager:create(self)
     self.scene = cc.Scene:create()
     self.scene:addChild(self.sceneManager.root)
+    
+    self.scene:getDefaultCamera():setScene(self.scene)
+    
     self.director:runWithScene(self.scene)
     self:updateDesignResolution()
     

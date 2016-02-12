@@ -363,14 +363,6 @@ void Camera::setDepth(int8_t depth)
 
 void Camera::onEnter()
 {
-    if (_scene == nullptr)
-    {
-        auto scene = getScene();
-        if (scene)
-        {
-            setScene(scene);
-        }
-    }
     Node::onEnter();
 }
 

@@ -19,6 +19,8 @@ function Arena:init()
     self.tasks = TaskManager:create()
     self.fb = FrameBuffer:create()
     self:initCamera()
+    
+    --self:getDefaultCamera():setVisible(false)
 end
 
 function Arena:initCamera()
@@ -38,7 +40,8 @@ function Arena:initCamera()
     local distance = math.cos(angle) * far
     local delta = math.sqrt(distance * distance / 2)
     camera:setPosition(Vec(-delta + 5, height, delta + 5))
-    
+    --camera:setScene(theDirector->getRunningScene())
+        
     camera:lookAt(Vector(5, 0, 5), Vector(0, 1, 0))
 end
 

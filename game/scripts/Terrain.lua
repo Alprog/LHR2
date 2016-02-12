@@ -110,7 +110,7 @@ function Terrain:batch()
     batchGfx:setCullFaceEnabled(false)
     self:addChild(batchGfx)
     
-    local material = createMaterial('default', 'vertexColor')
+    local material = createMaterial('default', 'vColor')
     local batchMask = Carcase:create(nil, mesh, material)
     batchMask:setCameraMask(MASK_LAYER)
     batchMask:setForceDepthWrite(true)

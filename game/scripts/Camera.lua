@@ -14,6 +14,7 @@ function Camera:setPassCount(count)
     
     for i = #self.passes + 1, count do
         local pass = cc.Camera:create()
+        pass:setScene(theApp.scene)
         self.space:addChild(pass)
         self.passes[i] = pass
     end
@@ -28,7 +29,7 @@ function Camera:setPassCount(count)
     
     self.dirty = true
 end
-
+    
 function Camera:setPassSettings(index, enabled, depth, mask, frameBuffer, scissorsRect)
     local pass = self.passes[index]
     pass:setVisible(enabled)
