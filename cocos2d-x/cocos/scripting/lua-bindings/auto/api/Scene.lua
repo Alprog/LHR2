@@ -6,24 +6,8 @@
 
 --------------------------------
 -- 
--- @function [parent=#Scene] initWithSize 
--- @param self
--- @param #size_table size
--- @return bool#bool ret (return value: bool)
-        
---------------------------------
--- 
 -- @function [parent=#Scene] setCameraOrderDirty 
 -- @param self
--- @return Scene#Scene self (return value: cc.Scene)
-        
---------------------------------
---  Render the scene.<br>
--- param renderer The renderer use to render the scene.<br>
--- js NA
--- @function [parent=#Scene] render 
--- @param self
--- @param #cc.Renderer renderer
 -- @return Scene#Scene self (return value: cc.Scene)
         
 --------------------------------
@@ -35,10 +19,10 @@
         
 --------------------------------
 -- 
--- @function [parent=#Scene] renderCamera 
+-- @function [parent=#Scene] initWithSize 
 -- @param self
--- @param #cc.Camera camera
--- @return Scene#Scene self (return value: cc.Scene)
+-- @param #size_table size
+-- @return bool#bool ret (return value: bool)
         
 --------------------------------
 --  Get the default camera.<br>

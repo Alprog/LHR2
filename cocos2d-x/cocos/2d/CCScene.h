@@ -85,13 +85,6 @@ public:
 
     using Node::addChild;
     virtual std::string getDescription() const override;
-    
-    /** Get all cameras.
-     * 
-     * @return The vector of all cameras, ordered by camera depth.
-     * @js NA
-     */
-    const std::vector<Camera*>& getCameras();
 
     /** Get the default camera.
      * @js NA
@@ -104,16 +97,7 @@ public:
      * @js NA
      */
     const std::vector<BaseLight*>& getLights() const { return _lights; }
-    
-	/* render specific camera */
-	void renderCamera(Camera* camera);
-
-    /** Render the scene.
-     * @param renderer The renderer use to render the scene.
-     * @js NA
-     */
-    void render(Renderer* renderer);
-    
+       
     /** override function */
     virtual void removeAllChildren() override;
     

@@ -160,19 +160,6 @@ void Scene::onProjectionChanged(EventCustom* event)
     }
 }
 
-const std::vector<Camera*>& Scene::getCameras()
-{
-	return {};
-}
-
-void Scene::renderCamera(Camera* camera)
-{
-}
-
-void Scene::render(Renderer* renderer)
-{
-}
-
 void Scene::removeAllChildren()
 {
     if (_defaultCamera)

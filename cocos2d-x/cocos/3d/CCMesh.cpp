@@ -458,7 +458,7 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
 
     // set default uniforms for Mesh
     // 'u_color' and others
-	const auto scene = const_cast<Scene*>(Camera::getVisitingScene());
+	
     auto technique = _material->_currentTechnique;
     for(const auto pass : technique->_passes)
     {
@@ -468,8 +468,12 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
         if (_skin)
             programState->setUniformVec4v("u_matrixPalette", (GLsizei)_skin->getMatrixPaletteSize(), _skin->getMatrixPalette());
 
-        if (scene && scene->getLights().size() > 0)
-            setLightUniforms(pass, scene, color, lightMask);
+		const auto lightNode = Camera::getLightNode();
+		if (lightNode && lightNode->getChildrenCount() > 0)
+		{
+			setLightUniforms(pass, lightNode, color, lightMask);
+		}
+            
     }
 
     renderer->addCommand(&_meshCommand);
@@ -576,17 +580,16 @@ void Mesh::bindMeshCommand()
     }
 }
 
-void Mesh::setLightUniforms(Pass* pass, Scene* scene, const Vec4& color, unsigned int lightmask)
+void Mesh::setLightUniforms(Pass* pass, const Node* lightNode, const Vec4& color, unsigned int lightmask)
 {
     CCASSERT(pass, "Invalid Pass");
-    CCASSERT(scene, "Invalid scene");
+    CCASSERT(lightNode, "Invalid scene");
 
     const auto& conf = Configuration::getInstance();
     int maxDirLight = conf->getMaxSupportDirLightInShader();
     int maxPointLight = conf->getMaxSupportPointLightInShader();
     int maxSpotLight = conf->getMaxSupportSpotLightInShader();
-    auto &lights = scene->getLights();
-
+	
     auto glProgramState = pass->getGLProgramState();
     auto attributes = pass->getVertexAttributeBinding()->getVertexAttribsFlags();
 
@@ -598,9 +601,11 @@ void Mesh::setLightUniforms(Pass* pass, Scene* scene, const Vec4& color, unsigne
         GLint enabledPointLightNum = 0;
         GLint enabledSpotLightNum = 0;
         Vec3 ambientColor;
-        for (const auto& light : lights)
+        for (const auto& node : lightNode->getChildren())
         {
-            bool useLight = light->isEnabled() && ((unsigned int)light->getLightFlag() & lightmask);
+			auto light = static_cast<BaseLight*>(node);
+
+	        bool useLight = light->isEnabled() && ((unsigned int)light->getLightFlag() & lightmask);
             if (useLight)
             {
                 float intensity = light->getIntensity();
@@ -696,8 +701,9 @@ void Mesh::setLightUniforms(Pass* pass, Scene* scene, const Vec4& color, unsigne
     {
         Vec3 ambient(0.0f, 0.0f, 0.0f);
         bool hasAmbient = false;
-        for (const auto& light : lights)
-        {
+		for (const auto& node : lightNode->getChildren())
+		{
+			auto light = static_cast<BaseLight*>(node);
             if (light->getLightType() == LightType::AMBIENT)
             {
                 bool useLight = light->isEnabled() && ((unsigned int)light->getLightFlag() & lightmask);

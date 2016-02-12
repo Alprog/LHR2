@@ -61,7 +61,6 @@ function App:run(sceneManager)
     self.scene = cc.Scene:create()
     self.scene:addChild(self.sceneManager.root)
     
-    self.scene:getDefaultCamera():setScene(self.scene)
     self.scene:retain()
     
     self.director:runWithScene(self.scene)

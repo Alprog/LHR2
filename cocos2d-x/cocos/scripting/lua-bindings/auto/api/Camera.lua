@@ -11,15 +11,15 @@
 -- @return mat4_table#mat4_table ret (return value: mat4_table)
         
 --------------------------------
--- @overload self, cc.Scene, int, cc.experimental::FrameBuffer         
--- @overload self, cc.Scene, int         
--- @function [parent=#Camera] render
+-- 
+-- @function [parent=#Camera] render 
 -- @param self
--- @param #cc.Scene scene
+-- @param #cc.Node scene
 -- @param #int flag
+-- @param #cc.Node lightNode
 -- @param #cc.experimental::FrameBuffer frameBuffer
 -- @return Camera#Camera self (return value: cc.Camera)
-
+        
 --------------------------------
 -- 
 -- @function [parent=#Camera] applyViewport 
@@ -144,13 +144,6 @@
 -- @return Camera#Camera self (return value: cc.Camera)
         
 --------------------------------
--- Set the scene,this method shall not be invoke manually
--- @function [parent=#Camera] setScene 
--- @param self
--- @param #cc.Scene scene
--- @return Camera#Camera self (return value: cc.Camera)
-        
---------------------------------
 -- 
 -- @function [parent=#Camera] projectGL 
 -- @param self
@@ -250,6 +243,12 @@
         
 --------------------------------
 -- 
+-- @function [parent=#Camera] getLightNode 
+-- @param self
+-- @return Node#Node ret (return value: cc.Node)
+        
+--------------------------------
+-- 
 -- @function [parent=#Camera] create 
 -- @param self
 -- @return Camera#Camera ret (return value: cc.Camera)
@@ -285,7 +284,7 @@
 -- 
 -- @function [parent=#Camera] getVisitingScene 
 -- @param self
--- @return Scene#Scene ret (return value: cc.Scene)
+-- @return Node#Node ret (return value: cc.Node)
         
 --------------------------------
 -- Get the default camera of the current running scene.

@@ -200,8 +200,7 @@ public:
      */
     float getDepthInView(const Mat4& transform) const;
     
-    void render(Scene* scene, CameraFlag flag);
-	void render(Scene* scene, CameraFlag flag, experimental::FrameBuffer* frameBuffer);
+	void render(Node* scene, CameraFlag flag = CameraFlag::DEFAULT, Node* lightNode = nullptr, experimental::FrameBuffer* frameBuffer = nullptr);
     
     /**
      * Get the frustum's far plane.
@@ -213,15 +212,12 @@ public:
      */
     float getNearPlane() const { return _nearPlane; }
     
-    //override
-    virtual void onEnter() override;
-    virtual void onExit() override;
-
     /**
      * Get the visiting camera , the visiting camera shall be set on Scene::render
      */
     static const Camera* getVisitingCamera() { return _visitingCamera; }
-	static const Scene* getVisitingScene() { return _visitingScene; }
+	static const Node* getVisitingScene() { return _visitingScene; }
+	static const Node* getLightNode() { return _lightNode; }
 
     /**
      * Get the default camera of the current running scene.
@@ -270,11 +266,7 @@ CC_CONSTRUCTOR_ACCESS:
     Camera();
     ~Camera();
     
-    /**
-     * Set the scene,this method shall not be invoke manually
-     */
-    void setScene(Scene* scene);
-    
+
     /**set additional matrix for the projection matrix, it multiplys mat to projection matrix when called, used by WP8*/
     void setAdditionalProjection(const Mat4& mat);
     
@@ -286,7 +278,6 @@ CC_CONSTRUCTOR_ACCESS:
 	void applyScissors();
 protected:
 
-    Scene* _scene; //Scene camera belongs to
     Mat4 _projection;
     mutable Mat4 _view;
     mutable Mat4 _viewInv;
@@ -305,14 +296,13 @@ protected:
     mutable bool _frustumDirty;
 
     static Camera* _visitingCamera;
-	static Scene* _visitingScene;
-
+	static Node* _visitingScene;
+	static Node* _lightNode;
+	
     CameraBackgroundBrush* _clearBrush; //brush used to clear the back ground
     
     experimental::Viewport _viewport;
 	Rect _scissorsRect;
-    
-    experimental::FrameBuffer* _fbo;
 protected:
     static experimental::Viewport _defaultViewport;
 public:

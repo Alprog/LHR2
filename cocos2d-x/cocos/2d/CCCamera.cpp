@@ -39,7 +39,8 @@
 NS_CC_BEGIN
 
 Camera* Camera::_visitingCamera = nullptr;
-Scene* Camera::_visitingScene = nullptr;
+Node* Camera::_visitingScene = nullptr;
+Node* Camera::_lightNode = nullptr;
 
 Camera* _defaultCamera = nullptr;
 
@@ -101,11 +102,9 @@ Camera* Camera::createOrthographic(float left, float right, float bottom, float 
 }
 
 Camera::Camera()
-: _scene(nullptr)
-, _viewProjectionDirty(true)
+: _viewProjectionDirty(true)
 , _cameraFlag(1)
 , _frustumDirty(true)
-, _fbo(nullptr)
 {
     _frustum.setClipZ(true);
     _clearBrush = CameraBackgroundBrush::createDepthBrush(1.f);
@@ -114,7 +113,6 @@ Camera::Camera()
 
 Camera::~Camera()
 {
-    CC_SAFE_RELEASE_NULL(_fbo);
     CC_SAFE_RELEASE(_clearBrush);
 }
 
@@ -349,12 +347,7 @@ float Camera::getDepthInView(const Mat4& transform) const
     return depth;
 }
 
-void Camera::render(Scene* scene, CameraFlag flag)
-{
-	render(scene, flag, nullptr);
-}
-
-void Camera::render(Scene* scene, CameraFlag flag, experimental::FrameBuffer* frameBuffer)
+void Camera::render(Node* scene, CameraFlag flag, Node* lightNode, experimental::FrameBuffer* frameBuffer)
 {
 	auto director = Director::getInstance();
 	auto renderer = director->getRenderer();
@@ -369,6 +362,7 @@ void Camera::render(Scene* scene, CameraFlag flag, experimental::FrameBuffer* fr
 
 	_visitingCamera = this;
 	_visitingScene = scene;
+	_lightNode = lightNode;
 
 	director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);
 	director->loadVPMatrices(getViewMatrix(), getProjectionMatrix());
@@ -381,47 +375,6 @@ void Camera::render(Scene* scene, CameraFlag flag, experimental::FrameBuffer* fr
 
 	_visitingCamera = nullptr;
 	_visitingScene = nullptr;
-}
-
-void Camera::onEnter()
-{
-    Node::onEnter();
-}
-
-void Camera::onExit()
-{
-    // remove this camera from scene
-    setScene(nullptr);
-    Node::onExit();
-}
-
-void Camera::setScene(Scene* scene)
-{
-    if (_scene != scene)
-    {
-        //remove old scene
-        if (_scene)
-        {
-            auto& cameras = _scene->_cameras;
-            auto it = std::find(cameras.begin(), cameras.end(), this);
-            if (it != cameras.end())
-                cameras.erase(it);
-            _scene = nullptr;
-        }
-        //set new scene
-        if (scene)
-        {
-            _scene = scene;
-            auto& cameras = _scene->_cameras;
-            auto it = std::find(cameras.begin(), cameras.end(), this);
-            if (it == cameras.end())
-            {
-                _scene->_cameras.push_back(this);
-                //notify scene that the camera order is dirty
-                _scene->setCameraOrderDirty();
-            }
-        }
-    }
 }
 
 void Camera::clearBackground()
