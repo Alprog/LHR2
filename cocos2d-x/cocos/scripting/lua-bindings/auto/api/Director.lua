@@ -221,6 +221,13 @@
 -- @return Director#Director self (return value: cc.Director)
         
 --------------------------------
+--  Returns the Renderer associated with this director.<br>
+-- since v3.0
+-- @function [parent=#Director] getRenderer 
+-- @param self
+-- @return Renderer#Renderer ret (return value: cc.Renderer)
+        
+--------------------------------
 -- Get the GLView.<br>
 -- lua NA
 -- @function [parent=#Director] getOpenGLView 

@@ -49,6 +49,11 @@ local function main()
     theSceneManager:goTo(screen)
 end
 
+function render()
+   local camera = theApp.scene:getDefaultCamera()
+   theApp.scene:renderCamera(camera)   
+end
+
 xpcall(main, __G__TRACKBACK__)
 
 

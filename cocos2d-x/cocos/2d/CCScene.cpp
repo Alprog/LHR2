@@ -190,6 +190,7 @@ void Scene::renderCamera(Camera* camera)
 	//clear background with max depth
 	camera->clearBackground();
 	//visit the scene
+	
 	visit(renderer, transform, 0);
 
 #if CC_USE_NAVMESH

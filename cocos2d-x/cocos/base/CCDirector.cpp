@@ -295,8 +295,7 @@ void Director::drawScene()
         _runningScene->stepPhysicsAndNavigation(_deltaTime);
 #endif
         
-        //render the scene
-        _runningScene->render(_renderer);
+		ScriptEngineManager::getInstance()->getScriptEngine()->executeGlobalFunction("render");
         
         _eventDispatcher->dispatchEvent(_eventAfterVisit);
     }

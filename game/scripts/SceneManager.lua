@@ -76,3 +76,7 @@ function SceneManager:onKeyPress(keyCode)
         end
     end
 end
+
+function SceneManager:render()
+    
+end
