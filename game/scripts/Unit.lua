@@ -7,7 +7,7 @@ Unit = Derive('Unit', Object)
 
 local walkTime = 0.33
 local jumpTime = 0.4
-local rotationSpeed = math.pi * 2
+local rotationSpeed = math.pi * 2.5
 
 function Unit:init()
     Object.init(self)
@@ -35,7 +35,7 @@ function Unit:loadModel(name)
     
     local silhouette = model:copy()
     silhouette:setCameraMask(ARENA_LAYER)
-    silhouette:setShaders('fatskin', 'color')
+    silhouette:setShaders('fatskin', 'uColor')
     silhouette:setUniformVec4('color', Vec(1, 1, 1, 1))
     silhouette:setVisible(false)
     
@@ -49,7 +49,7 @@ function Unit:loadModel(name)
     --self.silhouette:setPosition3D(Vec(100, 0, 0))
     
     local mask = model:copy()
-    mask:setShaders('skin', 'color')
+    mask:setShaders('skin', 'uColor')
     local r, g, b = indexToBytes(self.index)
     local color = Vec(r / 255, g / 255, b / 255, 1)
     mask:setUniformVec4('color', color)
@@ -83,7 +83,7 @@ function Unit:checkRotation(rotation)
     if not cmpAngle(self.rotation, rotation) then
         self:stop()
         self:rotateTo(rotation)
-        wait(0.1)
+        wait(0.05)
     end
 end
 
