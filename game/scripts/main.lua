@@ -49,9 +49,15 @@ local function main()
     theSceneManager:goTo(screen)
 end
 
+local camera = nil
+
 function render()
-   local camera = theApp.scene:getDefaultCamera()
-   theApp.scene:renderCamera(camera)   
+    if camera == nil then
+        camera = cc.Camera:create()
+        camera:retain()
+    end
+        
+    camera:render(theApp.scene, cc.CameraFlag.DEFAULT)
 end
 
 xpcall(main, __G__TRACKBACK__)

@@ -160,86 +160,17 @@ void Scene::onProjectionChanged(EventCustom* event)
     }
 }
 
-static bool camera_cmp(const Camera* a, const Camera* b)
-{
-    return a->getRenderOrder() < b->getRenderOrder();
-}
-
 const std::vector<Camera*>& Scene::getCameras()
 {
-    if (_cameraOrderDirty)
-    {
-        stable_sort(_cameras.begin(), _cameras.end(), camera_cmp);
-        _cameraOrderDirty = false;
-    }
-    return _cameras;
+	return {};
 }
 
 void Scene::renderCamera(Camera* camera)
 {
-	auto director = Director::getInstance();
-	auto renderer = director->getRenderer();
-	const auto& transform = getNodeToParentTransform();
-
-	Camera::_visitingCamera = camera;
-
-	director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);
-	director->loadVPMatrices(camera->getViewMatrix(), camera->getProjectionMatrix());
-
-	camera->apply();
-	//clear background with max depth
-	camera->clearBackground();
-	//visit the scene
-	
-	visit(renderer, transform, 0);
-
-#if CC_USE_NAVMESH
-	if (_navMesh && _navMeshDebugCamera == camera)
-	{
-		_navMesh->debugDraw(renderer);
-	}
-#endif
-
-	glDisable(GL_SCISSOR_TEST);
-
-	renderer->render();
-
-	director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);
 }
 
 void Scene::render(Renderer* renderer)
 {
-    auto director = Director::getInstance();
-    Camera* defaultCamera = nullptr;
-    
-
-    for (const auto& camera : getCameras())
-    {
-        if (!camera->isVisible())
-            continue;
-        
-		this->renderCamera(camera);
-
-		if (Camera::_visitingCamera->getCameraFlag() == CameraFlag::DEFAULT)
-		{
-			defaultCamera = Camera::_visitingCamera;
-		}
-    }
-    
-#if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
-    if (_physics3DWorld && _physics3DWorld->isDebugDrawEnabled())
-    {
-		auto cam = _physics3dDebugCamera != nullptr ? _physics3dDebugCamera : defaultCamera;
-        director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);
-		director->loadVPMatrices(cam->getViewMatrix(), cam->getProjectionMatrix());
-		_physics3DWorld->debugDraw(renderer);
-        renderer->render();
-        director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);
-    }
-#endif
-
-    Camera::_visitingCamera = nullptr;
-    experimental::FrameBuffer::applyDefaultFBO();
 }
 
 void Scene::removeAllChildren()

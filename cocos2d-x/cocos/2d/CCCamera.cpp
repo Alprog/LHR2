@@ -29,27 +29,25 @@
 #include "base/CCDirector.h"
 #include "platform/CCGLView.h"
 #include "2d/CCScene.h"
-#include "renderer/CCRenderer.h"
 #include "renderer/CCQuadCommand.h"
 #include "renderer/CCGLProgramCache.h"
 #include "renderer/ccGLStateCache.h"
 #include "renderer/CCFrameBuffer.h"
 #include "renderer/CCRenderState.h"
+#include "renderer/CCRenderer.h"
 
 NS_CC_BEGIN
 
 Camera* Camera::_visitingCamera = nullptr;
+Scene* Camera::_visitingScene = nullptr;
+
+Camera* _defaultCamera = nullptr;
+
 experimental::Viewport Camera::_defaultViewport;
 
 Camera* Camera::getDefaultCamera()
 {
-    auto scene = Director::getInstance()->getRunningScene();
-    if(scene)
-    {
-        return scene->getDefaultCamera();
-    }
-
-    return nullptr;
+    return _defaultCamera;
 }
 
 Camera* Camera::create()
@@ -57,8 +55,12 @@ Camera* Camera::create()
     Camera* camera = new (std::nothrow) Camera();
     camera->initDefault();
     camera->autorelease();
-    camera->setDepth(0.f);
     
+	if (_defaultCamera == nullptr)
+	{
+		_defaultCamera = camera;
+	}
+
     return camera;
 }
 
@@ -103,7 +105,6 @@ Camera::Camera()
 , _viewProjectionDirty(true)
 , _cameraFlag(1)
 , _frustumDirty(true)
-, _depth(-1)
 , _fbo(nullptr)
 {
     _frustum.setClipZ(true);
@@ -348,17 +349,38 @@ float Camera::getDepthInView(const Mat4& transform) const
     return depth;
 }
 
-void Camera::setDepth(int8_t depth)
+void Camera::render(Scene* scene, CameraFlag flag)
 {
-    if (_depth != depth)
-    {
-        _depth = depth;
-        if (_scene)
-        {
-            //notify scene that the camera order is dirty
-            _scene->setCameraOrderDirty();
-        }
-    }
+	render(scene, flag, nullptr);
+}
+
+void Camera::render(Scene* scene, CameraFlag flag, experimental::FrameBuffer* frameBuffer)
+{
+	auto director = Director::getInstance();
+	auto renderer = director->getRenderer();
+	
+	applyViewport(frameBuffer);
+	if (frameBuffer == nullptr)
+	{
+		frameBuffer = experimental::FrameBuffer::getDefaultFBO();
+	}
+	frameBuffer->applyFBO();
+	applyScissors();
+
+	_visitingCamera = this;
+	_visitingScene = scene;
+
+	director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);
+	director->loadVPMatrices(getViewMatrix(), getProjectionMatrix());
+	
+	clearBackground();
+	scene->visit(renderer, scene->getNodeToParentTransform(), 0);
+	renderer->render();
+	
+	director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);
+
+	_visitingCamera = nullptr;
+	_visitingScene = nullptr;
 }
 
 void Camera::onEnter()
@@ -410,17 +432,6 @@ void Camera::clearBackground()
     }
 }
 
-void Camera::setFrameBufferObject(experimental::FrameBuffer *fbo)
-{
-    CC_SAFE_RETAIN(fbo);
-    CC_SAFE_RELEASE_NULL(_fbo);
-    _fbo = fbo;
-    if(_scene)
-    {
-        _scene->setCameraOrderDirty();
-    }
-}
-
 void Camera::setScissors(Rect rect)
 {
 	_scissorsRect = rect;
@@ -432,35 +443,16 @@ void Camera::setViewport(float left, float bottom, float width, float height)
 	setViewport(viewport);
 }
 
-void Camera::applyFrameBufferObject()
+void Camera::applyViewport(experimental::FrameBuffer* frameBuffer)
 {
-    if(nullptr == _fbo)
-    {
-        experimental::FrameBuffer::applyDefaultFBO();
-    }
-    else
-    {
-        _fbo->applyFBO();
-    }
-}
-
-void Camera::apply()
-{
-    applyFrameBufferObject();
-    applyViewport();
-	applyScissors();
-}
-
-void Camera::applyViewport()
-{
-    if(nullptr == _fbo)
+    if(nullptr == frameBuffer)
     {
         glViewport(getDefaultViewport()._left, getDefaultViewport()._bottom, getDefaultViewport()._width, getDefaultViewport()._height);
     }
     else
     {
-        glViewport(_viewport._left * _fbo->getWidth(), _viewport._bottom * _fbo->getHeight(),
-                   _viewport._width * _fbo->getWidth(), _viewport._height * _fbo->getHeight());
+        glViewport(_viewport._left * frameBuffer->getWidth(), _viewport._bottom * frameBuffer->getHeight(),
+                   _viewport._width * frameBuffer->getWidth(), _viewport._height * frameBuffer->getHeight());
     }
     
 }
@@ -472,21 +464,10 @@ void Camera::applyScissors()
 		glEnable(GL_SCISSOR_TEST);
 		glScissor(_scissorsRect.origin.x, _scissorsRect.origin.y, _scissorsRect.size.width, _scissorsRect.size.height);
 	}
-}
-
-int Camera::getRenderOrder() const
-{
-    int result(0);
-    if(_fbo)
-    {
-        result = _fbo->getFID()<<8;
-    }
-    else
-    {
-        result = 127 <<8;
-    }
-    result += _depth;
-    return result;
+	else
+	{
+		glDisable(GL_SCISSOR_TEST);
+	}
 }
 
 void Camera::visit(Renderer* renderer, const Mat4 &parentTransform, uint32_t parentFlags)

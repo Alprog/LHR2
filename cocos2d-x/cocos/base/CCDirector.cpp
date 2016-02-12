@@ -795,6 +795,9 @@ void Director::runWithScene(Scene *scene)
     CCASSERT(scene != nullptr, "This command can only be used to start the Director. There is already a scene present.");
     CCASSERT(_runningScene == nullptr, "_runningScene should be null");
 
+	_runningScene = scene;
+	_runningScene->onEnter();
+
     pushScene(scene);
     startAnimation();
 }

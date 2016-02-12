@@ -5,21 +5,26 @@
 -- @parent_module cc
 
 --------------------------------
--- get depth, camera with larger depth is drawn on top of camera with smaller depth, the depth of camera with CameraFlag::DEFAULT is 0, user defined camera is -1 by default
--- @function [parent=#Camera] getDepth 
--- @param self
--- @return char#char ret (return value: char)
-        
---------------------------------
 -- get view projection matrix
 -- @function [parent=#Camera] getViewProjectionMatrix 
 -- @param self
 -- @return mat4_table#mat4_table ret (return value: mat4_table)
         
 --------------------------------
+-- @overload self, cc.Scene, int, cc.experimental::FrameBuffer         
+-- @overload self, cc.Scene, int         
+-- @function [parent=#Camera] render
+-- @param self
+-- @param #cc.Scene scene
+-- @param #int flag
+-- @param #cc.experimental::FrameBuffer frameBuffer
+-- @return Camera#Camera self (return value: cc.Camera)
+
+--------------------------------
 -- 
 -- @function [parent=#Camera] applyViewport 
 -- @param self
+-- @param #cc.experimental::FrameBuffer frameBuffer
 -- @return Camera#Camera self (return value: cc.Camera)
         
 --------------------------------
@@ -38,12 +43,6 @@
 -- @param self
 -- @param #vec3_table target
 -- @param #vec3_table up
--- @return Camera#Camera self (return value: cc.Camera)
-        
---------------------------------
--- Apply the FBO, RenderTargets and viewport.
--- @function [parent=#Camera] apply 
--- @param self
 -- @return Camera#Camera self (return value: cc.Camera)
         
 --------------------------------
@@ -80,13 +79,6 @@
 -- Before rendering scene with this camera, the background need to be cleared. It clears the depth buffer with max depth by default. Use setBackgroundBrush to modify the default behavior
 -- @function [parent=#Camera] clearBackground 
 -- @param self
--- @return Camera#Camera self (return value: cc.Camera)
-        
---------------------------------
--- set additional matrix for the projection matrix, it multiplys mat to projection matrix when called, used by WP8
--- @function [parent=#Camera] setAdditionalProjection 
--- @param self
--- @param #mat4_table mat
 -- @return Camera#Camera self (return value: cc.Camera)
         
 --------------------------------
@@ -138,12 +130,6 @@
 -- @return bool#bool ret (return value: bool)
         
 --------------------------------
--- get rendered order
--- @function [parent=#Camera] getRenderOrder 
--- @param self
--- @return int#int ret (return value: int)
-        
---------------------------------
 -- Is this aabb visible in frustum
 -- @function [parent=#Camera] isVisibleInFrustum 
 -- @param self
@@ -151,16 +137,10 @@
 -- @return bool#bool ret (return value: bool)
         
 --------------------------------
--- 
--- @function [parent=#Camera] applyFrameBufferObject 
+-- set additional matrix for the projection matrix, it multiplys mat to projection matrix when called, used by WP8
+-- @function [parent=#Camera] setAdditionalProjection 
 -- @param self
--- @return Camera#Camera self (return value: cc.Camera)
-        
---------------------------------
--- set depth, camera with larger depth is drawn on top of camera with smaller depth, the depth of camera with CameraFlag::DEFAULT is 0, user defined camera is -1 by default
--- @function [parent=#Camera] setDepth 
--- @param self
--- @param #char depth
+-- @param #mat4_table mat
 -- @return Camera#Camera self (return value: cc.Camera)
         
 --------------------------------
@@ -230,13 +210,6 @@
 -- @return Camera#Camera self (return value: cc.Camera)
         
 --------------------------------
--- Set FBO, which will attacha several render target for the rendered result.
--- @function [parent=#Camera] setFrameBufferObject 
--- @param self
--- @param #cc.experimental::FrameBuffer fbo
--- @return Camera#Camera self (return value: cc.Camera)
-        
---------------------------------
 -- Whether or not the viewprojection matrix was updated since the last frame.<br>
 -- return True if the viewprojection matrix was updated since the last frame.
 -- @function [parent=#Camera] isViewProjectionUpdated 
@@ -276,7 +249,7 @@
 -- @return Camera#Camera ret (return value: cc.Camera)
         
 --------------------------------
---  create default camera, the camera type depends on Director::getProjection, the depth of the default camera is 0 
+-- 
 -- @function [parent=#Camera] create 
 -- @param self
 -- @return Camera#Camera ret (return value: cc.Camera)
@@ -307,6 +280,12 @@
 -- @param self
 -- @param #cc.experimental::Viewport vp
 -- @return Camera#Camera self (return value: cc.Camera)
+        
+--------------------------------
+-- 
+-- @function [parent=#Camera] getVisitingScene 
+-- @param self
+-- @return Scene#Scene ret (return value: cc.Scene)
         
 --------------------------------
 -- Get the default camera of the current running scene.

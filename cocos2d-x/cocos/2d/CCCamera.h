@@ -96,7 +96,6 @@ public:
     */
     static Camera* createOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane);
 
-    /** create default camera, the camera type depends on Director::getProjection, the depth of the default camera is 0 */
     static Camera* create();
     
 	void setPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane);
@@ -201,20 +200,8 @@ public:
      */
     float getDepthInView(const Mat4& transform) const;
     
-    /**
-     * set depth, camera with larger depth is drawn on top of camera with smaller depth, the depth of camera with CameraFlag::DEFAULT is 0, user defined camera is -1 by default
-     */
-    void setDepth(int8_t depth);
-    
-    /**
-     * get depth, camera with larger depth is drawn on top of camera with smaller depth, the depth of camera with CameraFlag::DEFAULT is 0, user defined camera is -1 by default
-     */
-    int8_t getDepth() const { return _depth; }
-    
-    /**
-     get rendered order
-     */
-    int getRenderOrder() const;
+    void render(Scene* scene, CameraFlag flag);
+	void render(Scene* scene, CameraFlag flag, experimental::FrameBuffer* frameBuffer);
     
     /**
      * Get the frustum's far plane.
@@ -234,6 +221,7 @@ public:
      * Get the visiting camera , the visiting camera shall be set on Scene::render
      */
     static const Camera* getVisitingCamera() { return _visitingCamera; }
+	static const Scene* getVisitingScene() { return _visitingScene; }
 
     /**
      * Get the default camera of the current running scene.
@@ -243,14 +231,6 @@ public:
      Before rendering scene with this camera, the background need to be cleared. It clears the depth buffer with max depth by default. Use setBackgroundBrush to modify the default behavior
      */
     void clearBackground();
-    /**
-     Apply the FBO, RenderTargets and viewport.
-     */
-    void apply();
-    /**
-     Set FBO, which will attacha several render target for the rendered result.
-    */
-    void setFrameBufferObject(experimental::FrameBuffer* fbo);
 
 	/**
 	Set Scissors for camera.
@@ -302,8 +282,7 @@ CC_CONSTRUCTOR_ACCESS:
     bool initDefault();
     bool initPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane);
     bool initOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane);
-    void applyFrameBufferObject();
-    void applyViewport();
+    void applyViewport(experimental::FrameBuffer* frameBuffer);
 	void applyScissors();
 protected:
 
@@ -324,9 +303,10 @@ protected:
     unsigned short _cameraFlag; // camera flag
     mutable Frustum _frustum;   // camera frustum
     mutable bool _frustumDirty;
-    int8_t  _depth;                 //camera depth, the depth of camera with CameraFlag::DEFAULT flag is 0 by default, a camera with larger depth is drawn on top of camera with smaller detph
+
     static Camera* _visitingCamera;
-    
+	static Scene* _visitingScene;
+
     CameraBackgroundBrush* _clearBrush; //brush used to clear the back ground
     
     experimental::Viewport _viewport;
