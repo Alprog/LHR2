@@ -62,8 +62,10 @@ function App:run(sceneManager)
     self.scene:addChild(self.sceneManager.root)
     
     self.scene:getDefaultCamera():setScene(self.scene)
+    self.scene:retain()
     
     self.director:runWithScene(self.scene)
+    --self.director:startAnimation()
     self:updateDesignResolution()
     
     self.director:setDepthTest(false)

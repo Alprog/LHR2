@@ -265,40 +265,26 @@ void Director::drawScene()
         _openGLView->pollEvents();
     }
 
-    //tick before glClear: issue #533
-
-
     _renderer->clear();
     experimental::FrameBuffer::clearAllFBOs();
-    /* to avoid flickr, nextScene MUST be here: after tick and before draw.
-     * FIXME: Which bug is this one. It seems that it can't be reproduced with v0.9
-     */
-    if (_nextScene)
-    {
-        setNextScene();
-    }
-
+    
     pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODEL);
     
-    if (_runningScene)
-    {
-		//clear draw stats
-		_renderer->clearDrawStats();
+	_renderer->clearDrawStats();
 
-		if (!_paused)
-		{
-			_scheduler->update(_deltaTime);
-			_eventDispatcher->dispatchEvent(_eventAfterUpdate);
-		}
+	if (!_paused)
+	{
+		_scheduler->update(_deltaTime);
+		_eventDispatcher->dispatchEvent(_eventAfterUpdate);
+	}
 
 #if (CC_USE_PHYSICS || (CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION) || CC_USE_NAVMESH)
-        _runningScene->stepPhysicsAndNavigation(_deltaTime);
+    _runningScene->stepPhysicsAndNavigation(_deltaTime);
 #endif
         
-		ScriptEngineManager::getInstance()->getScriptEngine()->executeGlobalFunction("render");
+	ScriptEngineManager::getInstance()->getScriptEngine()->executeGlobalFunction("render");
         
-        _eventDispatcher->dispatchEvent(_eventAfterVisit);
-    }
+    _eventDispatcher->dispatchEvent(_eventAfterVisit);
 
     // draw the notifications node
     if (_notificationNode)
