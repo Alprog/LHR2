@@ -44,6 +44,7 @@ function App:updateView()
     end
     
     self.windowSize = self.view:getFrameSize()
+        
     self:updateDesignResolution()
     self.view:setViewPortInPoints(0, 0, self.windowSize.width, self.windowSize.height)
 end
@@ -60,7 +61,6 @@ function App:run(sceneManager)
     self.sceneManager = SceneManager:create(self)
     self.scene = cc.Scene:create()
     self.scene:addChild(self.sceneManager.root)
-    
     self.scene:retain()
     
     self.director:runWithScene(self.scene)

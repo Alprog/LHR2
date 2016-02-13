@@ -142,3 +142,7 @@ function Scene:close(result)
     self.result = result
     theSceneManager:pop() 
 end
+
+function Scene:render()
+    theSceneManager.defaultCamera:render(theApp.scene, cc.CameraFlag.DEFAULT)
+end

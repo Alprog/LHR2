@@ -66,11 +66,7 @@ Scene::Scene()
     setAnchorPoint(Vec2(0.5f, 0.5f));
     
     _cameraOrderDirty = true;
-    
-    //create default camera
-    _defaultCamera = Camera::create();
-    addChild(_defaultCamera);
-    
+	_defaultCamera = nullptr;
     _event = Director::getInstance()->getEventDispatcher()->addCustomEventListener(Director::EVENT_PROJECTION_CHANGED, std::bind(&Scene::onProjectionChanged, this, std::placeholders::_1));
     _event->retain();
     

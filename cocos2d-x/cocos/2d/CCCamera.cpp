@@ -24,6 +24,7 @@
  Code based GamePlay3D's Camera: http://gameplay3d.org
 
  ****************************************************************************/
+
 #include "2d/CCCamera.h"
 #include "2d/CCCameraBackgroundBrush.h"
 #include "base/CCDirector.h"
@@ -358,23 +359,38 @@ void Camera::render(Node* scene, CameraFlag flag, Node* lightNode, experimental:
 		frameBuffer = experimental::FrameBuffer::getDefaultFBO();
 	}
 	frameBuffer->applyFBO();
+
+	CCLOG("s: %i %i", frameBuffer->getWidth(), frameBuffer->getHeight());
+
 	applyScissors();
 
 	_visitingCamera = this;
-	_visitingScene = scene;
 	_lightNode = lightNode;
 
 	director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);
 	director->loadVPMatrices(getViewMatrix(), getProjectionMatrix());
 	
 	clearBackground();
-	scene->visit(renderer, scene->getNodeToParentTransform(), 0);
+	
+
+	scene->visit(renderer, scene->getNodeToWorldTransform(), FLAGS_TRANSFORM_DIRTY);
+	
+	/*scene->processParentFlags(scene->getNodeToWorldTransform(), 0);
+	
+	auto root = *scene->_children.cbegin();
+	root->processParentFlags(scene->_modelTransform, 0);
+
+	auto gamescene = *root->_children.cbegin();
+	gamescene->visit(renderer, root->_modelTransform, 0);*/
+
+
+
 	renderer->render();
 	
 	director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);
 
 	_visitingCamera = nullptr;
-	_visitingScene = nullptr;
+	_lightNode = nullptr;
 }
 
 void Camera::clearBackground()

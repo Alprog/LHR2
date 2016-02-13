@@ -50,7 +50,7 @@ function Arena:update(deltaTime)
     self.camera:update(deltaTime)
     
     self:renderMask()
-    self:checkHover()
+    --self:checkHover()
     self:sortUnits()
 end
 
@@ -59,7 +59,7 @@ function Arena:renderMask()
     local k = self.fb.downScale
     local rect = cc.rect(pos.x / k - 1, pos.y / k - 1, 3, 3)
     --self.camera.passes[2]:setScissors(rect)
-    self.camera:render(2)
+    --self.camera:render(2)
 end
 
 function Arena:checkHover()

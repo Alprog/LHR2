@@ -7,6 +7,8 @@ function SceneManager:init(app)
     self.app = app
     self.scenes = {}
     self.root = cc.Node:create()
+    self.defaultCamera = cc.Camera:create()
+    self.defaultCamera:retain() 
     self:onResize(app.windowSize)
 end
 
@@ -62,10 +64,12 @@ function SceneManager:onResize(size)
     local scale = size.height / virtualHeight
     self.root:setScale(scale)
     self.root:setPosition(Vec(size.width / 2, size.height / 2))
-    
+        
     for i = 1, #self.scenes do
         self.scenes[i]:onResize(size)
     end
+    
+    self.defaultCamera:initDefault()
 end
 
 function SceneManager:onKeyPress(keyCode)
@@ -78,5 +82,5 @@ function SceneManager:onKeyPress(keyCode)
 end
 
 function SceneManager:render()
-    
+    self:getTopScene():render()
 end
