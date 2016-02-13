@@ -144,5 +144,5 @@ function Scene:close(result)
 end
 
 function Scene:render()
-    theSceneManager.defaultCamera:render(theApp.scene, cc.CameraFlag.DEFAULT)
+    theSceneManager.defaultCamera:render(self, cc.CameraFlag.DEFAULT)
 end

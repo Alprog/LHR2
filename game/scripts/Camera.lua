@@ -2,53 +2,17 @@
 Camera = Class('Camera')
 
 function Camera:init(space)
-    self.space = space
     self.position = Vector(0, 0, 0)
     self.rotation = cc.quaternion(0, 0, 0, 1)
     self.perspective = 0
-    self:setPassCount(1)
-end
 
-function Camera:setPassCount(count)
-    self.passes = self.passes or {}
-    
-    for i = #self.passes + 1, count do
-        local pass = cc.Camera:create()
-        self.space:addChild(pass)
-        self.passes[i] = pass
-    end
-    
-    for i = #self.passes, count + 1, -1 do
-        local pass = self.passes[i]
-        pass:setScene(nil)
-        pass:setFrameBufferObject(nil)
-        pass:removeFromParent()
-        self.passes[i] = nil
-    end
+    self.cppCamera = cc.Camera:create()
+    space:addChild(self.cppCamera)
     
     self.dirty = true
 end
-    
-function Camera:setPassSettings(index, enabled, depth, mask, frameBuffer, scissorsRect)
-    local pass = self.passes[index]
-    pass:setVisible(enabled)
-    pass.frameBuffer = frameBuffer
-    if scissorsRect then
-        pass:setScissors(scissorsRect)
-    end
-    self.dirty = true
-end
-
+   
 function Camera:update(deltaTime)
-    self:inputUpdate(deltaTime)
-    
-    if self.dirty then
-        self:refreshView()
-        self.dirty = false
-    end
-end
-
-function Camera:inputUpdate(deltaTime)
     self:moveUpdate(deltaTime)
     self:rotationUpdate(deltaTime)
 end
@@ -118,15 +82,8 @@ function Camera:rotationUpdate(deltaTime)
     end
 end
 
-function Camera:render(passIndex)
-    local pass = self.passes[passIndex]
-    theApp.scene:renderCamera(pass)
-end
-
 function Camera:localMove(vector)
-    
     vector = multVecQuat(vector, self.rotation)
-    
     self.position = self.position + vector
     self.dirty = true
 end
@@ -195,14 +152,17 @@ function Camera:refreshView()
     
     --pass:setOrthographic(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0.1, 1000)
       
-    
-    local passPosition = self.position + multVecQuat(Vector(0, 0, 0), self.rotation)
-    
-    for i = 1, #self.passes do
-        local pass = self.passes[i]
-        pass:setPerspective(10, aspect, 0.1, 1000)
-        pass:setPosition3D(passPosition)
-        pass:setRotationQuat(self.rotation)
-    end
+    local nativePosition = self.position + multVecQuat(Vector(0, 0, 0), self.rotation)
+    self.cppCamera:setPerspective(10, aspect, 0.1, 1000)
+    self.cppCamera:setPosition3D(nativePosition)
+    self.cppCamera:setRotationQuat(self.rotation)
+end
 
+function Camera:render(scene, flag, lightNode, frameBuffer)
+    if self.dirty then
+        self:refreshView()
+        self.dirty = false
+    end
+    
+    self.cppCamera:render(scene, flag, lightNode, frameBuffer)
 end

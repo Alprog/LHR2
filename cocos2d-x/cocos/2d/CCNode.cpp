@@ -1919,6 +1919,11 @@ void Node::setNodeToParentTransform(const Mat4& transform)
     _transformUpdated = true;
 }
 
+void Node::setTransformUpdated()
+{
+	_transformUpdated = _transformDirty = _inverseDirty = true;
+}
+
 void Node::setAdditionalTransform(const AffineTransform& additionalTransform)
 {
     Mat4 tmp;

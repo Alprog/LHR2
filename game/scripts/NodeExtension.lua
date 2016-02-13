@@ -127,3 +127,9 @@ end
 function Node:addMemberHandler(event, memberFunc)
     event:addHandler(bind(memberFunc, self))
 end
+
+function Node:createChild()
+    local child = cc.Node:create()
+    self:addChild(child)
+    return child
+end

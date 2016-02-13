@@ -360,10 +360,9 @@ void Camera::render(Node* scene, CameraFlag flag, Node* lightNode, experimental:
 	}
 	frameBuffer->applyFBO();
 
-	CCLOG("s: %i %i", frameBuffer->getWidth(), frameBuffer->getHeight());
-
 	applyScissors();
 
+	setCameraFlag(flag);
 	_visitingCamera = this;
 	_lightNode = lightNode;
 
@@ -372,19 +371,10 @@ void Camera::render(Node* scene, CameraFlag flag, Node* lightNode, experimental:
 	
 	clearBackground();
 	
-
-	scene->visit(renderer, scene->getNodeToWorldTransform(), FLAGS_TRANSFORM_DIRTY);
+	auto parent = scene->getParent();
+	auto transform = parent ? parent->getNodeToWorldTransform() : Mat4::IDENTITY;
+	scene->visit(renderer, transform, 0);
 	
-	/*scene->processParentFlags(scene->getNodeToWorldTransform(), 0);
-	
-	auto root = *scene->_children.cbegin();
-	root->processParentFlags(scene->_modelTransform, 0);
-
-	auto gamescene = *root->_children.cbegin();
-	gamescene->visit(renderer, root->_modelTransform, 0);*/
-
-
-
 	renderer->render();
 	
 	director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);

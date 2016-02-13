@@ -1057,6 +1057,12 @@
 -- @return Node#Node self (return value: cc.Node)
         
 --------------------------------
+-- / @} end of component functions
+-- @function [parent=#Node] setTransformUpdated 
+-- @param self
+-- @return Node#Node self (return value: cc.Node)
+        
+--------------------------------
 -- Update method will be called automatically every frame if "scheduleUpdate" is called, and the node is "live".<br>
 -- param delta In seconds.
 -- @function [parent=#Node] update 

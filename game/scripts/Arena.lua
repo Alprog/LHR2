@@ -10,8 +10,8 @@ require 'Terrain.lua'
 Arena = Derive("Arena", cc.Node)
 
 function Arena:init()
-    self.unitLayer = cc.Node:create()
-    self:addChild(self.unitLayer)
+    self.unitLayer = self:createChild()
+    self.lightNode = self:createChild()
     
     self:listenTouches()
     self:scheduleUpdate()
@@ -26,12 +26,7 @@ end
 function Arena:initCamera()
     self.fb = FrameBuffer:create()
     
-    local camera = Camera:create(self)
-    camera:setPassCount(2)
-    camera:setPassSettings(1, true, -1, ARENA_LAYER)
-    camera:setPassSettings(2, false, -2, MASK_LAYER, self.fb)
-    self.camera = camera
-    
+    self.camera = Camera:create(self)   
     
     local far = 50 
     local angle = 30 * math.pi / 180
@@ -39,10 +34,9 @@ function Arena:initCamera()
     local height = math.sin(angle) * far
     local distance = math.cos(angle) * far
     local delta = math.sqrt(distance * distance / 2)
-    camera:setPosition(Vec(-delta + 5, height, delta + 5))
-    --camera:setScene(theDirector->getRunningScene())
+    self.camera:setPosition(Vec(-delta + 5, height, delta + 5))
         
-    camera:lookAt(Vector(5, 0, 5), Vector(0, 1, 0))
+    self.camera:lookAt(Vector(5, 0, 5), Vector(0, 1, 0))
 end
 
 function Arena:update(deltaTime)
@@ -50,7 +44,7 @@ function Arena:update(deltaTime)
     self.camera:update(deltaTime)
     
     self:renderMask()
-    --self:checkHover()
+    self:checkHover()
     self:sortUnits()
 end
 
@@ -58,8 +52,9 @@ function Arena:renderMask()
     local pos = Input.mousePos
     local k = self.fb.downScale
     local rect = cc.rect(pos.x / k - 1, pos.y / k - 1, 3, 3)
-    --self.camera.passes[2]:setScissors(rect)
-    --self.camera:render(2)
+    
+    --self.camera:setScissors(rect)
+    self.camera:render(self, MASK_LAYER, self.lightNode, self.fb.cObj)
 end
 
 function Arena:checkHover()
@@ -175,6 +170,8 @@ function Arena:destroy()
             child:destroy()
         end
     end
+    self.fb:destroy()
+    self.fb = nil
 end
 
 function Arena:addObstacles()
@@ -250,5 +247,8 @@ function Arena:addObstacles()
             end
         end
     end
-    
+end
+
+function Arena:render()
+    self.camera:render(self, ARENA_LAYER) 
 end

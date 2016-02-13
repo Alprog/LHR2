@@ -1679,6 +1679,7 @@ public:
     virtual void removeAllComponents();
     /// @} end of component functions
 
+	void setTransformUpdated();
 
 #if CC_USE_PHYSICS
     /**

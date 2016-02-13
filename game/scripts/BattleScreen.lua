@@ -32,6 +32,7 @@ function BattleScreen:init()
     local arenaLayer = self:getChildByName('ArenaLayer')
     
     local arena = Arena:create()
+    
     WithoutDebug(function()
         arena:createTerrain()
     end)
@@ -80,12 +81,9 @@ function BattleScreen:init()
     eventDispatcher:addEventListenerWithSceneGraphPriority(listener, arenaLayer)
     
     self.arena = arena
-    
+        
     self.battle:selectPlayerByIndex(1)
     self:updateUI()
-end
-
-function BattleScreen:update(dt)
 end
 
 function BattleScreen:initUI()
@@ -108,6 +106,14 @@ function BattleScreen:initAvatars()
             self.avatars[index] = avatar
         end
     end
+end
+
+function BattleScreen:update(dt)
+end
+
+function BattleScreen:render()
+    self.arena:render()    
+    Scene.render(self)
 end
 
 function BattleScreen:onKeyPress(keyCode)
@@ -165,6 +171,7 @@ function BattleScreen:SetMaskSprite()
     local height = self.maskSprite:getContentSize().height
     local scale = 768 / height
     self.maskSprite:setScale(scale, -scale)
+    self.maskSprite:setLocalZOrder(-1)
 end
 
 function BattleScreen:destroy()

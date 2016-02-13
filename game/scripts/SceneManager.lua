@@ -65,8 +65,9 @@ function SceneManager:onResize(size)
     self.root:setScale(scale)
     self.root:setPosition(Vec(size.width / 2, size.height / 2))
         
-    for i = 1, #self.scenes do
-        self.scenes[i]:onResize(size)
+    for scene in iter(self.scenes) do
+        scene:onResize(size)
+        scene:setTransformUpdated()
     end
     
     self.defaultCamera:initDefault()
@@ -82,5 +83,7 @@ function SceneManager:onKeyPress(keyCode)
 end
 
 function SceneManager:render()
-    self:getTopScene():render()
+    for scene in iter(self.scenes) do
+        scene:render()
+    end
 end
