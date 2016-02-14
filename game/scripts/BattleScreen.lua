@@ -10,7 +10,6 @@ require 'Avatar.lua'
 BattleScreen = Derive('BattleScreen', Scene)
 
 MASK_LAYER = cc.CameraFlag.USER1
-ARENA_LAYER = cc.CameraFlag.USER2
 
 function BattleScreen:init()
     Scene.init(self, 'BattleScreen')
@@ -29,21 +28,20 @@ function BattleScreen:init()
         table.insert(battle.teams[1], mechanic)
     end
     
-    local arenaLayer = self:getChildByName('ArenaLayer')
-    
-    local arena = Arena:create()
+    self.arena = Arena:create()
     
     WithoutDebug(function()
-        arena:createTerrain()
+        self.arena:createTerrain()
     end)
     
     --arena:addObstacles()
             
-    arena:update(0)
+    self.arena:update(0)
     
-    arenaLayer:addChild(arena)
+    self:getChildByName('ArenaLayer'):addChild(self.arena)
     
-    battle:setArena(arena)
+    
+    battle:setArena(self.arena)
     battle:setScene(self)
     
     battle:spawnTeams()
@@ -55,32 +53,6 @@ function BattleScreen:init()
         touchBeginPoint = {x = location.x, y = location.y}
         return true
     end
-
-    local function onTouchMoved(touch, event)
-        local location = touch:getLocation()
-        if touchBeginPoint then
-            local cx, cy = arenaLayer:getPosition()
-            if location.x ~= touchBeginPoint.x or location.y ~= touchBeginPoint.y then
-                touch.dragging = true
-            end
-            arenaLayer:setPosition(cx + location.x - touchBeginPoint.x, cy + location.y - touchBeginPoint.y)
-            touchBeginPoint = Vec(location.x, location.y)
-        end
-    end
-
-    local function onTouchEnded(touch, event)
-        local location = touch:getLocation()
-        touchBeginPoint = nil
-    end
-
-    local listener = cc.EventListenerTouchOneByOne:create()
-    listener:registerScriptHandler(onTouchBegan, cc.Handler.EVENT_TOUCH_BEGAN)
-    listener:registerScriptHandler(onTouchMoved, cc.Handler.EVENT_TOUCH_MOVED)
-    listener:registerScriptHandler(onTouchEnded, cc.Handler.EVENT_TOUCH_ENDED)
-    local eventDispatcher = arenaLayer:getEventDispatcher()
-    eventDispatcher:addEventListenerWithSceneGraphPriority(listener, arenaLayer)
-    
-    self.arena = arena
         
     self.battle:selectPlayerByIndex(1)
     self:updateUI()

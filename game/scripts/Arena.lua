@@ -96,6 +96,7 @@ function Arena:sortUnits()
 end
 
 function Arena:onResize(size)
+    self:setTransformUpdated()
     self.fb:resize(size)
     self.camera.dirty = true
 end
@@ -228,7 +229,6 @@ function Arena:addObstacles()
                 local obstacle = Model:create(path)
                 obstacle:setScale(0.01)
                 obstacle:setPosition3D(Vec(0, 0, 0))
-                obstacle:setCameraMask(ARENA_LAYER)
                 obstacle:setGlobalZOrder(-6)
                 obstacle:setForceDepthWrite(true)
                 if index == 7 or index == 8 then
@@ -250,5 +250,5 @@ function Arena:addObstacles()
 end
 
 function Arena:render()
-    self.camera:render(self, ARENA_LAYER) 
+    self.camera:render(self, cc.CameraFlag.DEFAULT) 
 end

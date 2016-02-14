@@ -181,20 +181,7 @@
       <ObjectData Name="Node" Tag="8" ctype="GameNodeObjectData">
         <Size X="0.0000" Y="0.0000" />
         <Children>
-          <AbstractNodeData Name="Background" ActionTag="1593895451" VisibleForFrame="False" Tag="35" IconVisible="False" LeftMargin="-683.0000" RightMargin="-683.0000" TopMargin="-384.0000" BottomMargin="-384.0000" TouchEnable="True" ComboBoxIndex="1" ColorAngle="90.0000" ctype="PanelObjectData">
-            <Size X="1366.0000" Y="768.0000" />
-            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-            <Position />
-            <Scale ScaleX="1.0000" ScaleY="1.0000" />
-            <CColor A="255" R="255" G="255" B="255" />
-            <PrePosition />
-            <PreSize X="0.0000" Y="0.0000" />
-            <SingleColor A="255" R="63" G="15" B="0" />
-            <FirstColor A="255" R="150" G="200" B="255" />
-            <EndColor A="255" R="255" G="255" B="255" />
-            <ColorVector ScaleY="1.0000" />
-          </AbstractNodeData>
-          <AbstractNodeData Name="ArenaLayer" ActionTag="-2139499789" Tag="49" IconVisible="True" ctype="SingleNodeObjectData">
+          <AbstractNodeData Name="ArenaLayer" ActionTag="-2139499789" VisibleForFrame="False" Tag="49" IconVisible="True" ctype="SingleNodeObjectData">
             <Size X="0.0000" Y="0.0000" />
             <AnchorPoint />
             <Position />

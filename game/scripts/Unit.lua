@@ -27,14 +27,12 @@ function Unit:loadModel(name)
         
     local model = Model:create(fileName)
     model:setForceDepthWrite(true)
-    model:setCameraMask(ARENA_LAYER)
     model:play('idle', true)
     model:setRotation3D(Vec(0, 0, 0))
     
     --model:setShaders('skin', 'default')
     
     local silhouette = model:copy()
-    silhouette:setCameraMask(ARENA_LAYER)
     silhouette:setShaders('fatskin', 'uColor')
     silhouette:setUniformVec4('color', Vec(1, 1, 1, 1))
     silhouette:setVisible(false)

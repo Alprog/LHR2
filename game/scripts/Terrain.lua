@@ -104,7 +104,6 @@ function Terrain:batch()
     local mesh = combineMesh(infos)
     
     local batchGfx = Carcase:create('tiles/ground.png', mesh)
-    batchGfx:setCameraMask(ARENA_LAYER)
     batchGfx:setForceDepthWrite(true)
     batchGfx:setGlobalZOrder(-6)
     batchGfx:setCullFaceEnabled(false)

@@ -159,10 +159,12 @@ function Camera:refreshView()
 end
 
 function Camera:render(scene, flag, lightNode, frameBuffer)
+    flag = flag or cc.CameraFlag.DEFAULT
+    
     if self.dirty then
         self:refreshView()
         self.dirty = false
     end
     
-    self.cppCamera:render(scene, flag, lightNode, frameBuffer)
+    self.cppCamera:render(scene, flag, nil, frameBuffer)
 end

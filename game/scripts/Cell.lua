@@ -8,12 +8,10 @@ function Cell:initGfx()
     self.gfx:setScale(0.01)
     self.gfx:setPosition3D(Vec(0, 0, 0))]]
     
-    self.gfx:setCameraMask(ARENA_LAYER)
     self.gfx:setGlobalZOrder(-6)
     self.gfx:setForceDepthWrite(true)
     
     local selection = Carcase:create('tiles/select.png')
-    selection:setCameraMask(ARENA_LAYER)
     selection:setVisible(false)
     selection:setPosition3D(Vec(0, 0.05, 0))
     self.selection = selection
