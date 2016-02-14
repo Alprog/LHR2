@@ -160,7 +160,7 @@ end
 
 function Unit:walkTo(cell)
     local pos = cell:getPosition3D()
-    self.gfx:playLoop('walk', self.walkAnimSpeed or 1)
+    self.gfx:playLoop('run', self.walkAnimSpeed or 1)
     self:linearMove(pos, walkTime)    
     self:setCell(cell)
 end
