@@ -19,7 +19,7 @@ function Arena:init()
     self.tasks = TaskManager:create()
     self:initCamera()
     
-    self.frameBuffer = FrameBuffer:create(1, false, 4)
+    self.frameBuffer = FrameBuffer:create(1, true, 4)
     self.maskFrameBuffer = FrameBuffer:create(1, false, 0, 4)
     
     --self:getDefaultCamera():setVisible(false)

@@ -615,17 +615,10 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
 
     glGenTextures(1, &_name);
 
+	GL::bindTextureN(0, _name, multisamples > 0 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D);
 	if (multisamples > 0)
-	{
-		CHECK_GL_ERROR_DEBUG();
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, _name);
-		CHECK_GL_ERROR_DEBUG();
-		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, multisamples, GL_RGBA8, pixelsWide, pixelsHigh, false);
-		CHECK_GL_ERROR_DEBUG();
-	}
-	else
-	{
-		GL::bindTexture2D(_name);
+	{	
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, multisamples, GL_RGBA8, pixelsWide, pixelsHigh, true);
 	}
 	_multisamples = multisamples;
 

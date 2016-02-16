@@ -571,12 +571,6 @@ void FrameBuffer::applyFBO()
 			}
 
 			CHECK_GL_ERROR_DEBUG();
-		
-			auto a = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-			if (a == GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE)
-			{
-				a = 0;
-			}
 		}
 
 		_renderTargetCount = 0;
@@ -592,6 +586,13 @@ void FrameBuffer::applyFBO()
         CHECK_GL_ERROR_DEBUG();
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, nullptr == _rtDepthStencil ? 0 : _rtDepthStencil->getBuffer());
         CHECK_GL_ERROR_DEBUG();
+
+		auto a = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (a == GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE)
+		{
+			a = 0;
+		}
+
         _fboBindingDirty = false;
     }
     if(GL_FRAMEBUFFER_COMPLETE != glCheckFramebufferStatus(GL_FRAMEBUFFER))
