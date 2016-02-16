@@ -17,26 +17,28 @@ function BattleScreen:init()
     self:scheduleUpdate()
     self:initUI()
    
+    self.arena = Arena:create()
+    WithoutDebug(function()
+        self.arena:createTerrain()
+    end)
+    self.arena:update(0)
+   
     local battle = Battle:create()
     battle:setTeamCount(2)
-    for i = 1, 4 do
+    for i = 1, 1 do
         local mechanic = Mechanic:create()
         table.insert(battle.teams[2], mechanic)
     end
-    for i = 1, 2 do
+    for i = 1, 1 do
         local mechanic = Mechanic:create()
         table.insert(battle.teams[1], mechanic)
     end
     
-    self.arena = Arena:create()
     
-    WithoutDebug(function()
-        self.arena:createTerrain()
-    end)
     
     --arena:addObstacles()
             
-    self.arena:update(0)
+    
     
     self:getChildByName('ArenaLayer'):addChild(self.arena)
     
@@ -135,6 +137,7 @@ function BattleScreen:SetMaskSprite()
     
     local texture = self.arena.frameBuffer:getTexture()
     self.maskSprite = cc.Sprite:createWithTexture(texture)
+    self.maskSprite:setTexture(nil)
     
     local program = getShader('default3d', 'defaultMS')
     local state = cc.GLProgramState:create(program)

@@ -155,6 +155,15 @@ function Model:setShaders(vert, frag)
     end 
 end
 
+function Model:setUniformTexture(name, texture)
+    local count = self:getMeshCount()
+    for i = 0, count - 1 do
+        local mesh = self:getMeshByIndex(i)
+        local state = mesh:getGLProgramState()
+        state:setUniformTexture(name, texture)
+    end
+end
+
 function Model:setUniformVec4(name, vec)
     local count = self:getMeshCount()
     for i = 0, count - 1 do

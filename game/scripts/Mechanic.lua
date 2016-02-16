@@ -17,6 +17,7 @@ function Mechanic:initGfx()
     self:setScaleZ(scale)
     
     local children = self.gfx:getChildren()
-    self.gfx:setTexture('models/soldier4.png')
+    --self.gfx:setTexture(getTexture('models/soldier4.png'))
     self.gfx:setShaders('skin', 'default3d')
+    self.gfx:setUniformTexture('mainTexture', getTexture('models/soldier4.png'))
 end

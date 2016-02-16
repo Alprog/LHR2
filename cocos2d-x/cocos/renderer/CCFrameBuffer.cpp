@@ -601,8 +601,11 @@ void FrameBuffer::applyFBO()
     }
     CHECK_GL_ERROR_DEBUG();
 
-	const GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT, GL_COLOR_ATTACHMENT3_EXT };
-	glDrawBuffers(_renderTargetCount, buffers);
+	if (!isDefaultFBO())
+	{
+		const GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT, GL_COLOR_ATTACHMENT3_EXT };
+		glDrawBuffers(_renderTargetCount, buffers);
+	}
 }
 
 void FrameBuffer::attachDepthStencilTarget(RenderTargetDepthStencil* rt)
