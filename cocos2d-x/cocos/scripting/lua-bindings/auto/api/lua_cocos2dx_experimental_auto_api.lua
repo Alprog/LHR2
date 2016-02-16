@@ -11,4 +11,19 @@
 -- @field [parent=#ccexp] TMXTiledMap#TMXTiledMap TMXTiledMap preloaded module
 
 
+--------------------------------------------------------
+-- the ccexp RenderTarget
+-- @field [parent=#ccexp] RenderTarget#RenderTarget RenderTarget preloaded module
+
+
+--------------------------------------------------------
+-- the ccexp RenderTargetDepthStencil
+-- @field [parent=#ccexp] RenderTargetDepthStencil#RenderTargetDepthStencil RenderTargetDepthStencil preloaded module
+
+
+--------------------------------------------------------
+-- the ccexp FrameBuffer
+-- @field [parent=#ccexp] FrameBuffer#FrameBuffer FrameBuffer preloaded module
+
+
 return nil

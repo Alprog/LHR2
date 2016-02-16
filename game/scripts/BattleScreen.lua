@@ -129,18 +129,24 @@ function BattleScreen:onResize(size)
 end
 
 function BattleScreen:SetMaskSprite()
-    local visible = self.maskSprite and self.maskSprite:isVisible()
     if self.maskSprite then
         self.maskSprite:removeFromParent()
     end
-    self.maskSprite = cc.Sprite:createWithTexture(self.arena.fb:getTexture())
+    
+    local texture = self.arena.frameBuffer:getTexture()
+    self.maskSprite = cc.Sprite:createWithTexture(texture)
+    
+    local program = getShader('default3d', 'defaultMS')
+    local state = cc.GLProgramState:create(program)
+    state:setUniformTexture('mainTexture', texture)
+    self.maskSprite:setGLProgramState(state)
+    
     self.maskSprite:setAnchorPoint(Vec(0.5, 0.5))
     
     self.maskSprite:setPosition3D(Vec(0, 0, 0))
     self:addChild(self.maskSprite)
-    self.maskSprite:setVisible(visible)
     
-    local height = self.maskSprite:getContentSize().height
+    local height = self.maskSprite:getContentSize().height    
     local scale = 768 / height
     self.maskSprite:setScale(scale, -scale)
     self.maskSprite:setLocalZOrder(-1)

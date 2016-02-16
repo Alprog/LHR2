@@ -21,7 +21,7 @@ end
 function Carcase:getMaterial(textureName)
     local cache = theApp.director:getTextureCache()
     local texture = cache:addImage(textureName)
-    local program = getShader('default', 'default')
+    local program = getShader('default', 'default3d')
     local state = cc.GLProgramState:create(program)
     state:setUniformTexture('mainTexture', texture)
     return cc.Material:createWithGLStateProgram(state)
@@ -41,19 +41,29 @@ function Carcase:getMesh(name)
             Vector(-0.5, 0, -0.5),
             Vector(0.5, 0, -0.5),
             Vector(0.5, 0, 0.5),
-            Vector(-0.5, 0, 0.5)
+            Vector(-0.5, 0, 0.5),
+            Vector(-0.5, -1, -0.5),
+            Vector(-0.5, -1, 0.5),
+            Vector(-0.5, -1, 0.5),
+            Vector(0.5, -1, 0.5)
         },
         texs = {
             Vec(0, 0),
             Vec(0, 1),
             Vec(1, 1),
             Vec(1, 0),
-            
-            
+            Vec(0, 1),
+            Vec(1, 1),
+            Vec(0, 0),
+            Vec(0, 0)
         },
         indices = {
             0, 1, 2,
-            0, 2, 3
+            0, 2, 3,
+            0, 3, 4,
+            3, 4, 5,
+            3, 2, 6,
+            2, 6, 7
         },
         normals = {}
     }

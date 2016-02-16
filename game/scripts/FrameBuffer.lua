@@ -1,8 +1,11 @@
 
 FrameBuffer = Class('FrameBuffer')
 
-function FrameBuffer:init()
-    self.downScale = 4
+function FrameBuffer:init(rtCount, depthStencil, multiSamples, downScale)
+    self.rtCount = rtCount
+    self.depthStencil = depthStencil
+    self.multiSamples = multiSamples or 0
+    self.downScale = downScale or 1
     self:resize(theApp.windowSize)
 end
 
@@ -17,19 +20,24 @@ function FrameBuffer:setSize(width, height)
     
     self:releaseCObj()
     
-    self.cObj = ccexp.FrameBuffer:create(1, width, height)
+    self.cObj = ccexp.FrameBuffer:create(1, width, height)   
+    for i = 1, self.rtCount do
+        local rt = ccexp.RenderTarget:create(width, height, cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A8888, self.multiSamples)
+        self.cObj:attachRenderTarget(rt, i - 1)
+    end
+    if self.depthStencil then
+        self.rtDS = ccexp.RenderTargetDepthStencil:create(width, height, self.multiSamples)
+        self.cObj:attachDepthStencilTarget(self.rtDS)
+    end
     self.cObj:retain()
-    self.rt = ccexp.RenderTarget:create(width, height)
-    self.rtDS = ccexp.RenderTargetDepthStencil:create(width, height)
-    self.cObj:attachRenderTarget(self.rt)
-    self.cObj:attachDepthStencilTarget(self.rtDS)
         
     self.width = width
     self.height = height
 end
 
-function FrameBuffer:getTexture()
-    return self.cObj:getRenderTarget():getTexture()
+function FrameBuffer:getTexture(index)
+    index = index or 1
+    return self.cObj:getRenderTarget(index - 1):getTexture()
 end
 
 function FrameBuffer:getTexel(x, y)

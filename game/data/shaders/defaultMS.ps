@@ -1,0 +1,9 @@
+
+varying vec2 v_texCoord;
+varying vec3 v_normal;
+uniform sampler2DMS mainTexture;
+
+void main()
+{	
+	gl_FragColor = texelFetch(mainTexture, ivec2(v_texCoord.x * 1366, v_texCoord.y * 768), 0);
+}

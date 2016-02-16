@@ -21,7 +21,7 @@ function Model:init(modelPath, actionSchemePath)
     
     self.animates = {}
     self.fadeTimes = {}
-    self.defaultFadeTime = 0.1
+    self.defaultFadeTime = 0.15
     self.curAnimate = nil
     self:setCullFaceEnabled(true)
     

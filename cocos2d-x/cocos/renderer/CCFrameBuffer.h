@@ -84,9 +84,9 @@ class CC_DLL RenderTarget : public RenderTargetBase
 {
 public:
     
-    static RenderTarget* create(unsigned int width, unsigned int height, Texture2D::PixelFormat format = Texture2D::PixelFormat::RGBA8888);
+    static RenderTarget* create(unsigned int width, unsigned int height, Texture2D::PixelFormat format = Texture2D::PixelFormat::RGBA8888, int multisamples = 0);
     
-    bool init(unsigned int width, unsigned int height, Texture2D::PixelFormat format);
+    bool init(unsigned int width, unsigned int height, Texture2D::PixelFormat format, int multisamples);
     
     virtual Texture2D* getTexture() const { return _texture; }
 CC_CONSTRUCTOR_ACCESS:
@@ -104,9 +104,9 @@ class CC_DLL RenderTargetRenderBuffer : public RenderTargetBase
 {
 public:
     
-    static RenderTargetRenderBuffer* create(unsigned int width, unsigned int height);
+    static RenderTargetRenderBuffer* create(unsigned int width, unsigned int height, int multisamples = 0);
     
-    bool init(unsigned int width, unsigned int height);
+    bool init(unsigned int width, unsigned int height, int multisamples);
     
     virtual GLuint getBuffer() const { return _colorBuffer; }
     
@@ -126,9 +126,9 @@ class CC_DLL RenderTargetDepthStencil : public RenderTargetBase
 {
 public:
     
-    static RenderTargetDepthStencil* create(unsigned int width, unsigned int height);
+    static RenderTargetDepthStencil* create(unsigned int width, unsigned int height, int multisamples = 0);
     
-    bool init(unsigned int width, unsigned int height);
+    bool init(unsigned int width, unsigned int height, int multisamples);
     
     virtual GLuint getBuffer() const { return _depthStencilBuffer; }
     
@@ -144,6 +144,8 @@ protected:
     EventListenerCustom* _reBuildDepthStencilListener;
 #endif
 };
+
+const int MAX_RENDER_TARGET_COUNT = 4;
 
 class CC_DLL FrameBuffer : public Ref
 {
@@ -167,9 +169,9 @@ public:
     float getClearDepth() const { return _clearDepth; }
     int8_t getClearStencil() const { return _clearStencil; }
     
-    RenderTargetBase* getRenderTarget() const { return _rt; }
+	RenderTargetBase* getRenderTarget(int index = 0) const;
     RenderTargetDepthStencil* getDepthStencilTarget() const { return _rtDepthStencil; }
-    void attachRenderTarget(RenderTargetBase* rt);
+    void attachRenderTarget(RenderTargetBase* rt, int inde);
     void attachDepthStencilTarget(RenderTargetDepthStencil* rt);
     
     bool isDefaultFBO() const { return _isDefault; }
@@ -185,6 +187,8 @@ private:
     GLuint _fbo;
     //dirty flag for fbo binding
     bool _fboBindingDirty;
+
+	int _renderTargetCount;
     //
     uint8_t _fid;
     //
@@ -193,7 +197,7 @@ private:
     int8_t  _clearStencil;
     int _width;
     int _height;
-    RenderTargetBase* _rt;
+    RenderTargetBase* _renderTargets[MAX_RENDER_TARGET_COUNT];
     RenderTargetDepthStencil* _rtDepthStencil;
     bool _isDefault;
 public:

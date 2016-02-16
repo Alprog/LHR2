@@ -6,7 +6,7 @@ require 'Points.lua'
 Unit = Derive('Unit', Object)
 
 local walkTime = 0.33
-local jumpTime = 0.4
+local jumpTime = 0.5
 local rotationSpeed = math.pi * 2.5
 
 function Unit:init()

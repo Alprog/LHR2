@@ -17,15 +17,15 @@ function Arena:init()
     self:scheduleUpdate()
     
     self.tasks = TaskManager:create()
-    self.fb = FrameBuffer:create()
     self:initCamera()
+    
+    self.frameBuffer = FrameBuffer:create(1, false, 4)
+    self.maskFrameBuffer = FrameBuffer:create(1, false, 0, 4)
     
     --self:getDefaultCamera():setVisible(false)
 end
 
 function Arena:initCamera()
-    self.fb = FrameBuffer:create()
-    
     self.camera = Camera:create(self)   
     
     local far = 50 
@@ -50,11 +50,11 @@ end
 
 function Arena:renderMask()
     local pos = Input.mousePos
-    local k = self.fb.downScale
+    local k = self.maskFrameBuffer.downScale
     local rect = cc.rect(pos.x / k - 1, pos.y / k - 1, 3, 3)
     
     --self.camera:setScissors(rect)
-    self.camera:render(self, MASK_LAYER, self.lightNode, self.fb.cObj)
+    self.camera:render(self, MASK_LAYER, self.lightNode, self.maskFrameBuffer)
 end
 
 function Arena:checkHover()
@@ -67,21 +67,11 @@ function Arena:checkHover()
         if self.hoverObject then
             self.hoverObject:onHover(true)
         end
-    end
-    
-    --[[if self.battle then
-        if self.hoverObject then
-            self.battle:selectPlayer(self.hoverObject)
-        else
-            self.battle:selectPlayer(nil)
-        end
-        self.battle.scene:updateUI()
-    end]]
-    
+    end   
 end
 
 function Arena:getObjectFromScreenPos(pos)
-    local texel = self.fb:getTexel(pos.x, pos.y)
+    local texel = self.maskFrameBuffer:getTexel(pos.x, pos.y)
     local index = bytesToIndex(texel.x, texel.y, texel.z)
     return Object:fromIndex(index) 
 end
@@ -97,7 +87,8 @@ end
 
 function Arena:onResize(size)
     self:setTransformUpdated()
-    self.fb:resize(size)
+    self.frameBuffer:resize(size)
+    self.maskFrameBuffer:resize(size)
     self.camera.dirty = true
 end
 
@@ -171,8 +162,10 @@ function Arena:destroy()
             child:destroy()
         end
     end
-    self.fb:destroy()
-    self.fb = nil
+    if self.maskFrameBuffer then
+        self.maskFrameBuffer:destroy()
+        self.maskFrameBuffer = nil
+    end
 end
 
 function Arena:addObstacles()
@@ -250,5 +243,5 @@ function Arena:addObstacles()
 end
 
 function Arena:render()
-    self.camera:render(self, cc.CameraFlag.DEFAULT) 
+    self.camera:render(self, cc.CameraFlag.DEFAULT, nil, self.frameBuffer) 
 end

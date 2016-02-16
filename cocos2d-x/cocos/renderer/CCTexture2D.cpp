@@ -436,6 +436,7 @@ Texture2D::Texture2D()
 , _shaderProgram(nullptr)
 , _antialiasEnabled(true)
 , _ninePatchInfo(nullptr)
+, _multisamples(0)
 {
 }
 
@@ -537,7 +538,7 @@ bool Texture2D::hasPremultipliedAlpha() const
     return _hasPremultipliedAlpha;
 }
 
-bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, const Size& contentSize)
+bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, const Size& contentSize, int multisamples)
 {
     CCASSERT(dataLen>0 && pixelsWide>0 && pixelsHigh>0, "Invalid size");
 
@@ -545,10 +546,10 @@ bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::Pixel
     MipmapInfo mipmap;
     mipmap.address = (unsigned char*)data;
     mipmap.len = static_cast<int>(dataLen);
-    return initWithMipmaps(&mipmap, 1, pixelFormat, pixelsWide, pixelsHigh);
+    return initWithMipmaps(&mipmap, 1, pixelFormat, pixelsWide, pixelsHigh, multisamples);
 }
 
-bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat pixelFormat, int pixelsWide, int pixelsHigh)
+bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, int multisamples)
 {
 
 
@@ -613,7 +614,20 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     }
 
     glGenTextures(1, &_name);
-    GL::bindTexture2D(_name);
+
+	if (multisamples > 0)
+	{
+		CHECK_GL_ERROR_DEBUG();
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, _name);
+		CHECK_GL_ERROR_DEBUG();
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, multisamples, GL_RGBA8, pixelsWide, pixelsHigh, false);
+		CHECK_GL_ERROR_DEBUG();
+	}
+	else
+	{
+		GL::bindTexture2D(_name);
+	}
+	_multisamples = multisamples;
 
     if (mipmapsNum == 1)
     {
@@ -626,6 +640,8 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, _antialiasEnabled ? GL_LINEAR : GL_NEAREST );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+
+
 
 #if CC_ENABLE_CACHE_TEXTURE_DATA
     if (_antialiasEnabled)

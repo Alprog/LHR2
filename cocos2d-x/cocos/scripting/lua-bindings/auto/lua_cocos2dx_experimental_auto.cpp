@@ -1895,27 +1895,30 @@ int lua_cocos2dx_experimental_RenderTarget_init(lua_State* tolua_S)
 #endif
 
     argc = lua_gettop(tolua_S)-1;
-    if (argc == 3) 
+    if (argc == 4) 
     {
         unsigned int arg0;
         unsigned int arg1;
         cocos2d::Texture2D::PixelFormat arg2;
+        int arg3;
 
         ok &= luaval_to_uint32(tolua_S, 2,&arg0, "ccexp.RenderTarget:init");
 
         ok &= luaval_to_uint32(tolua_S, 3,&arg1, "ccexp.RenderTarget:init");
 
         ok &= luaval_to_int32(tolua_S, 4,(int *)&arg2, "ccexp.RenderTarget:init");
+
+        ok &= luaval_to_int32(tolua_S, 5,(int *)&arg3, "ccexp.RenderTarget:init");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_experimental_RenderTarget_init'", nullptr);
             return 0;
         }
-        bool ret = cobj->init(arg0, arg1, arg2);
+        bool ret = cobj->init(arg0, arg1, arg2, arg3);
         tolua_pushboolean(tolua_S,(bool)ret);
         return 1;
     }
-    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ccexp.RenderTarget:init",argc, 3);
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ccexp.RenderTarget:init",argc, 4);
     return 0;
 
 #if COCOS2D_DEBUG >= 1
@@ -2019,6 +2022,25 @@ int lua_cocos2dx_experimental_RenderTarget_create(lua_State* tolua_S)
         object_to_luaval<cocos2d::experimental::RenderTarget>(tolua_S, "ccexp.RenderTarget",(cocos2d::experimental::RenderTarget*)ret);
         return 1;
     }
+    if (argc == 4)
+    {
+        unsigned int arg0;
+        unsigned int arg1;
+        cocos2d::Texture2D::PixelFormat arg2;
+        int arg3;
+        ok &= luaval_to_uint32(tolua_S, 2,&arg0, "ccexp.RenderTarget:create");
+        ok &= luaval_to_uint32(tolua_S, 3,&arg1, "ccexp.RenderTarget:create");
+        ok &= luaval_to_int32(tolua_S, 4,(int *)&arg2, "ccexp.RenderTarget:create");
+        ok &= luaval_to_int32(tolua_S, 5,(int *)&arg3, "ccexp.RenderTarget:create");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_experimental_RenderTarget_create'", nullptr);
+            return 0;
+        }
+        cocos2d::experimental::RenderTarget* ret = cocos2d::experimental::RenderTarget::create(arg0, arg1, arg2, arg3);
+        object_to_luaval<cocos2d::experimental::RenderTarget>(tolua_S, "ccexp.RenderTarget",(cocos2d::experimental::RenderTarget*)ret);
+        return 1;
+    }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "ccexp.RenderTarget:create",argc, 2);
     return 0;
 #if COCOS2D_DEBUG >= 1
@@ -2113,24 +2135,27 @@ int lua_cocos2dx_experimental_RenderTargetDepthStencil_init(lua_State* tolua_S)
 #endif
 
     argc = lua_gettop(tolua_S)-1;
-    if (argc == 2) 
+    if (argc == 3) 
     {
         unsigned int arg0;
         unsigned int arg1;
+        int arg2;
 
         ok &= luaval_to_uint32(tolua_S, 2,&arg0, "ccexp.RenderTargetDepthStencil:init");
 
         ok &= luaval_to_uint32(tolua_S, 3,&arg1, "ccexp.RenderTargetDepthStencil:init");
+
+        ok &= luaval_to_int32(tolua_S, 4,(int *)&arg2, "ccexp.RenderTargetDepthStencil:init");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_experimental_RenderTargetDepthStencil_init'", nullptr);
             return 0;
         }
-        bool ret = cobj->init(arg0, arg1);
+        bool ret = cobj->init(arg0, arg1, arg2);
         tolua_pushboolean(tolua_S,(bool)ret);
         return 1;
     }
-    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ccexp.RenderTargetDepthStencil:init",argc, 2);
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ccexp.RenderTargetDepthStencil:init",argc, 3);
     return 0;
 
 #if COCOS2D_DEBUG >= 1
@@ -2214,6 +2239,23 @@ int lua_cocos2dx_experimental_RenderTargetDepthStencil_create(lua_State* tolua_S
             return 0;
         }
         cocos2d::experimental::RenderTargetDepthStencil* ret = cocos2d::experimental::RenderTargetDepthStencil::create(arg0, arg1);
+        object_to_luaval<cocos2d::experimental::RenderTargetDepthStencil>(tolua_S, "ccexp.RenderTargetDepthStencil",(cocos2d::experimental::RenderTargetDepthStencil*)ret);
+        return 1;
+    }
+    if (argc == 3)
+    {
+        unsigned int arg0;
+        unsigned int arg1;
+        int arg2;
+        ok &= luaval_to_uint32(tolua_S, 2,&arg0, "ccexp.RenderTargetDepthStencil:create");
+        ok &= luaval_to_uint32(tolua_S, 3,&arg1, "ccexp.RenderTargetDepthStencil:create");
+        ok &= luaval_to_int32(tolua_S, 4,(int *)&arg2, "ccexp.RenderTargetDepthStencil:create");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_experimental_RenderTargetDepthStencil_create'", nullptr);
+            return 0;
+        }
+        cocos2d::experimental::RenderTargetDepthStencil* ret = cocos2d::experimental::RenderTargetDepthStencil::create(arg0, arg1, arg2);
         object_to_luaval<cocos2d::experimental::RenderTargetDepthStencil>(tolua_S, "ccexp.RenderTargetDepthStencil",(cocos2d::experimental::RenderTargetDepthStencil*)ret);
         return 1;
     }
@@ -2757,6 +2799,20 @@ int lua_cocos2dx_experimental_FrameBuffer_getRenderTarget(lua_State* tolua_S)
         object_to_luaval<cocos2d::experimental::RenderTargetBase>(tolua_S, "ccexp.RenderTargetBase",(cocos2d::experimental::RenderTargetBase*)ret);
         return 1;
     }
+    if (argc == 1) 
+    {
+        int arg0;
+
+        ok &= luaval_to_int32(tolua_S, 2,(int *)&arg0, "ccexp.FrameBuffer:getRenderTarget");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_experimental_FrameBuffer_getRenderTarget'", nullptr);
+            return 0;
+        }
+        cocos2d::experimental::RenderTargetBase* ret = cobj->getRenderTarget(arg0);
+        object_to_luaval<cocos2d::experimental::RenderTargetBase>(tolua_S, "ccexp.RenderTargetBase",(cocos2d::experimental::RenderTargetBase*)ret);
+        return 1;
+    }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ccexp.FrameBuffer:getRenderTarget",argc, 0);
     return 0;
 
@@ -3134,21 +3190,24 @@ int lua_cocos2dx_experimental_FrameBuffer_attachRenderTarget(lua_State* tolua_S)
 #endif
 
     argc = lua_gettop(tolua_S)-1;
-    if (argc == 1) 
+    if (argc == 2) 
     {
         cocos2d::experimental::RenderTargetBase* arg0;
+        int arg1;
 
         ok &= luaval_to_object<cocos2d::experimental::RenderTargetBase>(tolua_S, 2, "ccexp.RenderTargetBase",&arg0, "ccexp.FrameBuffer:attachRenderTarget");
+
+        ok &= luaval_to_int32(tolua_S, 3,(int *)&arg1, "ccexp.FrameBuffer:attachRenderTarget");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_experimental_FrameBuffer_attachRenderTarget'", nullptr);
             return 0;
         }
-        cobj->attachRenderTarget(arg0);
+        cobj->attachRenderTarget(arg0, arg1);
         lua_settop(tolua_S, 1);
         return 1;
     }
-    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ccexp.FrameBuffer:attachRenderTarget",argc, 1);
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ccexp.FrameBuffer:attachRenderTarget",argc, 2);
     return 0;
 
 #if COCOS2D_DEBUG >= 1
@@ -3452,6 +3511,40 @@ int lua_cocos2dx_experimental_FrameBuffer_clearAllFBOs(lua_State* tolua_S)
 #endif
     return 0;
 }
+int lua_cocos2dx_experimental_FrameBuffer_getDefaultFBO(lua_State* tolua_S)
+{
+    int argc = 0;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertable(tolua_S,1,"ccexp.FrameBuffer",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    argc = lua_gettop(tolua_S) - 1;
+
+    if (argc == 0)
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_experimental_FrameBuffer_getDefaultFBO'", nullptr);
+            return 0;
+        }
+        cocos2d::experimental::FrameBuffer* ret = cocos2d::experimental::FrameBuffer::getDefaultFBO();
+        object_to_luaval<cocos2d::experimental::FrameBuffer>(tolua_S, "ccexp.FrameBuffer",(cocos2d::experimental::FrameBuffer*)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "ccexp.FrameBuffer:getDefaultFBO",argc, 0);
+    return 0;
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_experimental_FrameBuffer_getDefaultFBO'.",&tolua_err);
+#endif
+    return 0;
+}
 int lua_cocos2dx_experimental_FrameBuffer_constructor(lua_State* tolua_S)
 {
     int argc = 0;
@@ -3527,6 +3620,7 @@ int lua_register_cocos2dx_experimental_FrameBuffer(lua_State* tolua_S)
         tolua_function(tolua_S,"create", lua_cocos2dx_experimental_FrameBuffer_create);
         tolua_function(tolua_S,"applyDefaultFBO", lua_cocos2dx_experimental_FrameBuffer_applyDefaultFBO);
         tolua_function(tolua_S,"clearAllFBOs", lua_cocos2dx_experimental_FrameBuffer_clearAllFBOs);
+        tolua_function(tolua_S,"getDefaultFBO", lua_cocos2dx_experimental_FrameBuffer_getDefaultFBO);
     tolua_endmodule(tolua_S);
     std::string typeName = typeid(cocos2d::experimental::FrameBuffer).name();
     g_luaType[typeName] = "ccexp.FrameBuffer";

@@ -66,10 +66,10 @@ bool RenderTargetBase::init(unsigned int width, unsigned int height)
     return true;
 }
 
-RenderTarget* RenderTarget::create(unsigned int width, unsigned int height, Texture2D::PixelFormat format/* = Texture2D::PixelFormat::RGBA8888*/)
+RenderTarget* RenderTarget::create(unsigned int width, unsigned int height, Texture2D::PixelFormat format, int multisamples)
 {
     auto result = new (std::nothrow) RenderTarget();
-    if(result && result->init(width, height,format))
+    if(result && result->init(width, height,format, multisamples))
     {
         result->autorelease();
         return result;
@@ -81,7 +81,7 @@ RenderTarget* RenderTarget::create(unsigned int width, unsigned int height, Text
     }
 }
 
-bool RenderTarget::init(unsigned int width, unsigned int height, Texture2D::PixelFormat format)
+bool RenderTarget::init(unsigned int width, unsigned int height, Texture2D::PixelFormat format, int multisamples)
 {
     if(!RenderTargetBase::init(width, height))
     {
@@ -94,9 +94,9 @@ bool RenderTarget::init(unsigned int width, unsigned int height, Texture2D::Pixe
     auto dataLen = width * height * 4;
     auto data = malloc(dataLen);
     if( nullptr == data) return false;
-    
+	
     memset(data, 0, dataLen);
-    if(_texture->initWithData(data, dataLen, format, width, height, Size(width, height)))
+    if(_texture->initWithData(data, dataLen, format, width, height, Size(width, height), multisamples))
     {
         _texture->autorelease();
         CC_SAFE_RETAIN(_texture);
@@ -161,7 +161,7 @@ RenderTargetRenderBuffer::~RenderTargetRenderBuffer()
 #endif
 }
 
-bool RenderTargetRenderBuffer::init(unsigned int width, unsigned int height)
+bool RenderTargetRenderBuffer::init(unsigned int width, unsigned int height, int multisamples)
 {
     if(!RenderTargetBase::init(width, height)) return false;
     GLint oldRenderBuffer(0);
@@ -171,7 +171,7 @@ bool RenderTargetRenderBuffer::init(unsigned int width, unsigned int height)
     glGenRenderbuffers(1, &_colorBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _colorBuffer);
     //todo: this could have a param
-    glRenderbufferStorage(GL_RENDERBUFFER, _format, width, height);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, multisamples, _format, width, height);
     glBindRenderbuffer(GL_RENDERBUFFER, oldRenderBuffer);
     
 #if CC_ENABLE_CACHE_TEXTURE_DATA
@@ -195,11 +195,11 @@ bool RenderTargetRenderBuffer::init(unsigned int width, unsigned int height)
 }
 
 
-RenderTargetRenderBuffer* RenderTargetRenderBuffer::create(unsigned int width, unsigned int height)
+RenderTargetRenderBuffer* RenderTargetRenderBuffer::create(unsigned int width, unsigned int height, int multisample)
 {
     auto result = new (std::nothrow) RenderTargetRenderBuffer();
     
-    if(result && result->init(width, height))
+    if(result && result->init(width, height, multisample))
     {
         result->autorelease();
         return result;
@@ -232,7 +232,7 @@ RenderTargetDepthStencil::~RenderTargetDepthStencil()
 #endif
 }
 
-bool RenderTargetDepthStencil::init(unsigned int width, unsigned int height)
+bool RenderTargetDepthStencil::init(unsigned int width, unsigned int height, int multisamples)
 {
     if(!RenderTargetBase::init(width, height)) return false;
     GLint oldRenderBuffer(0);
@@ -241,7 +241,7 @@ bool RenderTargetDepthStencil::init(unsigned int width, unsigned int height)
     //generate depthStencil
     glGenRenderbuffers(1, &_depthStencilBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _depthStencilBuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, multisamples, GL_DEPTH24_STENCIL8, width, height);
     glBindRenderbuffer(GL_RENDERBUFFER, oldRenderBuffer);
     
 #if CC_ENABLE_CACHE_TEXTURE_DATA
@@ -265,11 +265,11 @@ bool RenderTargetDepthStencil::init(unsigned int width, unsigned int height)
 }
 
 
-RenderTargetDepthStencil* RenderTargetDepthStencil::create(unsigned int width, unsigned int height)
+RenderTargetDepthStencil* RenderTargetDepthStencil::create(unsigned int width, unsigned int height, int multisamples)
 {
     auto result = new (std::nothrow) RenderTargetDepthStencil();
     
-    if(result && result->init(width, height))
+    if(result && result->init(width, height, multisamples))
     {
         result->autorelease();
         return result;
@@ -290,6 +290,7 @@ bool FrameBuffer::initWithGLView(GLView* view)
     GLint fbo;
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &fbo);
     _fbo = fbo;
+	_renderTargetCount = 1;
     return true;
 }
 
@@ -385,7 +386,7 @@ FrameBuffer::FrameBuffer()
 , _clearDepth(1.0)
 , _clearStencil(0)
 , _fbo(0)
-, _rt(nullptr)
+, _renderTargetCount(0)
 , _rtDepthStencil(nullptr)
 , _fboBindingDirty(true)
 , _isDefault(false)
@@ -394,13 +395,16 @@ FrameBuffer::FrameBuffer()
 #endif
 {
     _frameBuffers.insert(this);
+	for (int i = 0; i < MAX_RENDER_TARGET_COUNT; i++)
+		_renderTargets[i] = nullptr;
 }
 
 FrameBuffer::~FrameBuffer()
 {
     if(!isDefaultFBO())
     {
-        CC_SAFE_RELEASE_NULL(_rt);
+		for (int i = 0; i < MAX_RENDER_TARGET_COUNT; i++)
+			CC_SAFE_RELEASE_NULL(_renderTargets[i]);
         CC_SAFE_RELEASE_NULL(_rtDepthStencil);
         glDeleteFramebuffers(1, &_fbo);
         _fbo = 0;
@@ -428,7 +432,7 @@ Vec4 FrameBuffer::getTexel(int x, int y)
 /* get buffer as Image */
 Image* FrameBuffer::newImage(bool fliimage)
 {
-	auto texture = _rt->getTexture();
+	auto texture = _renderTargets[0]->getTexture();
 	const Size& s = texture->getContentSizeInPixels();
 
 	// to get the image size to save
@@ -507,7 +511,16 @@ void FrameBuffer::clearFBO()
     applyDefaultFBO();
 }
 
-void FrameBuffer::attachRenderTarget(RenderTargetBase* rt)
+RenderTargetBase* FrameBuffer::getRenderTarget(int index) const
+{
+	if (index >= 0 && index < MAX_RENDER_TARGET_COUNT)
+	{
+		return _renderTargets[index];
+	}
+	return nullptr;
+}
+
+void FrameBuffer::attachRenderTarget(RenderTargetBase* rt, int index)
 {
     if(isDefaultFBO())
     {
@@ -521,8 +534,8 @@ void FrameBuffer::attachRenderTarget(RenderTargetBase* rt)
         return;
     }
     CC_SAFE_RETAIN(rt);
-    CC_SAFE_RELEASE(_rt);
-    _rt = rt;
+    CC_SAFE_RELEASE(_renderTargets[index]);
+	_renderTargets[index] = rt;
     _fboBindingDirty = true;
 }
 
@@ -534,16 +547,51 @@ void FrameBuffer::applyFBO()
     if(_fboBindingDirty && !isDefaultFBO())
     {
         CHECK_GL_ERROR_DEBUG();
-        if(RenderTargetBase::Type::Texture2D == _rt->getType())
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _rt->getTexture()->getName(), 0);
-        else
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _rt->getBuffer());
-        CHECK_GL_ERROR_DEBUG();
+		
+		for (int i = 0; i < MAX_RENDER_TARGET_COUNT; i++)
+		{
+			auto rt = _renderTargets[i];
+
+			if (rt)
+			{
+				if (RenderTargetBase::Type::Texture2D == rt->getType())
+				{ 
+					auto texture = rt->getTexture();
+					auto textarget = texture->getMultisamples() > 0 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
+					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, textarget, texture->getName(), 0);
+				}
+				else
+				{
+					glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_RENDERBUFFER, rt->getBuffer());
+				}
+			}
+			else
+			{
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, 0, 0);
+			}
+
+			CHECK_GL_ERROR_DEBUG();
+		
+			auto a = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+			if (a == GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE)
+			{
+				a = 0;
+			}
+		}
+
+		_renderTargetCount = 0;
+		for (int i = 0; i < MAX_RENDER_TARGET_COUNT; i++)
+		{
+			if (_renderTargets[i])
+				_renderTargetCount++;
+			else
+				break;
+		}
+
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, nullptr == _rtDepthStencil ? 0 : _rtDepthStencil->getBuffer());
         CHECK_GL_ERROR_DEBUG();
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, nullptr == _rtDepthStencil ? 0 : _rtDepthStencil->getBuffer());
         CHECK_GL_ERROR_DEBUG();
-        CCLOG("FBO is %d _fbo %d color, %d ds", _fbo, RenderTargetBase::Type::Texture2D == _rt->getType() ? _rt->getTexture()->getName() : _rt->getBuffer(), _rtDepthStencil->getBuffer());
         _fboBindingDirty = false;
     }
     if(GL_FRAMEBUFFER_COMPLETE != glCheckFramebufferStatus(GL_FRAMEBUFFER))
@@ -551,6 +599,9 @@ void FrameBuffer::applyFBO()
         CCLOG("FrameBuffer Status Error %d", (int)glCheckFramebufferStatus(GL_FRAMEBUFFER));
     }
     CHECK_GL_ERROR_DEBUG();
+
+	const GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_COLOR_ATTACHMENT2_EXT, GL_COLOR_ATTACHMENT3_EXT };
+	glDrawBuffers(_renderTargetCount, buffers);
 }
 
 void FrameBuffer::attachDepthStencilTarget(RenderTargetDepthStencil* rt)

@@ -166,5 +166,5 @@ function Camera:render(scene, flag, lightNode, frameBuffer)
         self.dirty = false
     end
     
-    self.cppCamera:render(scene, flag, nil, frameBuffer)
+    self.cppCamera:render(scene, flag, nil, frameBuffer and frameBuffer.cObj)
 end

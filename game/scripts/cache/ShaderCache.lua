@@ -24,8 +24,12 @@ function getShader(vsName, psName)
     local psSource = getShaderSource('shaders/'..psName..'.ps')
     
     local shader = cc.GLProgram:createWithByteArrays(vsSource, psSource)
-    shader:retain()
-    shaders[key] = shader
+    if shader then
+        shader:retain()
+        shaders[key] = shader
+    else
+        return
+    end
     return shader
 end
 

@@ -228,7 +228,7 @@ public:
      * @js NA
      * @lua NA
      */
-    bool initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, const Size& contentSize);
+    bool initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, const Size& contentSize, int multisamples = 0);
 
     /** Initializes with mipmaps. 
      
@@ -238,7 +238,7 @@ public:
      @param pixelsWide The image width.
      @param pixelsHigh The image height.
      */
-    bool initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh);
+    bool initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, int multisamples = 0);
 
     /** Update with texture data.
      
@@ -406,6 +406,8 @@ public:
     /** Get a shader program from the texture.*/
     GLProgram* getGLProgram() const;
 
+	/**Get multisamples count**/
+	int getMultisamples() { return _multisamples; }
 
 public:
     /** Get pixel info map, the key-value pairs is PixelFormat and PixelFormatInfo.*/
@@ -532,6 +534,9 @@ protected:
 
     /** shader program used by drawAtPoint and drawInRect */
     GLProgram* _shaderProgram;
+
+	/** count of multisamples**/
+	int _multisamples;
 
     static const PixelFormatInfoMap _pixelFormatInfoTables;
 

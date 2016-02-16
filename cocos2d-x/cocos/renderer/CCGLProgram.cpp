@@ -123,6 +123,7 @@ const char* GLProgram::ATTRIBUTE_NAME_BLEND_WEIGHT = "a_blendWeight";
 const char* GLProgram::ATTRIBUTE_NAME_BLEND_INDEX = "a_blendIndex";
 
 static const char * COCOS2D_SHADER_UNIFORMS =
+		"#version 330\n"
 		"uniform mat4 CC_MMatrix;\n"
 		"uniform mat4 CC_VMatrix;\n"
         "uniform mat4 CC_PMatrix;\n"
