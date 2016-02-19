@@ -17,8 +17,6 @@ function BattleScreen:init()
     self:scheduleUpdate()
     self:initUI()
     
-    
-    
     self.arena = Arena:create()
     WithoutDebug(function()
         self.arena:createTerrain()
