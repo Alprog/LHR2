@@ -3,6 +3,30 @@
   <Content ctype="GameProjectContent">
     <Content>
       <Animation Duration="24" Speed="0.4000">
+        <Timeline ActionTag="-1453609064" Property="Position">
+          <PointFrame FrameIndex="0" X="0.0000" Y="0.0000">
+            <EasingData Type="0" />
+          </PointFrame>
+          <PointFrame FrameIndex="24" X="0.0000" Y="0.0000">
+            <EasingData Type="0" />
+          </PointFrame>
+        </Timeline>
+        <Timeline ActionTag="-1453609064" Property="Scale">
+          <ScaleFrame FrameIndex="0" X="1366.0000" Y="-768.0000">
+            <EasingData Type="0" />
+          </ScaleFrame>
+          <ScaleFrame FrameIndex="24" X="1024.0000" Y="-768.0000">
+            <EasingData Type="0" />
+          </ScaleFrame>
+        </Timeline>
+        <Timeline ActionTag="-1453609064" Property="RotationSkew">
+          <ScaleFrame FrameIndex="0" X="0.0000" Y="0.0000">
+            <EasingData Type="0" />
+          </ScaleFrame>
+          <ScaleFrame FrameIndex="24" X="0.0000" Y="0.0000">
+            <EasingData Type="0" />
+          </ScaleFrame>
+        </Timeline>
         <Timeline ActionTag="-358569704" Property="Position">
           <PointFrame FrameIndex="0" X="668.7197" Y="370.3953">
             <EasingData Type="0" />
@@ -189,6 +213,17 @@
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition />
             <PreSize X="0.0000" Y="0.0000" />
+          </AbstractNodeData>
+          <AbstractNodeData Name="3DScreen" ActionTag="-1453609064" Tag="1000" IconVisible="False" LeftMargin="-0.5000" RightMargin="-0.5000" TopMargin="-0.5000" BottomMargin="-0.5000" ctype="SpriteObjectData">
+            <Size X="1.0000" Y="1.0000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <Position />
+            <Scale ScaleX="1366.0000" ScaleY="-768.0000" />
+            <CColor A="255" R="255" G="255" B="255" />
+            <PrePosition />
+            <PreSize X="0.0000" Y="0.0000" />
+            <FileData Type="Normal" Path="empty.png" Plist="" />
+            <BlendFunc Src="770" Dst="771" />
           </AbstractNodeData>
           <AbstractNodeData Name="MenuButton" ActionTag="-358569704" UserData="ESCAPE" Tag="34" IconVisible="False" LeftMargin="548.7197" RightMargin="-668.7197" TopMargin="-370.3953" BottomMargin="250.3953" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="90" Scale9Height="98" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
             <Size X="120.0000" Y="120.0000" />

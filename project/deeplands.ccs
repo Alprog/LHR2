@@ -4,28 +4,7 @@
     <Group ctype="ResourceGroup">
       <RootFolder Name=".">
         <Folder Name="tiles">
-          <Image Name="block_small.png" />
-          <Image Name="block_wall.png" />
-          <Image Name="block_wall_simple.png" />
-          <Image Name="bricks.png" />
-          <Image Name="grass_ground.png" />
-          <Image Name="grass_ground_flip.png" />
-          <Image Name="grass_ground_leaf.png" />
-          <Image Name="grass_ground_long.png" />
-          <Image Name="grass_ground_small.png" />
-          <Image Name="grass_ground_small_flip.png" />
-          <Image Name="grass_wall.png" />
-          <Image Name="grass_wall_small.png" />
           <Image Name="ground.png" />
-          <Image Name="ground_grate.png" />
-          <Image Name="ground_light_1.png" />
-          <Image Name="ground_light_2.png" />
-          <Image Name="ground_light_3.png" />
-          <Image Name="ground_simple.png" />
-          <Image Name="ground_simple_light_1.png" />
-          <Image Name="ground_simple_light_2.png" />
-          <Image Name="ground_simple_light_3.png" />
-          <Image Name="ground_stone.png" />
         </Folder>
         <Project Name="Tiles.csd" Type="Scene" />
         <Folder Name="scenes">
@@ -63,9 +42,9 @@
           <Image Name="marine.png" />
         </Folder>
         <Folder Name="fonts">
-          <TTF Name="Marker Felt.ttf" />
           <TTF Name="BoggerSans.ttf" />
         </Folder>
+        <Image Name="empty.png" />
       </RootFolder>
     </Group>
   </SolutionFolder>
