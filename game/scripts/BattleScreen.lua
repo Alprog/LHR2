@@ -16,7 +16,9 @@ function BattleScreen:init()
     
     self:scheduleUpdate()
     self:initUI()
-   
+    
+    
+    
     self.arena = Arena:create()
     WithoutDebug(function()
         self.arena:createTerrain()
@@ -92,8 +94,7 @@ end
 
 function BattleScreen:onKeyPress(keyCode)
     if keyCode == cc.KeyCode.KEY_F2 then
-        local visible = self.maskSprite:isVisible()
-        self.maskSprite:setVisible(not visible)
+        self:setMaskSprite()
     elseif keyCode == cc.KeyCode.KEY_SPACE then
         self.battle:selectNext()
         self:updateUI()
@@ -127,19 +128,24 @@ end
 function BattleScreen:onResize(size)
     Scene.onResize(self, size)
     self.arena:onResize(size)
-    self:SetMaskSprite()
+    self:setMaskSprite()
 end
 
-function BattleScreen:SetMaskSprite()
+local maskIndex = 1
+
+function BattleScreen:setMaskSprite()
     if self.maskSprite then
         self.maskSprite:removeFromParent()
     end
     
-    local texture = self.arena.frameBuffer:getTexture()
+    local texture = self.arena.frameBuffer:getTexture(maskIndex)
+    maskIndex = maskIndex + 1
+    if maskIndex > 3 then maskIndex = 1 end
+    
     self.maskSprite = cc.Sprite:createWithTexture(texture)
     self.maskSprite:setTexture(nil)
     
-    local program = getShader('default3d', 'defaultMS')
+    local program = getShader('default3d', 'default')
     local state = cc.GLProgramState:create(program)
     state:setUniformTexture('mainTexture', texture)
     self.maskSprite:setGLProgramState(state)

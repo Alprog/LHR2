@@ -414,6 +414,9 @@ public:
     static const PixelFormatInfoMap& getPixelFormatInfoMap();
     
 private:
+
+	GLuint getTarget() { return _target; }
+
     /**
     * A struct for storing 9-patch image capInsets.
     */
@@ -537,6 +540,9 @@ protected:
 
 	/** count of multisamples**/
 	int _multisamples;
+
+	/** GL_TEXTURE_2D or GL_TEXTURE_2D_MULTISAMPLE **/
+	GLuint _target;
 
     static const PixelFormatInfoMap _pixelFormatInfoTables;
 

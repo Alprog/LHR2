@@ -34,7 +34,7 @@ function Unit:loadModel(name)
     
     local silhouette = model:copy()
     silhouette:setShaders('fatskin', 'uColor')
-    silhouette:setUniformVec4('color', Vec(1, 1, 1, 1))
+    silhouette:setUniformVec4('u_color', Vec(1, 1, 1, 1))
     silhouette:setVisible(false)
     
     silhouette:setLocalZOrder(1)
@@ -50,7 +50,7 @@ function Unit:loadModel(name)
     mask:setShaders('skin', 'uColor')
     local r, g, b = indexToBytes(self.index)
     local color = Vec(r / 255, g / 255, b / 255, 1)
-    mask:setUniformVec4('color', color)
+    mask:setUniformVec4('u_color', color)
     mask:setCameraMask(MASK_LAYER)
     mask:setForceDepthWrite(true)
         
@@ -67,7 +67,7 @@ function Unit:setHighlight(color)
         self.silhouette:setVisible(false)
     else
         self.silhouette:setVisible(true)
-        self.silhouette:setUniformVec4('color', color)
+        self.silhouette:setUniformVec4('u_color', color)
     end
 end
 

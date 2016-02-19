@@ -19,8 +19,13 @@ function Arena:init()
     self.tasks = TaskManager:create()
     self:initCamera()
     
-    self.frameBuffer = FrameBuffer:create(1, true, 4)
+    
+    --local ground = getTexture('tiles/ground.png')
+    
+    self.frameBuffer = FrameBuffer:create(3, true)
     self.maskFrameBuffer = FrameBuffer:create(1, false, 0, 4)
+    
+    --theApp.director:getTextureCache():reloadTexture('tiles/ground.png')
     
     --self:getDefaultCamera():setVisible(false)
 end
@@ -54,7 +59,7 @@ function Arena:renderMask()
     local rect = cc.rect(pos.x / k - 1, pos.y / k - 1, 3, 3)
     
     --self.camera:setScissors(rect)
-    self.camera:render(self, MASK_LAYER, self.lightNode, self.maskFrameBuffer)
+    --self.camera:render(self, MASK_LAYER, self.lightNode, self.maskFrameBuffer)
 end
 
 function Arena:checkHover()

@@ -5,12 +5,12 @@ attribute vec4 a_blendIndex;
 attribute vec3 a_normal;
 attribute vec2 a_texCoord;
 
+varying vec2 v_texCoord;
+varying vec3 v_normal;
+
 const int SKINNING_JOINT_COUNT = 60;
 uniform vec4 u_matrixPalette[SKINNING_JOINT_COUNT * 3];
 uniform float fatness;
-
-varying vec2 v_texCoord;
-varying vec4 v_pos;
 
 vec4 Skinned(vec4 vec)
 {
@@ -71,5 +71,5 @@ void main()
     gl_Position = pos;
 	
 	v_texCoord = vec2(a_texCoord.x, 1 - a_texCoord.y);
-	v_pos = gl_Position;
+    v_normal = a_normal;
 }
