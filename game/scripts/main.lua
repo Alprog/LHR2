@@ -28,6 +28,7 @@ require 'EffectLab.lua'
 require 'Carcase.lua'
 require 'Vector.lua'
 require 'ParticlesEffect.lua'
+require 'Projector.lua'
 
 require 'ContentPipeline.lua'
 contentPipeline()

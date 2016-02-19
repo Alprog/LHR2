@@ -23,7 +23,7 @@ function Arena:init()
     --local ground = getTexture('tiles/ground.png')
     
     self.frameBuffer = FrameBuffer:create(3, true)
-    self.maskFrameBuffer = FrameBuffer:create(1, false, 0, 4)
+    self.maskFrameBuffer = FrameBuffer:create(1, true, 0, 4)
     
     --theApp.director:getTextureCache():reloadTexture('tiles/ground.png')
     
@@ -59,7 +59,7 @@ function Arena:renderMask()
     local rect = cc.rect(pos.x / k - 1, pos.y / k - 1, 3, 3)
     
     --self.camera:setScissors(rect)
-    --self.camera:render(self, MASK_LAYER, self.lightNode, self.maskFrameBuffer)
+    self.camera:render(self, MASK_LAYER, self.lightNode, self.maskFrameBuffer)
 end
 
 function Arena:checkHover()

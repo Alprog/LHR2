@@ -43,8 +43,12 @@ function BattleScreen:init()
     
     battle:spawnTeams()
     
-    self.screen = self:getChildByName('3DScreen')
-    
+    self.projector = Projector:create(self:getChildByName('3DScreen'))
+    self.projector:addSource(self.arena.frameBuffer, 1)
+    self.projector:addSource(self.arena.frameBuffer, 2)
+    self.projector:addSource(self.arena.frameBuffer, 3)
+    self.projector:addSource(self.arena.maskFrameBuffer, 1)
+       
     local touchBeginPoint = nil
     
     local function onTouchBegan(touch, event)
@@ -89,7 +93,7 @@ end
 
 function BattleScreen:onKeyPress(keyCode)
     if keyCode == cc.KeyCode.KEY_F2 then
-        self:switchScreenTexture()
+        self.projector:nextSource()
     elseif keyCode == cc.KeyCode.KEY_SPACE then
         self.battle:selectNext()
         self:updateUI()
@@ -123,21 +127,7 @@ end
 function BattleScreen:onResize(size)
     Scene.onResize(self, size)
     self.arena:onResize(size)
-    self:updateScreenTexture()
-end
-
-function BattleScreen:updateScreenTexture()
-    self.screen.index = self.screen.index or 1
-    local texture = self.arena.frameBuffer:getTexture(self.screen.index)
-    self.screen:setTexture(texture)   
-end
-
-function BattleScreen:switchScreenTexture()
-    self.screen.index = self.screen.index + 1
-    if self.screen.index > 3 then 
-        self.screen.index = 1 
-    end
-    self:updateScreenTexture()
+    self.projector:refreshScreen()
 end
 
 function BattleScreen:destroy()
