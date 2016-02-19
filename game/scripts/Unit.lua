@@ -33,7 +33,7 @@ function Unit:loadModel(name)
     --model:setShaders('skin', 'default')
     
     local silhouette = model:copy()
-    silhouette:setShaders('fatskin', 'uColor')
+    silhouette:setShaders('fatskin', 'uColor3d')
     silhouette:setUniformVec4('u_color', Vec(1, 1, 1, 1))
     silhouette:setVisible(false)
     

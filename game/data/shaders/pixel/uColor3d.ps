@@ -1,0 +1,12 @@
+
+uniform vec4 u_color;
+varying vec3 v_normal;
+
+#include "utils.inc"
+
+void main()
+{
+    vec3 albedo = u_color.rgb;
+    
+    outputGBuffer(albedo, v_normal);
+}

@@ -30,9 +30,10 @@ function Projector:refreshScreen()
     if source then
         
         local texture = source.frameBuffer:getTexture(source.index)
-        self.screen:setTexture(texture)
         
-        local shader = getShader('default', source.shaderName)
-        --self.screen:setGLProgram(shader)
+        local shader = getShader('sprite', source.shaderName)
+        local state = cc.GLProgramState:create(shader)
+        state:setUniformTexture('mainTexture', texture)
+        self.screen:setGLProgramState(state)
     end
 end

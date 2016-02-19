@@ -463,8 +463,7 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
     for(const auto pass : technique->_passes)
     {
         auto programState = pass->getGLProgramState();
-        programState->setUniformVec4("u_color", color);
-
+        
         if (_skin)
             programState->setUniformVec4v("u_matrixPalette", (GLsizei)_skin->getMatrixPaletteSize(), _skin->getMatrixPalette());
 
