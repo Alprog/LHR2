@@ -497,7 +497,7 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
 		{
 			_prevMatrixPallete = new (std::nothrow) Vec4[paletteSize];
 		}
-		*_prevMatrixPallete = *matrixPalette;
+		memcpy(_prevMatrixPallete, matrixPalette, paletteSize * sizeof(Vec4));
 	}
 
 	_prevMVP = MVP;
