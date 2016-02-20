@@ -485,20 +485,23 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
 		auto matrixPalette = _skin->getMatrixPalette();
 		auto paletteSize = (GLsizei)_skin->getMatrixPaletteSize();
 
+		auto s0 = (frame % 2) * paletteSize;
+		auto s1 = (1 - frame % 2) * paletteSize;
+
 		auto technique = _material->_currentTechnique;
 		for (const auto pass : technique->_passes)
 		{
 			auto programState = pass->getGLProgramState();
 
 			programState->setUniformVec4v("u_matrixPalette", paletteSize, matrixPalette);
-			programState->setUniformVec4v("u_prevMatrixPalette", paletteSize, isPrevValid ? _prevMatrixPalette : matrixPalette);
+			programState->setUniformVec4v("u_prevMatrixPalette", paletteSize, isPrevValid ? _prevMatrixPalette + s0 : matrixPalette);
 		}
 
 		if (_prevMatrixPalette == nullptr)
 		{
-			_prevMatrixPalette = new (std::nothrow) Vec4[paletteSize];
+			_prevMatrixPalette = new (std::nothrow) Vec4[paletteSize * 2];
 		}
-		memcpy(_prevMatrixPalette, matrixPalette, paletteSize * sizeof(Vec4));
+		memcpy(_prevMatrixPalette + s1, matrixPalette, paletteSize * sizeof(Vec4));
 	}
 
 	_prevMVP = MVP;

@@ -11,7 +11,7 @@ uniform sampler2D mainTexture;
 void main()
 {	
     vec3 albedo = texture2D(mainTexture, v_texCoord).rgb;
-    vec2 velocity = (v_screenPos - v_prevScreenPos);
+    vec2 velocity = (v_screenPos - v_prevScreenPos) * 10;
     
     outputGBuffer(albedo, v_normal, velocity);
 }
