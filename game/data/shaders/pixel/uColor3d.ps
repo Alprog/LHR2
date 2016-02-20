@@ -1,12 +1,16 @@
 
-uniform vec4 u_color;
 varying vec3 v_normal;
+varying vec2 v_screenPos;
+varying vec2 v_prevScreenPos;
+
+uniform vec4 u_color;
 
 #include "utils.inc"
 
 void main()
 {
     vec3 albedo = u_color.rgb;
+    vec2 velocity = v_screenPos - v_prevScreenPos;
     
-    outputGBuffer(albedo, v_normal);
+    outputGBuffer(albedo, v_normal, velocity);
 }

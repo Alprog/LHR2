@@ -219,6 +219,10 @@ protected:
     Material*           _material;
     AABB                _aabb;
     std::function<void()> _visibleChanged;
+
+	unsigned int       _prevFrame;
+	Mat4               _prevMVP;
+	Vec4*              _prevMatrixPallete;
 };
 
 // end of 3d group

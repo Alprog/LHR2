@@ -129,9 +129,14 @@ Mesh::Mesh()
 , _visibleChanged(nullptr)
 , _blendDirty(true)
 , _force2DQueue(false)
+
+, _prevFrame()
+, _prevMVP()
+, _prevMatrixPallete(nullptr)
 {
     
 }
+
 Mesh::~Mesh()
 {
     CC_SAFE_RELEASE(_texture);
@@ -139,6 +144,7 @@ Mesh::~Mesh()
     CC_SAFE_RELEASE(_meshIndexData);
     CC_SAFE_RELEASE(_material);
     CC_SAFE_RELEASE(_glProgramState);
+	CC_SAFE_DELETE_ARRAY(_prevMatrixPallete);
 }
 
 GLuint Mesh::getVertexBuffer() const
@@ -425,13 +431,13 @@ Material* Mesh::getMaterial() const
 
 void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, uint32_t flags, unsigned int lightMask, const Vec4& color, bool forceDepthWrite)
 {
-    if (! isVisible())
-        return;
+	if (!isVisible())
+		return;
 
-    bool isTransparent = (_isTransparent || color.w < 1.f);
-    float globalZ = isTransparent ? 0 : globalZOrder;
-    if (isTransparent)
-        flags |= Node::FLAGS_RENDER_AS_3D;
+	bool isTransparent = (_isTransparent || color.w < 1.f);
+	float globalZ = isTransparent ? 0 : globalZOrder;
+	if (isTransparent)
+		flags |= Node::FLAGS_RENDER_AS_3D;
 
 	if (!forceDepthWrite)
 		_material->getStateBlock()->setDepthWrite(false);
@@ -439,42 +445,64 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
 		_material->getStateBlock()->setDepthWrite(true);
 
 
-    _meshCommand.init(globalZ,
-                      _material,
-                      getVertexBuffer(),
-                      getIndexBuffer(),
-                      getPrimitiveType(),
-                      getIndexFormat(),
-                      getIndexCount(),
-                      transform,
-                      flags);
+	_meshCommand.init(globalZ,
+		_material,
+		getVertexBuffer(),
+		getIndexBuffer(),
+		getPrimitiveType(),
+		getIndexFormat(),
+		getIndexCount(),
+		transform,
+		flags);
 
 
 
-    _meshCommand.setSkipBatching(isTransparent);
-    _meshCommand.setTransparent(isTransparent);
-    _meshCommand.set3D(!_force2DQueue);
-    _material->getStateBlock()->setBlend(_force2DQueue || isTransparent);
+	_meshCommand.setSkipBatching(isTransparent);
+	_meshCommand.setTransparent(isTransparent);
+	_meshCommand.set3D(!_force2DQueue);
+	_material->getStateBlock()->setBlend(_force2DQueue || isTransparent);
 
-    // set default uniforms for Mesh
-    // 'u_color' and others
+	// set default uniforms for Mesh
+	// 'u_color' and others
+
+	auto director = Director::getInstance();
+
+	auto frame = director->getTotalFrames();
+	auto MVP = director->getVPMat().viewProjection * transform;
 	
-    auto technique = _material->_currentTechnique;
-    for(const auto pass : technique->_passes)
-    {
-        auto programState = pass->getGLProgramState();
-        
-        if (_skin)
-            programState->setUniformVec4v("u_matrixPalette", (GLsizei)_skin->getMatrixPaletteSize(), _skin->getMatrixPalette());
+	auto isPrevValid = (frame - _prevFrame) == 1;
 
-		const auto lightNode = Camera::getLightNode();
-		if (lightNode && lightNode->getChildrenCount() > 0)
+	auto technique = _material->_currentTechnique;
+	for (const auto pass : technique->_passes)
+	{
+		auto programState = pass->getGLProgramState();
+		programState->setUniformMat4("prevMVP", isPrevValid ? _prevMVP : MVP);
+	}
+
+	if (_skin)
+	{
+		auto matrixPalette = _skin->getMatrixPalette();
+		auto paletteSize = (GLsizei)_skin->getMatrixPaletteSize();
+
+		auto technique = _material->_currentTechnique;
+		for (const auto pass : technique->_passes)
 		{
-			setLightUniforms(pass, lightNode, color, lightMask);
-		}
-            
-    }
+			auto programState = pass->getGLProgramState();
 
+			programState->setUniformVec4v("u_matrixPalette", paletteSize, matrixPalette);
+			programState->setUniformVec4v("u_prevMatrixPalette", paletteSize, isPrevValid ? _prevMatrixPallete : matrixPalette);
+		}
+
+		if (_prevMatrixPallete == nullptr)
+		{
+			_prevMatrixPallete = new (std::nothrow) Vec4[paletteSize];
+		}
+		*_prevMatrixPallete = *matrixPalette;
+	}
+
+	_prevMVP = MVP;
+	_prevFrame = frame;
+	
     renderer->addCommand(&_meshCommand);
 }
 

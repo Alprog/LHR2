@@ -1,6 +1,9 @@
 
 varying vec2 v_texCoord;
 varying vec3 v_normal;
+varying vec2 v_screenPos;
+varying vec2 v_prevScreenPos;
+
 uniform sampler2D mainTexture;
 
 #include "utils.inc"
@@ -8,6 +11,7 @@ uniform sampler2D mainTexture;
 void main()
 {	
     vec3 albedo = texture2D(mainTexture, v_texCoord).rgb;
-   
-    outputGBuffer(albedo, v_normal);
+    vec2 velocity = (v_screenPos - v_prevScreenPos) / 10;
+    
+    outputGBuffer(albedo, v_normal, velocity);
 }
