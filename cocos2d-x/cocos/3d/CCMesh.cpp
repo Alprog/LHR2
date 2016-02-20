@@ -132,7 +132,7 @@ Mesh::Mesh()
 
 , _prevFrame()
 , _prevMVP()
-, _prevMatrixPallete(nullptr)
+, _prevMatrixPalette(nullptr)
 {
     
 }
@@ -144,7 +144,7 @@ Mesh::~Mesh()
     CC_SAFE_RELEASE(_meshIndexData);
     CC_SAFE_RELEASE(_material);
     CC_SAFE_RELEASE(_glProgramState);
-	CC_SAFE_DELETE_ARRAY(_prevMatrixPallete);
+	CC_SAFE_DELETE_ARRAY(_prevMatrixPalette);
 }
 
 GLuint Mesh::getVertexBuffer() const
@@ -469,9 +469,10 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
 
 	auto frame = director->getTotalFrames();
 	auto MVP = director->getVPMat().viewProjection * transform;
-	
-	auto isPrevValid = (frame - _prevFrame) == 1;
+	auto deltaTime = director->getDeltaTime();
 
+	auto isPrevValid = (frame - _prevFrame) == 1;
+	
 	auto technique = _material->_currentTechnique;
 	for (const auto pass : technique->_passes)
 	{
@@ -490,14 +491,14 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
 			auto programState = pass->getGLProgramState();
 
 			programState->setUniformVec4v("u_matrixPalette", paletteSize, matrixPalette);
-			programState->setUniformVec4v("u_prevMatrixPalette", paletteSize, isPrevValid ? _prevMatrixPallete : matrixPalette);
+			//programState->setUniformVec4v("u_prevMatrixPalette", paletteSize, isPrevValid ? _prevMatrixPalette : matrixPalette);
 		}
 
-		if (_prevMatrixPallete == nullptr)
+		if (_prevMatrixPalette == nullptr)
 		{
-			_prevMatrixPallete = new (std::nothrow) Vec4[paletteSize];
+			_prevMatrixPalette = new (std::nothrow) Vec4[paletteSize];
 		}
-		memcpy(_prevMatrixPallete, matrixPalette, paletteSize * sizeof(Vec4));
+		memcpy(_prevMatrixPalette, matrixPalette, paletteSize * sizeof(Vec4));
 	}
 
 	_prevMVP = MVP;

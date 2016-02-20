@@ -222,7 +222,7 @@ protected:
 
 	unsigned int       _prevFrame;
 	Mat4               _prevMVP;
-	Vec4*              _prevMatrixPallete;
+	Vec4*              _prevMatrixPalette;
 };
 
 // end of 3d group

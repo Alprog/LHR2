@@ -158,6 +158,14 @@ function Camera:refreshView()
     self.cppCamera:setRotationQuat(self.rotation)
 end
 
+function Camera:setScissors(rect)
+    if rect then
+        self.cppCamera:setScissors(rect)
+    else
+        self.cppCamera:setScissors(cc.rect(0, 0, 0, 0))
+    end
+end
+
 function Camera:render(scene, flag, lightNode, frameBuffer)
     flag = flag or cc.CameraFlag.DEFAULT
     

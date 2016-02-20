@@ -25,11 +25,11 @@ function BattleScreen:init()
    
     local battle = Battle:create()
     battle:setTeamCount(2)
-    for i = 1, 1 do
+    for i = 1, 6 do
         local mechanic = Mechanic:create()
         table.insert(battle.teams[2], mechanic)
     end
-    for i = 1, 1 do
+    for i = 1, 6 do
         local mechanic = Mechanic:create()
         table.insert(battle.teams[1], mechanic)
     end
