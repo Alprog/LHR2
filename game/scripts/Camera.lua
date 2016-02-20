@@ -166,7 +166,7 @@ function Camera:setScissors(rect)
     end
 end
 
-function Camera:render(scene, flag, lightNode, frameBuffer)
+function Camera:render(scene, flag, frameBuffer)
     flag = flag or cc.CameraFlag.DEFAULT
     
     if self.dirty then
@@ -174,5 +174,5 @@ function Camera:render(scene, flag, lightNode, frameBuffer)
         self.dirty = false
     end
     
-    self.cppCamera:render(scene, flag, nil, frameBuffer and frameBuffer.cObj)
+    self.cppCamera:render(scene, flag, frameBuffer and frameBuffer.cObj)
 end

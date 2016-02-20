@@ -22,12 +22,13 @@ function Arena:init()
     
     --local ground = getTexture('tiles/ground.png')
     
-    self.frameBuffer = FrameBuffer:create(3, true)
-    self.maskFrameBuffer = FrameBuffer:create(1, true, 0, 4)
+    self.gBuffer = FrameBuffer:create(3, true)
+    self.maskFrameBuffer = FrameBuffer:create(1, true, 0, 4, true)
     
     --theApp.director:getTextureCache():reloadTexture('tiles/ground.png')
     
     --self:getDefaultCamera():setVisible(false)
+    self.hoverEnabled = true
 end
 
 function Arena:initCamera()
@@ -45,11 +46,15 @@ function Arena:initCamera()
 end
 
 function Arena:update(deltaTime)
+    
     self.tasks:update(deltaTime)
     self.camera:update(deltaTime)
     
     self:renderMask()
-    self:checkHover()
+    if self.hoverEnabled then
+        self:checkHover()
+    end
+    
     self:sortUnits()
 end
 
@@ -58,8 +63,8 @@ function Arena:renderMask()
     local k = self.maskFrameBuffer.downScale
     local rect = cc.rect(pos.x / k - 1, pos.y / k - 1, 3, 3)
     
-    --self.camera:setScissors(rect)
-    self.camera:render(self, MASK_LAYER, self.lightNode, self.maskFrameBuffer)
+    self.camera:setScissors(rect)
+    self.camera:render(self, MASK_LAYER, self.maskFrameBuffer)
 end
 
 function Arena:checkHover()
@@ -92,7 +97,7 @@ end
 
 function Arena:onResize(size)
     self:setTransformUpdated()
-    self.frameBuffer:resize(size)
+    self.gBuffer:resize(size)
     self.maskFrameBuffer:resize(size)
     self.camera.dirty = true
 end
@@ -108,14 +113,13 @@ function Arena:onTouchEnded(touch, event)
     end
     
     local pos = touch:getLocation()    
-    local object = self:getObjectFromScreenPos(pos)
     
-    if object then
-        if object.isUnit then
-            self.battle:selectPlayer(object)
+    if self.hoverObject then
+        if self.hoverObject.isUnit then
+            self.battle:selectPlayer(self.hoverObject)
             self.battle.scene:updateUI()
         else
-            self.battle:onCellClick(object)
+            self.battle:onCellClick(self.hoverObject)
         end    
     end
     
@@ -248,5 +252,13 @@ function Arena:addObstacles()
 end
 
 function Arena:render()
-    self.camera:render(self, cc.CameraFlag.DEFAULT, nil, self.frameBuffer) 
+    
+    self.camera:setScissors(nil)
+    self.camera:render(self, cc.CameraFlag.DEFAULT, self.gBuffer)
+
+    
+    
+    --[[self.camera:render(self, cc.CameraFlag.Ambient, self.frameBuffer)
+    self.camera:render(self, cc.CameraFlag.Lights, self.frameBuffer)
+    self.camera:render(self, cc.CameraFlag.Transparents, self.frameBuffer)]]
 end

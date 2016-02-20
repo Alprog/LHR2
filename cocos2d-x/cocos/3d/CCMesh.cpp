@@ -491,7 +491,7 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
 			auto programState = pass->getGLProgramState();
 
 			programState->setUniformVec4v("u_matrixPalette", paletteSize, matrixPalette);
-			//programState->setUniformVec4v("u_prevMatrixPalette", paletteSize, isPrevValid ? _prevMatrixPalette : matrixPalette);
+			programState->setUniformVec4v("u_prevMatrixPalette", paletteSize, isPrevValid ? _prevMatrixPalette : matrixPalette);
 		}
 
 		if (_prevMatrixPalette == nullptr)

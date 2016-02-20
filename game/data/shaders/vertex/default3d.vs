@@ -12,7 +12,7 @@ varying vec2 v_prevScreenPos;
 
 uniform mat4 prevMVP;
 
-void main()    
+void main()
 {                            
     vec4 pos = CC_MVPMatrix * a_position;
     vec4 prevPos = prevMVP * a_position;

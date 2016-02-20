@@ -200,7 +200,7 @@ public:
      */
     float getDepthInView(const Mat4& transform) const;
     
-	void render(Node* scene, CameraFlag flag = CameraFlag::DEFAULT, Node* lightNode = nullptr, experimental::FrameBuffer* frameBuffer = nullptr);
+	void render(Node* scene, CameraFlag flag = CameraFlag::DEFAULT, experimental::FrameBuffer* frameBuffer = nullptr);
     
     /**
      * Get the frustum's far plane.
@@ -217,7 +217,6 @@ public:
      */
     static const Camera* getVisitingCamera() { return _visitingCamera; }
 	static const Node* getVisitingScene() { return _visitingScene; }
-	static const Node* getLightNode() { return _lightNode; }
 
     /**
      * Get the default camera of the current running scene.
@@ -297,7 +296,6 @@ protected:
 
     static Camera* _visitingCamera;
 	static Node* _visitingScene;
-	static Node* _lightNode;
 	
     CameraBackgroundBrush* _clearBrush; //brush used to clear the back ground
     

@@ -41,7 +41,6 @@ NS_CC_BEGIN
 
 Camera* Camera::_visitingCamera = nullptr;
 Node* Camera::_visitingScene = nullptr;
-Node* Camera::_lightNode = nullptr;
 
 Camera* _defaultCamera = nullptr;
 
@@ -348,7 +347,7 @@ float Camera::getDepthInView(const Mat4& transform) const
     return depth;
 }
 
-void Camera::render(Node* scene, CameraFlag flag, Node* lightNode, experimental::FrameBuffer* frameBuffer)
+void Camera::render(Node* scene, CameraFlag flag, experimental::FrameBuffer* frameBuffer)
 {
 	auto director = Director::getInstance();
 	auto renderer = director->getRenderer();
@@ -364,7 +363,6 @@ void Camera::render(Node* scene, CameraFlag flag, Node* lightNode, experimental:
 
 	setCameraFlag(flag);
 	_visitingCamera = this;
-	_lightNode = lightNode;
 
 	director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);
 	director->loadVPMatrices(getViewMatrix(), getProjectionMatrix());
@@ -380,7 +378,6 @@ void Camera::render(Node* scene, CameraFlag flag, Node* lightNode, experimental:
 	director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);
 
 	_visitingCamera = nullptr;
-	_lightNode = nullptr;
 }
 
 void Camera::clearBackground()

@@ -25,11 +25,11 @@ function BattleScreen:init()
    
     local battle = Battle:create()
     battle:setTeamCount(2)
-    for i = 1, 6 do
+    for i = 1, 26 do
         local mechanic = Mechanic:create()
         table.insert(battle.teams[2], mechanic)
     end
-    for i = 1, 6 do
+    for i = 1, 26 do
         local mechanic = Mechanic:create()
         table.insert(battle.teams[1], mechanic)
     end
@@ -44,9 +44,9 @@ function BattleScreen:init()
     battle:spawnTeams()
     
     self.projector = Projector:create(self:getChildByName('3DScreen'))
-    self.projector:addSource(self.arena.frameBuffer, 1)
-    self.projector:addSource(self.arena.frameBuffer, 2)
-    self.projector:addSource(self.arena.frameBuffer, 3)
+    self.projector:addSource(self.arena.gBuffer, 1)
+    self.projector:addSource(self.arena.gBuffer, 2)
+    self.projector:addSource(self.arena.gBuffer, 3)
     self.projector:addSource(self.arena.maskFrameBuffer, 1)
        
     local touchBeginPoint = nil
@@ -94,6 +94,8 @@ end
 function BattleScreen:onKeyPress(keyCode)
     if keyCode == cc.KeyCode.KEY_F2 then
         self.projector:nextSource()
+    elseif keyCode == cc.KeyCode.KEY_F3 then
+        self.arena.hoverEnabled = not self.arena.hoverEnabled
     elseif keyCode == cc.KeyCode.KEY_SPACE then
         self.battle:selectNext()
         self:updateUI()

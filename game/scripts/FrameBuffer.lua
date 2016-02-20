@@ -1,11 +1,12 @@
 
 FrameBuffer = Class('FrameBuffer')
 
-function FrameBuffer:init(rtCount, depthStencil, multiSamples, downScale)
+function FrameBuffer:init(rtCount, depthStencil, multiSamples, downScale, isBuffer)
     self.rtCount = rtCount
     self.depthStencil = depthStencil
     self.multiSamples = multiSamples or 0
     self.downScale = downScale or 1
+    self.isBuffer = isBuffer
     self:resize(theApp.windowSize)
 end
 
@@ -22,8 +23,13 @@ function FrameBuffer:setSize(width, height)
     
     self.cObj = ccexp.FrameBuffer:create(1, width, height)   
     for i = 1, self.rtCount do
-        local rt = ccexp.RenderTarget:create(width, height, cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A8888, self.multiSamples)
-        self.cObj:attachRenderTarget(rt, i - 1)
+        if self.isBuffer then
+            local rt = ccexp.RenderTargetRenderBuffer:create(width, height, self.multiSamples)
+            self.cObj:attachRenderTarget(rt, i - 1)
+        else
+            local rt = ccexp.RenderTarget:create(width, height, cc.TEXTURE2_D_PIXEL_FORMAT_BGR_A8888, self.multiSamples)
+            self.cObj:attachRenderTarget(rt, i - 1)
+        end
     end
     if self.depthStencil then
         self.rtDS = ccexp.RenderTargetDepthStencil:create(width, height, self.multiSamples)

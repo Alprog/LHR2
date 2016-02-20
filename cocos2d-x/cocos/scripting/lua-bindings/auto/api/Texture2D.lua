@@ -190,6 +190,12 @@
 -- @return Texture2D#Texture2D self (return value: cc.Texture2D)
         
 --------------------------------
+-- Get multisamples count*
+-- @function [parent=#Texture2D] getMultisamples 
+-- @param self
+-- @return int#int ret (return value: int)
+        
+--------------------------------
 --  sets the default pixel format for UIImagescontains alpha channel.<br>
 -- param format<br>
 -- If the UIImage contains alpha channel, then the options are:<br>

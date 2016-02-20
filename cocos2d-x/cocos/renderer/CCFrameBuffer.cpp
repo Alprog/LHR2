@@ -141,7 +141,7 @@ RenderTarget::~RenderTarget()
 
 RenderTargetRenderBuffer::RenderTargetRenderBuffer()
 : _colorBuffer(0)
-, _format(GL_RGBA4)
+, _format(GL_RGBA8)
 #if CC_ENABLE_CACHE_TEXTURE_DATA
 , _reBuildRenderBufferListener(nullptr)
 #endif
@@ -415,18 +415,47 @@ FrameBuffer::~FrameBuffer()
     }
 }
 
+GLuint pboids[2] = {0, 0};
+int pboIndex = 0;
+
 Vec4 FrameBuffer::getTexel(int x, int y)
 {
+	if (pboids[0] == 0)
+	{
+		glGenBuffers(2, pboids);
+		for (int i = 0; i < 2; i++)
+		{
+			glBindBuffer(GL_PIXEL_PACK_BUFFER, pboids[i]);
+			glBufferData(GL_PIXEL_PACK_BUFFER, 4, 0, GL_STREAM_READ);
+		}
+		glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+	}
+
 	GLint oldFBO;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 
 	uint8_t texel[4];
-	glReadPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, texel);
+	glBindBuffer(GL_PIXEL_PACK_BUFFER, pboids[pboIndex]);
+	glReadPixels(x, y, 1, 1, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+
+	glBindBuffer(GL_PIXEL_PACK_BUFFER, pboids[1 - pboIndex]);
+
+	uint8_t* src = (uint8_t*)glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY);
+	if (src)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			texel[i] = src[i];
+		}
+		glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+	}
+	glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, oldFBO);
+	pboIndex = 1 - pboIndex;
 
-	return Vec4(texel[0], texel[1], texel[2], texel[3]);
+	return Vec4(texel[2], texel[1], texel[0], texel[3]);
 }
 
 /* get buffer as Image */

@@ -28,15 +28,14 @@ function Unit:loadModel(name)
     local model = Model:create(fileName)
     model:setForceDepthWrite(true)
     model:play('idle', true)
-    model:setRotation3D(Vec(0, 0, 0))
-    
+    model:setRotation3D(Vec(90, 0, 0))
     --model:setShaders('skin', 'default')
     
     local silhouette = model:copy()
     silhouette:setShaders('fatskin', 'uColor3d')
     silhouette:setUniformVec4('u_color', Vec(1, 1, 1, 1))
     silhouette:setVisible(false)
-    
+       
     silhouette:setLocalZOrder(1)
     silhouette:setForceDepthWrite(false)
     model:setLocalZOrder(2)
@@ -53,12 +52,20 @@ function Unit:loadModel(name)
     mask:setUniformVec4('u_color', color)
     mask:setCameraMask(MASK_LAYER)
     mask:setForceDepthWrite(true)
-        
+    
     self:addChild(model)
     self:addChild(silhouette)
     self:addChild(mask)
     
+    silhouette:setRotation3D(Vec(0, 0, 0))
+    mask:setRotation3D(Vec(0, 0, 0))
+    
+    --mask:setCameraMask(128)
+    --silhouette:setCameraMask(128)
+    --model:setCameraMask(128)
+    
     self.model = model
+    
     return model
 end
 

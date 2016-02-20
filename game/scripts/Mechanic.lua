@@ -12,9 +12,7 @@ end
 function Mechanic:initGfx()
     local model = self:loadModel('soldier')
     self.gfx = model
-    local scale = 1
-    self:setScale(scale, 0.9)
-    self:setScaleZ(scale)
+    self:setScale(1)
     
     local children = self.gfx:getChildren()
     --self.gfx:setTexture(getTexture('models/soldier4.png'))

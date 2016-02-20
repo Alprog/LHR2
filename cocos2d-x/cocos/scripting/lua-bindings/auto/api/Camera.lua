@@ -16,7 +16,6 @@
 -- @param self
 -- @param #cc.Node scene
 -- @param #int flag
--- @param #cc.Node lightNode
 -- @param #cc.experimental::FrameBuffer frameBuffer
 -- @return Camera#Camera self (return value: cc.Camera)
         
@@ -240,12 +239,6 @@
 -- @function [parent=#Camera] getVisitingCamera 
 -- @param self
 -- @return Camera#Camera ret (return value: cc.Camera)
-        
---------------------------------
--- 
--- @function [parent=#Camera] getLightNode 
--- @param self
--- @return Node#Node ret (return value: cc.Node)
         
 --------------------------------
 -- 

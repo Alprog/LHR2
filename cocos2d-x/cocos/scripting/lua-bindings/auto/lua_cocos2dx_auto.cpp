@@ -1750,6 +1750,53 @@ int lua_cocos2dx_Texture2D_setMaxS(lua_State* tolua_S)
 
     return 0;
 }
+int lua_cocos2dx_Texture2D_getMultisamples(lua_State* tolua_S)
+{
+    int argc = 0;
+    cocos2d::Texture2D* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"cc.Texture2D",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (cocos2d::Texture2D*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_cocos2dx_Texture2D_getMultisamples'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_Texture2D_getMultisamples'", nullptr);
+            return 0;
+        }
+        int ret = cobj->getMultisamples();
+        tolua_pushnumber(tolua_S,(lua_Number)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "cc.Texture2D:getMultisamples",argc, 0);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_Texture2D_getMultisamples'.",&tolua_err);
+#endif
+
+    return 0;
+}
 int lua_cocos2dx_Texture2D_setDefaultAlphaPixelFormat(lua_State* tolua_S)
 {
     int argc = 0;
@@ -1895,6 +1942,7 @@ int lua_register_cocos2dx_Texture2D(lua_State* tolua_S)
         tolua_function(tolua_S,"getGLProgram",lua_cocos2dx_Texture2D_getGLProgram);
         tolua_function(tolua_S,"hasMipmaps",lua_cocos2dx_Texture2D_hasMipmaps);
         tolua_function(tolua_S,"setMaxS",lua_cocos2dx_Texture2D_setMaxS);
+        tolua_function(tolua_S,"getMultisamples",lua_cocos2dx_Texture2D_getMultisamples);
         tolua_function(tolua_S,"setDefaultAlphaPixelFormat", lua_cocos2dx_Texture2D_setDefaultAlphaPixelFormat);
         tolua_function(tolua_S,"getDefaultAlphaPixelFormat", lua_cocos2dx_Texture2D_getDefaultAlphaPixelFormat);
     tolua_endmodule(tolua_S);
@@ -74303,42 +74351,19 @@ int lua_cocos2dx_Camera_render(lua_State* tolua_S)
     {
         cocos2d::Node* arg0;
         cocos2d::CameraFlag arg1;
-        cocos2d::Node* arg2;
+        cocos2d::experimental::FrameBuffer* arg2;
 
         ok &= luaval_to_object<cocos2d::Node>(tolua_S, 2, "cc.Node",&arg0, "cc.Camera:render");
 
         ok &= luaval_to_int32(tolua_S, 3,(int *)&arg1, "cc.Camera:render");
 
-        ok &= luaval_to_object<cocos2d::Node>(tolua_S, 4, "cc.Node",&arg2, "cc.Camera:render");
+        ok &= luaval_to_object<cocos2d::experimental::FrameBuffer>(tolua_S, 4, "ccexp.FrameBuffer",&arg2, "cc.Camera:render");
         if(!ok)
         {
             tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_Camera_render'", nullptr);
             return 0;
         }
         cobj->render(arg0, arg1, arg2);
-        lua_settop(tolua_S, 1);
-        return 1;
-    }
-    if (argc == 4) 
-    {
-        cocos2d::Node* arg0;
-        cocos2d::CameraFlag arg1;
-        cocos2d::Node* arg2;
-        cocos2d::experimental::FrameBuffer* arg3;
-
-        ok &= luaval_to_object<cocos2d::Node>(tolua_S, 2, "cc.Node",&arg0, "cc.Camera:render");
-
-        ok &= luaval_to_int32(tolua_S, 3,(int *)&arg1, "cc.Camera:render");
-
-        ok &= luaval_to_object<cocos2d::Node>(tolua_S, 4, "cc.Node",&arg2, "cc.Camera:render");
-
-        ok &= luaval_to_object<cocos2d::experimental::FrameBuffer>(tolua_S, 5, "ccexp.FrameBuffer",&arg3, "cc.Camera:render");
-        if(!ok)
-        {
-            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_Camera_render'", nullptr);
-            return 0;
-        }
-        cobj->render(arg0, arg1, arg2, arg3);
         lua_settop(tolua_S, 1);
         return 1;
     }
@@ -75782,40 +75807,6 @@ int lua_cocos2dx_Camera_getVisitingCamera(lua_State* tolua_S)
 #endif
     return 0;
 }
-int lua_cocos2dx_Camera_getLightNode(lua_State* tolua_S)
-{
-    int argc = 0;
-    bool ok  = true;
-
-#if COCOS2D_DEBUG >= 1
-    tolua_Error tolua_err;
-#endif
-
-#if COCOS2D_DEBUG >= 1
-    if (!tolua_isusertable(tolua_S,1,"cc.Camera",0,&tolua_err)) goto tolua_lerror;
-#endif
-
-    argc = lua_gettop(tolua_S) - 1;
-
-    if (argc == 0)
-    {
-        if(!ok)
-        {
-            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_Camera_getLightNode'", nullptr);
-            return 0;
-        }
-        const cocos2d::Node* ret = cocos2d::Camera::getLightNode();
-        object_to_luaval<cocos2d::Node>(tolua_S, "cc.Node",(cocos2d::Node*)ret);
-        return 1;
-    }
-    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "cc.Camera:getLightNode",argc, 0);
-    return 0;
-#if COCOS2D_DEBUG >= 1
-    tolua_lerror:
-    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_Camera_getLightNode'.",&tolua_err);
-#endif
-    return 0;
-}
 int lua_cocos2dx_Camera_create(lua_State* tolua_S)
 {
     int argc = 0;
@@ -76111,7 +76102,6 @@ int lua_register_cocos2dx_Camera(lua_State* tolua_S)
         tolua_function(tolua_S,"initPerspective",lua_cocos2dx_Camera_initPerspective);
         tolua_function(tolua_S,"createOrthographic", lua_cocos2dx_Camera_createOrthographic);
         tolua_function(tolua_S,"getVisitingCamera", lua_cocos2dx_Camera_getVisitingCamera);
-        tolua_function(tolua_S,"getLightNode", lua_cocos2dx_Camera_getLightNode);
         tolua_function(tolua_S,"create", lua_cocos2dx_Camera_create);
         tolua_function(tolua_S,"createPerspective", lua_cocos2dx_Camera_createPerspective);
         tolua_function(tolua_S,"getDefaultViewport", lua_cocos2dx_Camera_getDefaultViewport);
