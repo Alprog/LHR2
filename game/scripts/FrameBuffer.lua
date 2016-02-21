@@ -17,15 +17,15 @@ function FrameBuffer:init(parent, rtCount, depthStencil, multiSamples, downScale
 end
 
 function FrameBuffer:resize(size)
-    self:setSiz(size.width / self.downScale, size.height / self.downScale)
+    self:setSize(size.width / self.downScale, size.height / self.downScale)
 end
 
-function FrameBuffer:setSiz(width, height)
+function FrameBuffer:setSize(width, height)
     if self.width == width and self.height == height then
         return
     end
     
-    self:setSize(width, height)
+    ccexp.FrameBuffer.setSize(self, width, height)
     
     for i = 1, self.rtCount do
         if self.isBuffer then

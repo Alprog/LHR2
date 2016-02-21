@@ -8,6 +8,7 @@ require 'Class.lua'
 require 'Utils.lua'
 require 'App.lua'
 require 'SceneManager.lua'
+require 'PostProcessor.lua'
 require 'Scene.lua'
 
 require 'Input.lua'
@@ -40,6 +41,7 @@ local function main()
     
     theApp = App:create("Little Humble RPG 2")
     theSceneManager = theApp.sceneManager
+    thePostProcessor = theApp.postProcessor
     
     local screen = nil
     if theApp.settings.splash then

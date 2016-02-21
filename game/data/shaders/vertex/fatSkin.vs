@@ -10,8 +10,8 @@ void main()
 	float shift = (0.003 * (pos.z + 1));
 	pos += normal * shift;
 	
-    v_screenPos = pos.xy;
-    v_prevScreenPos = pos.xy;
+    v_screenPos = pos.xy / pos.w;
+    v_prevScreenPos = v_screenPos;
     gl_Position = pos;
 	
 	v_texCoord = vec2(a_texCoord.x, 1 - a_texCoord.y);

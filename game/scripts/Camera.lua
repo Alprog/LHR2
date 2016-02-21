@@ -56,7 +56,10 @@ function Camera:rotationUpdate(deltaTime)
     local pitch = 0
     local roll = 0
     
-    local k = math.pi * deltaTime / 32
+    local k = math.pi * deltaTime / 4
+    if Input.keys[cc.KeyCode.KEY_SHIFT] then
+        k = k * 4
+    end
     
     if Input.keys[cc.KeyCode.KEY_LEFT_ARROW] then
         yaw = yaw + k

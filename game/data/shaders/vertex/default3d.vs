@@ -16,8 +16,8 @@ void main()
 {                            
     vec4 pos = CC_MVPMatrix * a_position;
     vec4 prevPos = prevMVP * a_position;
-    v_screenPos = pos.xy;
-    v_prevScreenPos = prevPos.xy;
+    v_screenPos = pos.xy / pos.w;
+    v_prevScreenPos = prevPos.xy / prevPos.w;
     gl_Position = pos;
     
     v_texCoord = vec2(a_texCoord.x, 1 - a_texCoord.y);

@@ -44,6 +44,7 @@ function BattleScreen:init()
     battle:spawnTeams()
     
     self.projector = Projector:create(self:getChildByName('3DScreen'))
+    self.projector:addSource(self.arena.frameBuffer, 1)
     self.projector:addSource(self.arena.gBuffer, 1)
     self.projector:addSource(self.arena.gBuffer, 2)
     self.projector:addSource(self.arena.gBuffer, 3)
@@ -96,6 +97,8 @@ function BattleScreen:onKeyPress(keyCode)
         self.projector:nextSource()
     elseif keyCode == cc.KeyCode.KEY_F3 then
         self.arena.hoverEnabled = not self.arena.hoverEnabled
+    elseif keyCode == cc.KeyCode.KEY_F4 then
+        thePostProcessor.disabled = not thePostProcessor.disabled
     elseif keyCode == cc.KeyCode.KEY_SPACE then
         self.battle:selectNext()
         self:updateUI()

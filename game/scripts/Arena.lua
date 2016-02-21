@@ -21,6 +21,7 @@ function Arena:init()
         
     self.gBuffer = FrameBuffer:create(self, 3, true)
     self.maskFrameBuffer = FrameBuffer:create(self, 1, true, 0, 4, true)
+    self.frameBuffer = FrameBuffer:create(self, 1, false)
 
     self.hoverEnabled = true
 end
@@ -93,6 +94,7 @@ function Arena:onResize(size)
     self:setTransformUpdated()
     self.gBuffer:resize(size)
     self.maskFrameBuffer:resize(size)
+    self.frameBuffer:resize(size)
     self.camera.dirty = true
 end
 
@@ -236,7 +238,8 @@ function Arena:render()
     self.camera:setScissors(nil)
     self.camera:render(self, cc.CameraFlag.DEFAULT, self.gBuffer)
 
-    
+    thePostProcessor:setup(self.gBuffer, self.frameBuffer)
+    thePostProcessor:perform()
     
     --[[self.camera:render(self, cc.CameraFlag.Ambient, self.frameBuffer)
     self.camera:render(self, cc.CameraFlag.Lights, self.frameBuffer)

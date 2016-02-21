@@ -59,6 +59,7 @@ function App:run(sceneManager)
     self.director:setAnimationInterval(1.0 / 30)
     
     self.sceneManager = SceneManager:create(self)
+    self.postProcessor = PostProcessor:create(self)
     self.scene = cc.Scene:create()
     self.scene:addChild(self.sceneManager.root)
     self.scene:retain()
@@ -114,6 +115,10 @@ function App:setCursorVisible(value)
     self.view:setCursorVisible(value)
 end
 
+function App:getDeltaTime()
+    return self.director:getDeltaTime()
+end
+
 function App:close()
-    cc.Director:getInstance():endToLua()
+    self.director:endToLua()
 end
