@@ -1,13 +1,15 @@
 
-Camera = Class('Camera')
+Camera = Class('Camera', cc.Camera)
+
+function Camera:instantinate()
+    return Camera.__create()
+end
 
 function Camera:init(space)
     self.position = Vector(0, 0, 0)
     self.rotation = cc.quaternion(0, 0, 0, 1)
     self.perspective = 0
-
-    self.cppCamera = cc.Camera:create()
-    space:addChild(self.cppCamera)
+    space:addChild(self)
     
     self.dirty = true
 end
@@ -54,7 +56,7 @@ function Camera:rotationUpdate(deltaTime)
     local pitch = 0
     local roll = 0
     
-    local k = math.pi * deltaTime / 4
+    local k = math.pi * deltaTime / 32
     
     if Input.keys[cc.KeyCode.KEY_LEFT_ARROW] then
         yaw = yaw + k
@@ -153,17 +155,14 @@ function Camera:refreshView()
     --pass:setOrthographic(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0.1, 1000)
       
     local nativePosition = self.position + multVecQuat(Vector(0, 0, 0), self.rotation)
-    self.cppCamera:setPerspective(10, aspect, 0.1, 1000)
-    self.cppCamera:setPosition3D(nativePosition)
-    self.cppCamera:setRotationQuat(self.rotation)
+    cc.Camera.setPerspective(self, 10, aspect, 0.1, 1000)
+    cc.Node.setPosition3D(self, nativePosition)
+    cc.Node.setRotationQuat(self, self.rotation)
 end
 
 function Camera:setScissors(rect)
-    if rect then
-        self.cppCamera:setScissors(rect)
-    else
-        self.cppCamera:setScissors(cc.rect(0, 0, 0, 0))
-    end
+    rect = rect or cc.rect(0, 0, 0, 0)
+    cc.Camera.setScissors(self, rect)
 end
 
 function Camera:render(scene, flag, frameBuffer)
@@ -174,5 +173,5 @@ function Camera:render(scene, flag, frameBuffer)
         self.dirty = false
     end
     
-    self.cppCamera:render(scene, flag, frameBuffer and frameBuffer.cObj)
+    cc.Camera.render(self, scene, flag, frameBuffer)
 end

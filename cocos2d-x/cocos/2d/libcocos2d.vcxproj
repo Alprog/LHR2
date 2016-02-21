@@ -430,6 +430,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\sqlite3\libraries\win32\*.*" "$(OutDir)
     <ClCompile Include="..\base\CCProperties.cpp" />
     <ClCompile Include="..\base\ccRandom.cpp" />
     <ClCompile Include="..\base\CCRef.cpp" />
+    <ClCompile Include="..\base\CCRefContainer.cpp" />
     <ClCompile Include="..\base\CCScheduler.cpp" />
     <ClCompile Include="..\base\CCScriptSupport.cpp" />
     <ClCompile Include="..\base\CCTouch.cpp" />
@@ -1016,6 +1017,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\sqlite3\libraries\win32\*.*" "$(OutDir)
     <ClInclude Include="..\base\CCProtocols.h" />
     <ClInclude Include="..\base\ccRandom.h" />
     <ClInclude Include="..\base\CCRef.h" />
+    <ClInclude Include="..\base\CCRefContainer.h" />
     <ClInclude Include="..\base\CCRefPtr.h" />
     <ClInclude Include="..\base\CCScheduler.h" />
     <ClInclude Include="..\base\CCScriptSupport.h" />

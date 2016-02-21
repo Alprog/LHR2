@@ -2,6 +2,7 @@
 #include "cocos2d.h"
 #include "CCProtectedNode.h"
 #include "CCAsyncTaskPool.h"
+#include "CCRefContainer.h"
 #include "tolua_fix.h"
 #include "LuaBasicConversions.h"
 
@@ -3071,6 +3072,53 @@ int lua_cocos2dx_Node_removeComponent(lua_State* tolua_S)
 #if COCOS2D_DEBUG >= 1
     tolua_lerror:
     tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_Node_removeComponent'.",&tolua_err);
+#endif
+
+    return 0;
+}
+int lua_cocos2dx_Node_getUserObject(lua_State* tolua_S)
+{
+    int argc = 0;
+    cocos2d::Node* cobj = nullptr;
+    bool ok  = true;
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"cc.Node",0,&tolua_err)) goto tolua_lerror;
+#endif
+    cobj = (cocos2d::Node*)tolua_tousertype(tolua_S,1,0);
+#if COCOS2D_DEBUG >= 1
+    if (!cobj)
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_cocos2dx_Node_getUserObject'", nullptr);
+        return 0;
+    }
+#endif
+    argc = lua_gettop(tolua_S)-1;
+    do{
+        if (argc == 0) {
+            const cocos2d::Ref* ret = cobj->getUserObject();
+            object_to_luaval<cocos2d::Ref>(tolua_S, "cc.Ref",(cocos2d::Ref*)ret);
+            return 1;
+        }
+    }while(0);
+    ok  = true;
+    do{
+        if (argc == 0) {
+            cocos2d::Ref* ret = cobj->getUserObject();
+            object_to_luaval<cocos2d::Ref>(tolua_S, "cc.Ref",(cocos2d::Ref*)ret);
+            return 1;
+        }
+    }while(0);
+    ok  = true;
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n",  "cc.Node:getUserObject",argc, 0);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_Node_getUserObject'.",&tolua_err);
 #endif
 
     return 0;
@@ -9752,6 +9800,7 @@ int lua_register_cocos2dx_Node(lua_State* tolua_S)
         tolua_function(tolua_S,"new",lua_cocos2dx_Node_constructor);
         tolua_function(tolua_S,"addChild",lua_cocos2dx_Node_addChild);
         tolua_function(tolua_S,"removeComponent",lua_cocos2dx_Node_removeComponent);
+        tolua_function(tolua_S,"getUserObject",lua_cocos2dx_Node_getUserObject);
         tolua_function(tolua_S,"getDescription",lua_cocos2dx_Node_getDescription);
         tolua_function(tolua_S,"setRotationSkewY",lua_cocos2dx_Node_setRotationSkewY);
         tolua_function(tolua_S,"setOpacityModifyRGB",lua_cocos2dx_Node_setOpacityModifyRGB);
@@ -92395,6 +92444,111 @@ int lua_register_cocos2dx_Component(lua_State* tolua_S)
     g_typeCast["Component"] = "cc.Component";
     return 1;
 }
+
+int lua_cocos2dx_RefContainer_add(lua_State* tolua_S)
+{
+    int argc = 0;
+    cocos2d::RefContainer* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"cc.RefContainer",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (cocos2d::RefContainer*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_cocos2dx_RefContainer_add'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 1) 
+    {
+        cocos2d::Ref* arg0;
+
+        ok &= luaval_to_object<cocos2d::Ref>(tolua_S, 2, "cc.Ref",&arg0, "cc.RefContainer:add");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_RefContainer_add'", nullptr);
+            return 0;
+        }
+        cobj->add(arg0);
+        lua_settop(tolua_S, 1);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "cc.RefContainer:add",argc, 1);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_RefContainer_add'.",&tolua_err);
+#endif
+
+    return 0;
+}
+int lua_cocos2dx_RefContainer_create(lua_State* tolua_S)
+{
+    int argc = 0;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertable(tolua_S,1,"cc.RefContainer",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    argc = lua_gettop(tolua_S) - 1;
+
+    if (argc == 0)
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_RefContainer_create'", nullptr);
+            return 0;
+        }
+        cocos2d::RefContainer* ret = cocos2d::RefContainer::create();
+        object_to_luaval<cocos2d::RefContainer>(tolua_S, "cc.RefContainer",(cocos2d::RefContainer*)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "cc.RefContainer:create",argc, 0);
+    return 0;
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_RefContainer_create'.",&tolua_err);
+#endif
+    return 0;
+}
+static int lua_cocos2dx_RefContainer_finalize(lua_State* tolua_S)
+{
+    printf("luabindings: finalizing LUA object (RefContainer)");
+    return 0;
+}
+
+int lua_register_cocos2dx_RefContainer(lua_State* tolua_S)
+{
+    tolua_usertype(tolua_S,"cc.RefContainer");
+    tolua_cclass(tolua_S,"RefContainer","cc.RefContainer","cc.Ref",nullptr);
+
+    tolua_beginmodule(tolua_S,"RefContainer");
+        tolua_function(tolua_S,"add",lua_cocos2dx_RefContainer_add);
+        tolua_function(tolua_S,"create", lua_cocos2dx_RefContainer_create);
+    tolua_endmodule(tolua_S);
+    std::string typeName = typeid(cocos2d::RefContainer).name();
+    g_luaType[typeName] = "cc.RefContainer";
+    g_typeCast["RefContainer"] = "cc.RefContainer";
+    return 1;
+}
 TOLUA_API int register_all_cocos2dx(lua_State* tolua_S)
 {
 	tolua_open(tolua_S);
@@ -92597,6 +92751,7 @@ TOLUA_API int register_all_cocos2dx(lua_State* tolua_S)
 	lua_register_cocos2dx_SplitRows(tolua_S);
 	lua_register_cocos2dx_Follow(tolua_S);
 	lua_register_cocos2dx_Animate(tolua_S);
+	lua_register_cocos2dx_RefContainer(tolua_S);
 	lua_register_cocos2dx_ShuffleTiles(tolua_S);
 	lua_register_cocos2dx_CameraBackgroundSkyBoxBrush(tolua_S);
 	lua_register_cocos2dx_ProgressTimer(tolua_S);

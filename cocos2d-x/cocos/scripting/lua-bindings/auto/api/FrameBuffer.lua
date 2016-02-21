@@ -145,6 +145,14 @@
         
 --------------------------------
 -- 
+-- @function [parent=#FrameBuffer] setSize 
+-- @param self
+-- @param #int width
+-- @param #int height
+-- @return experimental::FrameBuffer#experimental::FrameBuffer self (return value: cc.experimental::FrameBuffer)
+        
+--------------------------------
+-- 
 -- @function [parent=#FrameBuffer] getOrCreateDefaultFBO 
 -- @param self
 -- @param #cc.GLView glView

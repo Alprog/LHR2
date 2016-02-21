@@ -1256,4 +1256,9 @@
 -- @field [parent=#cc] Component#Component Component preloaded module
 
 
+--------------------------------------------------------
+-- the cc RefContainer
+-- @field [parent=#cc] RefContainer#RefContainer RefContainer preloaded module
+
+
 return nil

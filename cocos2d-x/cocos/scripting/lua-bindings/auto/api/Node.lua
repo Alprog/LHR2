@@ -25,6 +25,13 @@
 -- @return bool#bool ret (return value: bool)
 
 --------------------------------
+-- @overload self         
+-- @overload self         
+-- @function [parent=#Node] getUserObject
+-- @param self
+-- @return Ref#Ref ret (return value: cc.Ref)
+
+--------------------------------
 -- Gets the description string. It makes debugging easier.<br>
 -- return A string<br>
 -- js NA<br>

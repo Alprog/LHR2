@@ -4,11 +4,15 @@ require 'AnimateAction.lua'
 
 Model = Derive("Model", cc.Sprite3D)
 
-function Model:instantinate(modelPath, effectPath)
+function Model:instantinate(modelPath, actionSchemePath, passive)
     return Model.__create(modelPath)
 end
 
-function Model:init(modelPath, actionSchemePath)
+function Model:init(modelPath, actionSchemePath, passive)
+    if passive then
+        return
+    end
+    
     if actionSchemePath == nil then
         actionSchemePath = changeExtension(modelPath, 'scheme')
     end
@@ -23,17 +27,16 @@ function Model:init(modelPath, actionSchemePath)
     self.fadeTimes = {}
     self.defaultFadeTime = 0.15
     self.curAnimate = nil
-    self:setCullFaceEnabled(true)
     
     self:scheduleUpdate()
+    self:enableNodeEvents()
 end
 
 function Model:copy()
-    local copy = Model:create(self.modelPath)
+    local copy = Model:create(self.modelPath, nil, true)
     copy:setPosition3D(self:getPosition3D())
     copy:setRotation3D(self:getRotation3D())
     copy:shareSkin(self)
-    copy:unscheduleUpdate()
     return copy
 end
 
@@ -179,4 +182,11 @@ function Model:clearEffects()
             child:kill()
         end
     end
+end
+
+function Model:onCleanup()
+    for animate in iter(self.animates) do
+        animate:release()
+    end
+    self.animates = {}
 end

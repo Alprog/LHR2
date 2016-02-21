@@ -18,16 +18,10 @@ function Arena:init()
     
     self.tasks = TaskManager:create()
     self:initCamera()
-    
-    
-    --local ground = getTexture('tiles/ground.png')
-    
-    self.gBuffer = FrameBuffer:create(3, true)
-    self.maskFrameBuffer = FrameBuffer:create(1, true, 0, 4, true)
-    
-    --theApp.director:getTextureCache():reloadTexture('tiles/ground.png')
-    
-    --self:getDefaultCamera():setVisible(false)
+        
+    self.gBuffer = FrameBuffer:create(self, 3, true)
+    self.maskFrameBuffer = FrameBuffer:create(self, 1, true, 0, 4, true)
+
     self.hoverEnabled = true
 end
 
@@ -161,20 +155,6 @@ function Arena:spawn(unit)
     
     unit.arena = self
     self.unitLayer:addChild(unit)
-end
-
-function Arena:destroy()
-    local children = self:getChildren()
-    for i = 1, #children do
-        local child = children[i]
-        if child.destroy then
-            child:destroy()
-        end
-    end
-    if self.maskFrameBuffer then
-        self.maskFrameBuffer:destroy()
-        self.maskFrameBuffer = nil
-    end
 end
 
 function Arena:addObstacles()

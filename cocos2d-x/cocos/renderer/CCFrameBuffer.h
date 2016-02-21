@@ -177,6 +177,7 @@ public:
     bool isDefaultFBO() const { return _isDefault; }
     unsigned int getWidth() const { return _width; }
     unsigned int getHeight() const { return _height; }
+	void setSize(int width, int height) { _width = width; _height = height; }
 
 CC_CONSTRUCTOR_ACCESS:
     FrameBuffer();

@@ -357,6 +357,8 @@ bool GLViewImpl::initWithRect(const std::string& viewName, Rect rect, float fram
 
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
+	glfwSwapInterval(1);
+
     int needWidth = rect.size.width * _frameZoomFactor;
     int neeHeight = rect.size.height * _frameZoomFactor;
 	

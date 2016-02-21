@@ -20,7 +20,6 @@ function SceneManager:_killTopScene()
     local scene = self:getTopScene()
     if scene then
         scene:onExit()
-        scene:destroy()
         scene:removeFromParent()
         self.scenes[#self.scenes] = nil
     end

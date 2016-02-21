@@ -133,3 +133,12 @@ function Node:createChild()
     self:addChild(child)
     return child
 end
+
+function Node:keepObject(object)
+    local container = self:getUserObject()
+    if not container then
+        container = cc.RefContainer:create()
+        self:setUserObject(container)
+    end
+    container:add(object)
+end

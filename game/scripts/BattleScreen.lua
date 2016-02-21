@@ -25,11 +25,11 @@ function BattleScreen:init()
    
     local battle = Battle:create()
     battle:setTeamCount(2)
-    for i = 1, 26 do
+    for i = 1, 6 do
         local mechanic = Mechanic:create()
         table.insert(battle.teams[2], mechanic)
     end
-    for i = 1, 26 do
+    for i = 1, 6 do
         local mechanic = Mechanic:create()
         table.insert(battle.teams[1], mechanic)
     end
@@ -130,11 +130,6 @@ function BattleScreen:onResize(size)
     Scene.onResize(self, size)
     self.arena:onResize(size)
     self.projector:refreshScreen()
-end
-
-function BattleScreen:destroy()
-    self.arena:destroy()
-    self.arena = nil
 end
 
 function BattleScreen:updateUI()
