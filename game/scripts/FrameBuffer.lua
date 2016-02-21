@@ -32,7 +32,8 @@ function FrameBuffer:setSize(width, height)
             local rt = ccexp.RenderTargetRenderBuffer:create(width, height, self.multiSamples)
             self:attachRenderTarget(rt, i - 1)
         else
-            local rt = ccexp.RenderTarget:create(width, height, cc.TEXTURE2_D_PIXEL_FORMAT_BGR_A8888, self.multiSamples)
+            local format = i ~= 3 and cc.TEXTURE2_D_PIXEL_FORMAT_BGR_A8888 or cc.TEXTURE2_D_PIXEL_FORMAT_RG16F
+            local rt = ccexp.RenderTarget:create(width, height, format, self.multiSamples)
             self:attachRenderTarget(rt, i - 1)
         end
     end

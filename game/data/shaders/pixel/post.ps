@@ -9,34 +9,22 @@ uniform float velocityScale;
 void main()
 {	
     vec4 tex = texture2D(velocityTexture, v_texCoord);
-    vec2 velocity = tex.rg;
-    velocity.x = pow(velocity.x, 1.0 / 4.0);
-    velocity.y = pow(velocity.y, 1.0 / 4.0);
-    velocity = (velocity * 2 - 1) * velocityScale / 2;
+    vec2 velocity = tex.rg * velocityScale / 2; 
     
-    if (tex.b < 0.5)
-        velocity = vec2(0, 0);
-    
+    velocity = normalize(velocity) * clamp(length(velocity), 0, 0.15);
     
     float len = length(velocity / texelSize);
     int count = clamp(int(len), 1, 15);
     
-    vec4 color;
-    if (count < 2)
+    vec4 color = texture2D(colorTexture, v_texCoord);
+    for (int i = 1; i < count; i++) 
     {
-        color = texture2D(colorTexture, v_texCoord);
+        vec2 offset = velocity * (float(i) / float(count) - 0.5);
+        vec2 pos = v_texCoord - offset;
+        color += texture2D(colorTexture, pos);
     }
-    else
-    {
-        color = vec4(0, 0, 0, 0);
-        for (int i = 0; i < count; i++) 
-        {
-            vec2 offset = velocity * (float(i) / float(count) - 0.5);
-            color += texture2D(colorTexture, v_texCoord + offset);
-        }
-        color /= count;
-    }
-    
+    color /= count;
+
     gl_FragColor = color;
 }
 

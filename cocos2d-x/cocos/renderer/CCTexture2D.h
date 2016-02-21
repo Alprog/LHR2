@@ -114,9 +114,12 @@ public:
         ATC_EXPLICIT_ALPHA,
         //! ATITC-compresed texture: ATC_INTERPOLATED_ALPHA
         ATC_INTERPOLATED_ALPHA,
-        //! Default texture format: AUTO
-        DEFAULT = AUTO,
-        
+		// 16 bit per channel:
+		RG16F,
+		RGB16F,
+		RGBA16F,
+		//! Default texture format: AUTO
+		DEFAULT = AUTO,
         NONE = -1
     };
     

@@ -71,6 +71,11 @@ namespace {
         PixelFormatInfoMapValue(Texture2D::PixelFormat::I8, Texture2D::PixelFormatInfo(GL_LUMINANCE, GL_LUMINANCE, GL_UNSIGNED_BYTE, 8, false, false)),
         PixelFormatInfoMapValue(Texture2D::PixelFormat::AI88, Texture2D::PixelFormatInfo(GL_LUMINANCE_ALPHA, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, 16, false, true)),
         
+		PixelFormatInfoMapValue(Texture2D::PixelFormat::RG16F, Texture2D::PixelFormatInfo(GL_RG16F, GL_RG, GL_HALF_FLOAT, 32, false, false)),
+		PixelFormatInfoMapValue(Texture2D::PixelFormat::RGB16F, Texture2D::PixelFormatInfo(GL_RGB16F, GL_RGB, GL_HALF_FLOAT, 48, false, false)),
+		PixelFormatInfoMapValue(Texture2D::PixelFormat::RGBA16F, Texture2D::PixelFormatInfo(GL_RGBA16F, GL_RGBA, GL_HALF_FLOAT, 64, false, true)),
+
+
 #ifdef GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
         PixelFormatInfoMapValue(Texture2D::PixelFormat::PVRTC2, Texture2D::PixelFormatInfo(GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG, 0xFFFFFFFF, 0xFFFFFFFF, 2, true, false)),
         PixelFormatInfoMapValue(Texture2D::PixelFormat::PVRTC2A, Texture2D::PixelFormatInfo(GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG, 0xFFFFFFFF, 0xFFFFFFFF, 2, true, true)),
@@ -633,8 +638,8 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     }
     
     glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, _antialiasEnabled ? GL_LINEAR : GL_NEAREST );
-    glTexParameteri(_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-    glTexParameteri(_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+    glTexParameteri(_target, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    glTexParameteri(_target, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
 
 
