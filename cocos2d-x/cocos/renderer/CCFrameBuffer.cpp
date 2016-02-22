@@ -361,6 +361,15 @@ void FrameBuffer::applyFBO()
 			CHECK_GL_ERROR_DEBUG();
 		}
 
+		_renderTargetCount = 0;
+		for (int i = 0; i < COLOR_TARGETS_COUNT; i++)
+		{
+			if (_renderTargets[i])
+				_renderTargetCount++;
+			else
+				break;
+		}
+
 		if(GL_FRAMEBUFFER_COMPLETE != glCheckFramebufferStatus(GL_FRAMEBUFFER))
 		{
 			CCLOG("FrameBuffer Status Error %d", (int)glCheckFramebufferStatus(GL_FRAMEBUFFER));
