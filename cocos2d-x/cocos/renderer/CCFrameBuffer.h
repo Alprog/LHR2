@@ -52,114 +52,48 @@ struct CC_DLL Viewport
     float _height;
 };
     
-class CC_DLL RenderTargetBase : public Ref
-{
-public:
-    enum class Type
-    {
-        RenderBuffer,
-        Texture2D,
-    };
-protected:
-    RenderTargetBase();
-    virtual ~RenderTargetBase();
-    bool init(unsigned int width, unsigned int height);
-
-public:
-    
-    virtual Texture2D* getTexture() const { return nullptr; }
-    virtual GLuint getBuffer() const { return 0; }
-    
-    unsigned int getWidth() const { return _width; }
-    unsigned int getHeight() const { return _height; }
-    Type getType() const { return _type; }
-protected:
-    Type _type;
-    unsigned int _width;
-    unsigned int _height;
-    
-};
-
-class CC_DLL RenderTarget : public RenderTargetBase
+class CC_DLL RenderBuffer : public Ref
 {
 public:
     
-    static RenderTarget* create(unsigned int width, unsigned int height, Texture2D::PixelFormat format = Texture2D::PixelFormat::RGBA8888, int multisamples = 0);
+    static RenderBuffer* create(unsigned int width, unsigned int height, Texture2D::PixelFormat format, unsigned int multisamples = 0);
     
-    bool init(unsigned int width, unsigned int height, Texture2D::PixelFormat format, int multisamples);
+    bool init(unsigned int width, unsigned int height, Texture2D::PixelFormat format, unsigned int multisamples);
     
-    virtual Texture2D* getTexture() const { return _texture; }
+	inline GLuint getName() const { return _name; }
+	inline unsigned int getWidth() const { return _width; }
+	inline unsigned int getHeight() const { return _height; }
+	inline GLuint getFormat() const { return _format; }
+	inline unsigned int getMultisamples() const { return _multisamples; }
+
 CC_CONSTRUCTOR_ACCESS:
-    RenderTarget();
-    virtual ~RenderTarget();
+	RenderBuffer();
+    virtual ~RenderBuffer();
     
 protected:
-    Texture2D* _texture;
-#if CC_ENABLE_CACHE_TEXTURE_DATA
-    EventListenerCustom* _rebuildTextureListener;
-#endif
+	GLuint _name;
+	unsigned int _width;
+	unsigned int _height;
+	GLuint _format;
+	unsigned int _multisamples;
 };
 
-class CC_DLL RenderTargetRenderBuffer : public RenderTargetBase
-{
-public:
-    
-    static RenderTargetRenderBuffer* create(unsigned int width, unsigned int height, int multisamples = 0);
-    
-    bool init(unsigned int width, unsigned int height, int multisamples);
-    
-    virtual GLuint getBuffer() const { return _colorBuffer; }
-    
-CC_CONSTRUCTOR_ACCESS:
-    RenderTargetRenderBuffer();
-    virtual ~RenderTargetRenderBuffer();
-    
-protected:
-    GLenum _format;
-    GLuint _colorBuffer;
-#if CC_ENABLE_CACHE_TEXTURE_DATA
-    EventListenerCustom* _reBuildRenderBufferListener;
-#endif
-};
-
-class CC_DLL RenderTargetDepthStencil : public RenderTargetBase
-{
-public:
-    
-    static RenderTargetDepthStencil* create(unsigned int width, unsigned int height, int multisamples = 0);
-    
-    bool init(unsigned int width, unsigned int height, int multisamples);
-    
-    virtual GLuint getBuffer() const { return _depthStencilBuffer; }
-    
-    CC_DEPRECATED(3.7) GLuint getDepthStencilBuffer() const { return _depthStencilBuffer; }
-CC_CONSTRUCTOR_ACCESS:
-    RenderTargetDepthStencil();
-    virtual ~RenderTargetDepthStencil();
-    
-protected:
-
-    GLuint _depthStencilBuffer;
-#if CC_ENABLE_CACHE_TEXTURE_DATA
-    EventListenerCustom* _reBuildDepthStencilListener;
-#endif
-};
-
-const int MAX_RENDER_TARGET_COUNT = 4;
+const int COLOR_TARGETS_COUNT = 4;
+const int DEPTH_INDEX = 4;
+const int STENCIL_INDEX = 5;
+const int RENDER_TARGETS_COUNT = COLOR_TARGETS_COUNT + 2;
 
 class CC_DLL FrameBuffer : public Ref
 {
 public:
-    static FrameBuffer* create(uint8_t fid, unsigned int width, unsigned int height);
+    static FrameBuffer* create(uint8_t fid);
     
-    bool init(uint8_t fid, unsigned int width, unsigned int height);
+    bool init(uint8_t fid);
 public:
 	Vec4 getTexel(int x, int y);
-	Image* newImage(bool fliimage);
 
     GLuint getFBO() const { return _fbo; }
     GLuint getFID() const { return _fid; }
-    //call glclear to clear frame buffer object
     void clearFBO();
     void applyFBO();
     void setClearColor(const Color4F& color) { _clearColor = color;}
@@ -169,15 +103,17 @@ public:
     float getClearDepth() const { return _clearDepth; }
     int8_t getClearStencil() const { return _clearStencil; }
     
-	RenderTargetBase* getRenderTarget(int index = 0) const;
-    RenderTargetDepthStencil* getDepthStencilTarget() const { return _rtDepthStencil; }
-    void attachRenderTarget(RenderTargetBase* rt, int inde);
-    void attachDepthStencilTarget(RenderTargetDepthStencil* rt);
+	Ref* getRenderTarget(int index = 0) const;
     
     bool isDefaultFBO() const { return _isDefault; }
     unsigned int getWidth() const { return _width; }
     unsigned int getHeight() const { return _height; }
 	void setSize(int width, int height) { _width = width; _height = height; }
+
+	void attachRenderTarget(int index, Ref* renderTarget);
+	void attachDepth(Ref* renderTarget);
+	void attachStencil(Ref* renderTarget);
+	void attachDepthStencil(Ref* renderTarget);
 
 CC_CONSTRUCTOR_ACCESS:
     FrameBuffer();
@@ -198,9 +134,9 @@ private:
     int8_t  _clearStencil;
     int _width;
     int _height;
-    RenderTargetBase* _renderTargets[MAX_RENDER_TARGET_COUNT];
-    RenderTargetDepthStencil* _rtDepthStencil;
+    Ref* _renderTargets[RENDER_TARGETS_COUNT];
     bool _isDefault;
+
 public:
     static FrameBuffer* getOrCreateDefaultFBO(GLView* glView);
 	static FrameBuffer* getDefaultFBO() { return _defaultFBO; }

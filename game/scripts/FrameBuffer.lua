@@ -2,7 +2,7 @@
 FrameBuffer = Class('FrameBuffer', ccexp.FrameBuffer)
 
 function FrameBuffer:instantinate()
-    return FrameBuffer.__create(1, 0, 0)
+    return FrameBuffer.__create(1)
 end
 
 function FrameBuffer:init(parent, rtCount, depthStencil, multiSamples, downScale, isBuffer)
@@ -28,27 +28,22 @@ function FrameBuffer:setSize(width, height)
     ccexp.FrameBuffer.setSize(self, width, height)
     
     for i = 1, self.rtCount do
+        local format = i ~= 3 and cc.BGRA8888 or cc.RG16F
         if self.isBuffer then
-            local rt = ccexp.RenderTargetRenderBuffer:create(width, height, self.multiSamples)
-            self:attachRenderTarget(rt, i - 1)
+            local buffer = ccexp.RenderBuffer:create(width, height, format, self.multiSamples)
+            self:attachRenderTarget(i - 1, buffer)
         else
-            local format = i ~= 3 and cc.BGRA8888 or cc.RG16F
-            local rt = ccexp.RenderTarget:create(width, height, format, self.multiSamples)
-            self:attachRenderTarget(rt, i - 1)
+            local texture = cc.Texture2D:create(width, height, format, self.multiSamples)
+            self:attachRenderTarget(i - 1, texture)
         end
     end
     if self.depthStencil then
-        self.rtDS = ccexp.RenderTargetDepthStencil:create(width, height, self.multiSamples)
-        self:attachDepthStencilTarget(self.rtDS)
+        local rt = ccexp.RenderBuffer:create(width, height, cc.DEPTH24_STENCIL8, self.multiSamples)
+        self:attachDepthStencil(rt)
     end
     
     self.width = width
     self.height = height
-end
-
-function FrameBuffer:getTexture(index)
-    index = index or 1
-    return self:getRenderTarget(index - 1):getTexture()
 end
 
 function FrameBuffer:getTexel(x, y)

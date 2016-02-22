@@ -74,7 +74,7 @@ namespace {
 		PixelFormatInfoMapValue(Texture2D::PixelFormat::RG16F, Texture2D::PixelFormatInfo(GL_RG16F, GL_RG, GL_HALF_FLOAT, 32, false, false)),
 		PixelFormatInfoMapValue(Texture2D::PixelFormat::RGB16F, Texture2D::PixelFormatInfo(GL_RGB16F, GL_RGB, GL_HALF_FLOAT, 48, false, false)),
 		PixelFormatInfoMapValue(Texture2D::PixelFormat::RGBA16F, Texture2D::PixelFormatInfo(GL_RGBA16F, GL_RGBA, GL_HALF_FLOAT, 64, false, true)),
-
+		PixelFormatInfoMapValue(Texture2D::PixelFormat::DEPTH24_STENCIL8, Texture2D::PixelFormatInfo(GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, 32, false, false)),
 
 #ifdef GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
         PixelFormatInfoMapValue(Texture2D::PixelFormat::PVRTC2, Texture2D::PixelFormatInfo(GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG, 0xFFFFFFFF, 0xFFFFFFFF, 2, true, false)),
@@ -543,6 +543,32 @@ bool Texture2D::hasPremultipliedAlpha() const
     return _hasPremultipliedAlpha;
 }
 
+Texture2D* Texture2D::create(unsigned int width, unsigned int height, Texture2D::PixelFormat format, int multisamples)
+{
+	auto result = new (std::nothrow) Texture2D();
+	if (result && result->init(width, height, format, multisamples))
+	{
+		result->autorelease();
+		return result;
+	}
+	else
+	{
+		CC_SAFE_DELETE(result);
+		return nullptr;
+	}
+}
+
+bool Texture2D::init(unsigned int width, unsigned int height, Texture2D::PixelFormat format, int multisamples)
+{
+	//TODO: FIX me, get the correct bit depth for pixelformat
+	auto dataLen = width * height * 4;
+	auto data = malloc(dataLen);
+	if (nullptr == data) return false;
+
+	memset(data, 0, dataLen);
+	return initWithData(data, dataLen, format, width, height, Size(width, height), multisamples);
+}
+
 bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, const Size& contentSize, int multisamples)
 {
     CCASSERT(dataLen>0 && pixelsWide>0 && pixelsHigh>0, "Invalid size");
@@ -556,8 +582,6 @@ bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::Pixel
 
 bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, int multisamples)
 {
-
-
     //the pixelFormat must be a certain value 
     CCASSERT(pixelFormat != PixelFormat::NONE && pixelFormat != PixelFormat::AUTO, "the \"pixelFormat\" param must be a certain value!");
     CCASSERT(pixelsWide>0 && pixelsHigh>0, "Invalid size");

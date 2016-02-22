@@ -118,6 +118,7 @@ public:
 		RG16F,
 		RGB16F,
 		RGBA16F,
+		DEPTH24_STENCIL8,
 		//! Default texture format: AUTO
 		DEFAULT = AUTO,
         NONE = -1
@@ -198,6 +199,8 @@ public:
     CC_DEPRECATED_ATTRIBUTE static void PVRImagesHavePremultipliedAlpha(bool haveAlphaPremultiplied);
     
 public:
+	static Texture2D* create(unsigned int width, unsigned int height, Texture2D::PixelFormat format, int multisamples);
+
     /**
      * @js ctor
      */
@@ -219,6 +222,8 @@ public:
      * @lua NA
      */
 	void releaseGLTexture();
+
+	bool init(unsigned int width, unsigned int height, Texture2D::PixelFormat format, int multisamples);
 
     /** Initializes with a texture2d with data.
      
@@ -547,13 +552,14 @@ protected:
 	/** GL_TEXTURE_2D or GL_TEXTURE_2D_MULTISAMPLE **/
 	GLuint _target;
 
-    static const PixelFormatInfoMap _pixelFormatInfoTables;
-
     bool _antialiasEnabled;
     NinePatchInfo* _ninePatchInfo;
     friend class SpriteFrameCache;
     friend class TextureCache;
     friend class ui::Scale9Sprite;
+
+public:
+	static const PixelFormatInfoMap _pixelFormatInfoTables;
 };
 
 

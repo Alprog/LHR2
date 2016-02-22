@@ -12,18 +12,8 @@
 
 
 --------------------------------------------------------
--- the ccexp RenderTarget
--- @field [parent=#ccexp] RenderTarget#RenderTarget RenderTarget preloaded module
-
-
---------------------------------------------------------
--- the ccexp RenderTargetRenderBuffer
--- @field [parent=#ccexp] RenderTargetRenderBuffer#RenderTargetRenderBuffer RenderTargetRenderBuffer preloaded module
-
-
---------------------------------------------------------
--- the ccexp RenderTargetDepthStencil
--- @field [parent=#ccexp] RenderTargetDepthStencil#RenderTargetDepthStencil RenderTargetDepthStencil preloaded module
+-- the ccexp RenderBuffer
+-- @field [parent=#ccexp] RenderBuffer#RenderBuffer RenderBuffer preloaded module
 
 
 --------------------------------------------------------

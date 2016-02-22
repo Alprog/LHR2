@@ -44,12 +44,12 @@ function BattleScreen:init()
     battle:spawnTeams()
     
     self.projector = Projector:create(self:getChildByName('3DScreen'))
-    self.projector:addSource(self.arena.frameBuffer, 1)
+    self.projector:addSource(self.arena.frameBuffer, 0)
+    self.projector:addSource(self.arena.gBuffer, 0)
     self.projector:addSource(self.arena.gBuffer, 1)
     self.projector:addSource(self.arena.gBuffer, 2)
-    self.projector:addSource(self.arena.gBuffer, 3)
-    self.projector:addSource(self.arena.maskFrameBuffer, 1)
-       
+    self.projector:addSource(self.arena.maskFrameBuffer, 0)
+    
     local touchBeginPoint = nil
     
     local function onTouchBegan(touch, event)

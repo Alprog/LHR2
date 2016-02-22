@@ -29,7 +29,7 @@ function Projector:refreshScreen()
     local source = self.sources[self.sourceIndex]
     if source then
         
-        local texture = source.frameBuffer:getTexture(source.index)
+        local texture = source.frameBuffer:getRenderTarget(source.index)
         
         local shader = getShader('sprite', source.shaderName)
         local state = cc.GLProgramState:create(shader)

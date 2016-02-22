@@ -27,8 +27,8 @@ function PostProcessor:setup(gBuffer, outBuffer)
     local scale = math.min(0.33 / theApp:getDeltaTime(), 1)
     state:setUniformFloat('velocityScale', scale)
     
-    state:setUniformTexture('colorTexture', gBuffer:getTexture(1))
-    state:setUniformTexture('velocityTexture', gBuffer:getTexture(3))
+    state:setUniformTexture('colorTexture', gBuffer:getRenderTarget(0))
+    state:setUniformTexture('velocityTexture', gBuffer:getRenderTarget(2))
     
     self.sprite:setGLProgramState(state)
     

@@ -33,9 +33,16 @@
         
 --------------------------------
 -- 
--- @function [parent=#FrameBuffer] getDepthStencilTarget 
+-- @function [parent=#FrameBuffer] applyFBO 
 -- @param self
--- @return experimental::RenderTargetDepthStencil#experimental::RenderTargetDepthStencil ret (return value: cc.experimental::RenderTargetDepthStencil)
+-- @return experimental::FrameBuffer#experimental::FrameBuffer self (return value: cc.experimental::FrameBuffer)
+        
+--------------------------------
+-- 
+-- @function [parent=#FrameBuffer] attachStencil 
+-- @param self
+-- @param #cc.Ref renderTarget
+-- @return experimental::FrameBuffer#experimental::FrameBuffer self (return value: cc.experimental::FrameBuffer)
         
 --------------------------------
 -- 
@@ -51,12 +58,6 @@
         
 --------------------------------
 -- 
--- @function [parent=#FrameBuffer] applyFBO 
--- @param self
--- @return experimental::FrameBuffer#experimental::FrameBuffer self (return value: cc.experimental::FrameBuffer)
-        
---------------------------------
--- 
 -- @function [parent=#FrameBuffer] setClearStencil 
 -- @param self
 -- @param #char stencil
@@ -66,7 +67,7 @@
 -- 
 -- @function [parent=#FrameBuffer] getRenderTarget 
 -- @param self
--- @return experimental::RenderTargetBase#experimental::RenderTargetBase ret (return value: cc.experimental::RenderTargetBase)
+-- @return Ref#Ref ret (return value: cc.Ref)
         
 --------------------------------
 -- 
@@ -85,8 +86,6 @@
 -- @function [parent=#FrameBuffer] init 
 -- @param self
 -- @param #unsigned char fid
--- @param #unsigned int width
--- @param #unsigned int height
 -- @return bool#bool ret (return value: bool)
         
 --------------------------------
@@ -104,9 +103,23 @@
         
 --------------------------------
 -- 
+-- @function [parent=#FrameBuffer] attachDepth 
+-- @param self
+-- @param #cc.Ref renderTarget
+-- @return experimental::FrameBuffer#experimental::FrameBuffer self (return value: cc.experimental::FrameBuffer)
+        
+--------------------------------
+-- 
 -- @function [parent=#FrameBuffer] getFBO 
 -- @param self
 -- @return unsigned int#unsigned int ret (return value: unsigned int)
+        
+--------------------------------
+-- 
+-- @function [parent=#FrameBuffer] attachDepthStencil 
+-- @param self
+-- @param #cc.Ref renderTarget
+-- @return experimental::FrameBuffer#experimental::FrameBuffer self (return value: cc.experimental::FrameBuffer)
         
 --------------------------------
 -- 
@@ -118,23 +131,9 @@
 -- 
 -- @function [parent=#FrameBuffer] attachRenderTarget 
 -- @param self
--- @param #cc.experimental::RenderTargetBase rt
--- @param #int inde
+-- @param #int index
+-- @param #cc.Ref renderTarget
 -- @return experimental::FrameBuffer#experimental::FrameBuffer self (return value: cc.experimental::FrameBuffer)
-        
---------------------------------
--- 
--- @function [parent=#FrameBuffer] attachDepthStencilTarget 
--- @param self
--- @param #cc.experimental::RenderTargetDepthStencil rt
--- @return experimental::FrameBuffer#experimental::FrameBuffer self (return value: cc.experimental::FrameBuffer)
-        
---------------------------------
--- 
--- @function [parent=#FrameBuffer] newImage 
--- @param self
--- @param #bool fliimage
--- @return Image#Image ret (return value: cc.Image)
         
 --------------------------------
 -- 
@@ -163,8 +162,6 @@
 -- @function [parent=#FrameBuffer] create 
 -- @param self
 -- @param #unsigned char fid
--- @param #unsigned int width
--- @param #unsigned int height
 -- @return experimental::FrameBuffer#experimental::FrameBuffer ret (return value: cc.experimental::FrameBuffer)
         
 --------------------------------

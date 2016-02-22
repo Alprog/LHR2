@@ -94,6 +94,16 @@
 -- @return Texture2D#Texture2D self (return value: cc.Texture2D)
         
 --------------------------------
+-- 
+-- @function [parent=#Texture2D] init 
+-- @param self
+-- @param #unsigned int width
+-- @param #unsigned int height
+-- @param #int format
+-- @param #int multisamples
+-- @return bool#bool ret (return value: bool)
+        
+--------------------------------
 --  Get the texture content size.
 -- @function [parent=#Texture2D] getContentSize 
 -- @param self
@@ -214,6 +224,16 @@
 -- @param self
 -- @param #int format
 -- @return Texture2D#Texture2D self (return value: cc.Texture2D)
+        
+--------------------------------
+-- 
+-- @function [parent=#Texture2D] create 
+-- @param self
+-- @param #unsigned int width
+-- @param #unsigned int height
+-- @param #int format
+-- @param #int multisamples
+-- @return Texture2D#Texture2D ret (return value: cc.Texture2D)
         
 --------------------------------
 --  Returns the alpha pixel format.<br>
