@@ -27,7 +27,7 @@ function PostProcessor:setup(gBuffer, outBuffer)
     local scale = math.min(0.33 / theApp:getDeltaTime(), 1)
     state:setUniformFloat('velocityScale', scale)]]
     
-    local position = Vec(80, 100, 70)    
+    local position = Vec(-20, 100, 70)    
     state:setUniformVec3('lightPosition', position)
     
     state:setUniformTexture('colorTexture', gBuffer:getRenderTarget(0))

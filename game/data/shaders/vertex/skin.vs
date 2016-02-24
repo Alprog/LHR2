@@ -11,5 +11,5 @@ void main()
     
     v_texCoord = vec2(a_texCoord.x, 1 - a_texCoord.y);
 	
-    v_normal = (CC_MMatrix * vec4(a_normal, 0)).xyz;
+    v_normal = (CC_MMatrix * skin(vec4(a_normal, 0), u_matrixPalette)).xyz;
 }
