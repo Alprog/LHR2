@@ -41,9 +41,21 @@ Vector<Animation3D*> Animation3D::loadAnimations(const std::string& filename)
 	{
 		for (auto& data : datas)
 		{		
-			data._translationKeys.erase("Armature");
-			data._rotationKeys.erase("Armature");
-			data._scaleKeys.erase("Armature");
+			std::vector<std::string> names;
+			for (auto pair : data._scaleKeys)
+			{
+				auto scaleVector = pair.second.at(0)._key;
+				if (scaleVector.length() > 50)
+				{
+					names.push_back(pair.first);
+				}
+			}
+			for (auto& name : names)
+			{
+				data._translationKeys.erase(name);
+				data._rotationKeys.erase(name);
+				data._scaleKeys.erase(name);
+			}
 
 			auto animation = new (std::nothrow) Animation3D();
 			if (animation->init(data))

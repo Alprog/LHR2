@@ -28,7 +28,17 @@ function Unit:loadModel(name)
     local model = Model:create(fileName)
     model:setForceDepthWrite(true)
     
+    print('1')
+    dump(model:getNodeToWorldTransform())
+    
+    print('2')
     model:play('idle', true)
+    dump(model:getNodeToWorldTransform())
+
+    print('3')
+    model:setAdditionalTransform(cc.mat4:createIdentity())
+    dump(model:getNodeToWorldTransform())
+    
     
     local silhouette = model:copy()
     silhouette:setShaders('fatskin', 'uColor3d')
