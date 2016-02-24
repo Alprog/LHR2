@@ -334,6 +334,12 @@ bool Sprite3D::initFrom(const NodeDatas& nodeDatas, const MeshDatas& meshdatas, 
             _meshVertexDatas.pushBack(meshvertex);
         }
     }
+
+	for (auto& skeletonData : nodeDatas.skeleton)
+	{
+		skeletonData->transform = Mat4::IDENTITY;
+	}
+
     _skeleton = Skeleton3D::create(nodeDatas.skeleton);
     CC_SAFE_RETAIN(_skeleton);
     

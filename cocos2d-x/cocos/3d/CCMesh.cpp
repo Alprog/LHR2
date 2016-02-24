@@ -183,6 +183,7 @@ struct CombineMeshInfo
 struct CombineMeshVertex
 {
 	Vec3 position;
+	Vec3 normal;
 	Vec2 texCoord;
 	Vec4 color;
 };
@@ -211,6 +212,7 @@ Mesh* Mesh::combine(Vector<Mesh*>& meshes, std::vector<float>& data)
 	std::vector<MeshVertexAttrib> attribs =
 	{
 		{ 3, GL_FLOAT, GLProgram::VERTEX_ATTRIB_POSITION, 3 * sizeof(float) },
+		{ 3, GL_FLOAT, GLProgram::VERTEX_ATTRIB_NORMAL, 3 * sizeof(float) },
 		{ 2, GL_FLOAT, GLProgram::VERTEX_ATTRIB_TEX_COORD, 2 * sizeof(float) },
 		{ 4, GL_FLOAT, GLProgram::VERTEX_ATTRIB_COLOR, 4 * sizeof(float) }
 	};
@@ -243,6 +245,7 @@ Mesh* Mesh::combine(Vector<Mesh*>& meshes, std::vector<float>& data)
 		// vertices:
 		auto vertexSizeInFloat = d->getVertexSize() / sizeof(float);
 		auto pShift = d->getAttribOffset(GLProgram::VERTEX_ATTRIB_POSITION) / sizeof(float);
+		auto nShift = d->getAttribOffset(GLProgram::VERTEX_ATTRIB_NORMAL) / sizeof(float);
 		auto tShift = d->getAttribOffset(GLProgram::VERTEX_ATTRIB_TEX_COORD) / sizeof(float);
 		auto vCount = d->vertex.size();
 		for (size_t i = 0; i < vCount; i += vertexSizeInFloat)
@@ -254,13 +257,15 @@ Mesh* Mesh::combine(Vector<Mesh*>& meshes, std::vector<float>& data)
 			pVertex->texCoord.x = texCoord.x * pMeshInfo->texScale.x + pMeshInfo->texTranslate.x;
 			pVertex->texCoord.y = texCoord.y * pMeshInfo->texScale.y + pMeshInfo->texTranslate.y;
 			
+			pVertex->normal = *(Vec3*)(&d->vertex[i + nShift]);
+
 			pVertex->color = pMeshInfo->color;
 			
 			pVertex++;
 			vi++;
 		}
 
-		pMeshInfo++;
+		pMeshInfo++; 
 	}
 
 	return _create(vertices, vertexSizeInFloat, indices, attribs);

@@ -19,18 +19,26 @@ function PostProcessor:setup(gBuffer, outBuffer)
     
     self.frameBuffer = outBuffer
     
-    local shader = getShader('flippedSprite', 'post')
+    local shader = getShader('flippedSprite', 'halflambert')
     local state = cc.GLProgramState:create(shader)
     
-    local texelSize = Vec(1 / self.frameBuffer.width, 1 / self.frameBuffer.height)    
+    --[[local texelSize = Vec(1 / self.frameBuffer.width, 1 / self.frameBuffer.height)    
     state:setUniformVec2('texelSize', texelSize)
     local scale = math.min(0.33 / theApp:getDeltaTime(), 1)
-    state:setUniformFloat('velocityScale', scale)
+    state:setUniformFloat('velocityScale', scale)]]
+    
+    local position = Vec(80, 100, 70)    
+    state:setUniformVec3('lightPosition', position)
     
     state:setUniformTexture('colorTexture', gBuffer:getRenderTarget(0))
-    state:setUniformTexture('velocityTexture', gBuffer:getRenderTarget(2))
+    state:setUniformTexture('normalTexture', gBuffer:getRenderTarget(1))
+    --state:setUniformTexture('velocityTexture', gBuffer:getRenderTarget(2))
     
     self.sprite:setGLProgramState(state)
+    
+    
+    state:setUniformTexture('normalTexture', gBuffer:getRenderTarget(1))
+    state:setUniformTexture('wrapTexture', getTexture('wrap.png'))
     
     --local rt = gBuffer:getRenderTarget(0)
     --self.frameBuffer:attachRenderTarget(rt, i - 1)

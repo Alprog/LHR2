@@ -4,10 +4,19 @@ package.cpath = package.cpath .. ';../scripts/zerobrane/?.dll'
 
 local debugger = require('mobdebug.mobdebug')
 
+dump = function(t)
+    print(debugger.dump(t))
+end
+
+debugger.line = function(a) 
+    return tostring(a)
+end
+
 function StartDebug()
     debugger.start()
     debugger.enabled = true
     print('Debug Start')
+    print(debugger.start)
 end
 
 function StopDebug()

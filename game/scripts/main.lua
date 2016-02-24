@@ -34,6 +34,11 @@ require 'Projector.lua'
 require 'ContentPipeline.lua'
 contentPipeline()
 
+cc.Node.className = 'cc.Node'
+cc.Sprite3D.className = 'cc.Sprite3D'
+cc.AttachNode.className = 'cc.AttachNode'
+
+
 local function main()
     collectgarbage("setpause", 100)
     collectgarbage("setstepmul", 5000)

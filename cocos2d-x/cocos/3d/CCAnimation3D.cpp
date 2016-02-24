@@ -39,10 +39,14 @@ Vector<Animation3D*> Animation3D::loadAnimations(const std::string& filename)
 	auto bundle = Bundle3D::createBundle();
 	if (bundle->load(fullPath) && bundle->loadAnimationDatas(datas))
 	{
-		for (int i = 0; i < datas.size(); i++)
-		{
+		for (auto& data : datas)
+		{		
+			data._translationKeys.erase("Armature");
+			data._rotationKeys.erase("Armature");
+			data._scaleKeys.erase("Armature");
+
 			auto animation = new (std::nothrow) Animation3D();
-			if (animation->init(datas[i]))
+			if (animation->init(data))
 			{
 				animation->autorelease();
 				animations.pushBack(animation);

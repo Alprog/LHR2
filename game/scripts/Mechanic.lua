@@ -10,12 +10,12 @@ function Mechanic:init()
 end
 
 function Mechanic:initGfx()
-    local model = self:loadModel('soldier')
+    local model = self:loadModel('jrpg')
     self.gfx = model
-    self:setScale(1)
+    self:setScale(0.01)
     
     local children = self.gfx:getChildren()
     --self.gfx:setTexture(getTexture('models/soldier4.png'))
-    self.gfx:setShaders('skin', 'default3d')
-    self.gfx:setUniformTexture('mainTexture', getTexture('models/soldier4.png'))
+    self.gfx:setShaders('skin', 'uColor3d')
+    self.gfx:setUniformVec4('u_color', Vec(1, 1, 1, 1))
 end

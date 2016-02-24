@@ -155,7 +155,12 @@ function Model:setShaders(vert, frag)
         else
             mesh:setGLProgramState(state:clone())
         end
-    end 
+    end
+    for child in iter(self:getChildren()) do
+        if child.getMeshByIndex then
+            Model.setShaders(child, vert, frag)
+        end
+    end
 end
 
 function Model:setUniformTexture(name, texture)
@@ -165,6 +170,11 @@ function Model:setUniformTexture(name, texture)
         local state = mesh:getGLProgramState()
         state:setUniformTexture(name, texture)
     end
+    for child in iter(self:getChildren()) do
+        if child.getMeshByIndex then
+            Model.setUniformTexture(child, name, texture)
+        end
+    end
 end
 
 function Model:setUniformVec4(name, vec)
@@ -173,6 +183,11 @@ function Model:setUniformVec4(name, vec)
         local mesh = self:getMeshByIndex(i)
         local state = mesh:getGLProgramState()
         state:setUniformVec4(name, vec)
+    end
+    for child in iter(self:getChildren()) do
+        if child.getMeshByIndex then
+            Model.setUniformVec4(child, name, vec)
+        end
     end
 end
 

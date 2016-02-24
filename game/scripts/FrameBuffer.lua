@@ -38,7 +38,7 @@ function FrameBuffer:setSize(width, height)
         end
     end
     if self.depthStencil then
-        local rt = ccexp.RenderBuffer:create(width, height, cc.DEPTH24_STENCIL8, self.multiSamples)
+        local rt = cc.Texture2D:create(width, height, cc.DEPTH24_STENCIL8, self.multiSamples)
         self:attachDepthStencil(rt)
     end
     
