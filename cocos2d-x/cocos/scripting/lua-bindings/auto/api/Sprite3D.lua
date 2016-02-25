@@ -116,6 +116,13 @@
 -- @return AttachNode#AttachNode ret (return value: cc.AttachNode)
         
 --------------------------------
+-- 
+-- @function [parent=#Sprite3D] initWithFile 
+-- @param self
+-- @param #string path
+-- @return bool#bool ret (return value: bool)
+        
+--------------------------------
 -- set skeleton
 -- @function [parent=#Sprite3D] setSkeleton 
 -- @param self
@@ -191,6 +198,12 @@
 -- @param self
 -- @param #cc.Action action
 -- @return Action#Action ret (return value: cc.Action)
+        
+--------------------------------
+-- 
+-- @function [parent=#Sprite3D] init 
+-- @param self
+-- @return bool#bool ret (return value: bool)
         
 --------------------------------
 --  just rember bind attributes 

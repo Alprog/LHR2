@@ -3,7 +3,7 @@ require 'Object.lua'
 require 'Model.lua'
 require 'Points.lua'
 
-Unit = Derive('Unit', Object)
+Unit = Derive('Unit', Model, Object)
 
 local walkTime = 0.33
 local jumpTime = 0.5
@@ -11,8 +11,6 @@ local rotationSpeed = math.pi * 2.5
 
 function Unit:init()
     Object.init(self)
-    --self:setRotation(0)
-    
     self.healthPoints = Points:create(100)
     self.motionPoints = Points:create(3)
     self.actionPoints = Points:create(2)

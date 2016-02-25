@@ -53,7 +53,7 @@ end
 function Arena:setTechnique(index)
     local units = self.unitLayer:getChildren() 
     for unit in iter(units) do
-        unit.gfx:selectTechnique(index)
+        unit:selectTechnique(index)
     end
 end
 

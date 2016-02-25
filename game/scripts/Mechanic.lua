@@ -12,5 +12,5 @@ end
 function Mechanic:initGfx()
     local model = self:loadModel('jrpg')
     self.gfx = model
-    self:setScale(0.01)     
+    self:setScale(0.01)    
 end

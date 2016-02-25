@@ -4,14 +4,12 @@ require 'AnimateAction.lua'
 
 Model = Derive("Model", cc.Sprite3D)
 
-function Model:instantinate(modelPath, actionSchemePath, passive)
-    return Model.__create(modelPath)
+function Model:instantinate(modelPath, actionSchemePath)
+    return Model.__create()
 end
 
-function Model:init(modelPath, actionSchemePath, passive)
-    if passive then
-        return
-    end
+function Model:init(modelPath, actionSchemePath)   
+    self:initWithFile(modelPath)
     
     if actionSchemePath == nil then
         actionSchemePath = changeExtension(modelPath, 'scheme')
@@ -30,14 +28,8 @@ function Model:init(modelPath, actionSchemePath, passive)
     
     self:scheduleUpdate()
     self:enableNodeEvents()
-end
-
-function Model:copy()
-    local copy = Model:create(self.modelPath, nil, true)
-    copy:setPosition3D(self:getPosition3D())
-    copy:setRotation3D(self:getRotation3D())
-    copy:shareSkin(self)
-    return copy
+    
+    self:setForceDepthWrite(true)
 end
 
 function Model:update(dt)

@@ -86,14 +86,14 @@ void RenderQueue::push_back(RenderCommand* command)
 
 	if(command->is3D())
 	{
-		/*if(command->isTransparent())
+		if(command->isTransparent())
 		{
 			_commands[QUEUE_GROUP::TRANSPARENT_3D].push_back(command);
 		}
 		else
-		{*/
+		{
 			_commands[QUEUE_GROUP::OPAQUE_3D].push_back(command);
-		//}
+		}
 	}
 	else
 	{
@@ -126,7 +126,7 @@ ssize_t RenderQueue::size() const
 void RenderQueue::sort()
 {
     // Don't sort _queue0, it already comes sorted
-	std::stable_sort(std::begin(_commands[QUEUE_GROUP::OPAQUE_3D]), std::end(_commands[QUEUE_GROUP::OPAQUE_3D]), compare3D);
+	//std::sort(std::begin(_commands[QUEUE_GROUP::OPAQUE_3D]), std::end(_commands[QUEUE_GROUP::OPAQUE_3D]), compareRenderCommand);
     std::sort(std::begin(_commands[QUEUE_GROUP::TRANSPARENT_3D]), std::end(_commands[QUEUE_GROUP::TRANSPARENT_3D]), compare3DCommand);
     std::sort(std::begin(_commands[QUEUE_GROUP::GLOBALZ_NEG]), std::end(_commands[QUEUE_GROUP::GLOBALZ_NEG]), compareRenderCommand);
     std::sort(std::begin(_commands[QUEUE_GROUP::GLOBALZ_POS]), std::end(_commands[QUEUE_GROUP::GLOBALZ_POS]), compareRenderCommand);

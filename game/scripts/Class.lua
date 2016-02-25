@@ -23,14 +23,31 @@ function NewClass(name)
     return cls
 end
 
-function Derive(name, base)
+function multiBaseIndex(table, key)
+    local class = getmetatable(table)
+    local value = rawget(class, key)
+    if value then 
+        return value 
+    end
+    
+    local bases = rawget(class, 'bases')
+    if bases then
+        for i = 1, #bases do
+            value = bases[i][key]
+            if value then
+                return value
+            end
+        end
+    end
+end
+
+function Derive(name, base, ...)
     local cls = nil
     
     if base.isLuaClass then
         cls = NewClass(name)
     else
         cls = {}
-        cls.__index = cls
         
         if base[".isclass"] then
             cls.__create = function(...) 
@@ -56,6 +73,13 @@ function Derive(name, base)
     setmetatable(cls, base)
     cls.base = base
     cls.className = name
+ 
+    if #{...} > 0 then
+        cls.__index = multiBaseIndex
+        cls.bases = { base, ... }
+    else
+        cls.__index = cls
+    end
     
     return cls
 end
