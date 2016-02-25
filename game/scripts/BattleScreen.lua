@@ -1,9 +1,6 @@
 
 require 'Battle.lua'
-require 'Marine.lua'
-require 'BigRobot.lua'
-require 'Mechanic.lua'
-require 'Renegade.lua'
+require 'Warrior.lua'
 require 'Avatar.lua'
 
 require 'FrameBuffer/FrameBuffer.lua'
@@ -28,12 +25,12 @@ function BattleScreen:init()
     local battle = Battle:create()
     battle:setTeamCount(2)
     for i = 1, 1 do
-        local mechanic = Mechanic:create()
-        table.insert(battle.teams[2], mechanic)
+        local warrior = Warrior:create()
+        table.insert(battle.teams[2], warrior)
     end
     for i = 1, 1 do
-        local mechanic = Mechanic:create()
-        table.insert(battle.teams[1], mechanic)
+        local warrior = Warrior:create()
+        table.insert(battle.teams[1], warrior)
     end
     
     --arena:addObstacles()

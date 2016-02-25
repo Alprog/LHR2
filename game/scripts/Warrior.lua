@@ -1,7 +1,7 @@
 
-Mechanic = Derive('Mechanic', Unit)
+Warrior = Derive('Warrior', Unit)
 
-function Mechanic:init()
+function Warrior:init()
     Unit.init(self)
     self.attackCost = 2
     self.attackPower = 40
@@ -9,7 +9,7 @@ function Mechanic:init()
     self.motionPoints = Points:create(4)
 end
 
-function Mechanic:initGfx()
+function Warrior:initGfx()
     local model = self:loadModel('jrpg')
     self.gfx = model
     self:setScale(0.01)    

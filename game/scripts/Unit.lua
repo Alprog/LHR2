@@ -24,9 +24,7 @@ function Unit:loadModel(name)
     local fileName = 'models/'.. name .. '.c3b'
         
     local model = Model:create(fileName)
-    model:setForceDepthWrite(true)
-    
-        
+            
     local material = cc.Material:create()
     
     -- default
@@ -274,8 +272,8 @@ function Unit:die()
     self.cell = nil
     
     self.arena.tasks:run(function()
-        self.gfx:play('die')
-        self.gfx:waitAnimation()
+        self.model:play('die')
+        self.model:waitAnimation()
         self:killGfx()
     end)
 end

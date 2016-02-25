@@ -1,5 +1,5 @@
 <Solution>
-  <PropertyGroup Name="deeplands" Version="2.3.2.3" Type="CocosStudio" />
+  <PropertyGroup Name="lhr2" Version="2.3.2.3" Type="CocosStudio" />
   <SolutionFolder>
     <Group ctype="ResourceGroup">
       <RootFolder Name=".">
