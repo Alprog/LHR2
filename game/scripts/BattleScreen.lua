@@ -47,11 +47,11 @@ function BattleScreen:init()
     
     self.projector = Projector:create(self:getChildByName('3DScreen'))
     self.projector:addSource(self.arena.frameBuffer, 0)
-    self.projector:addSource(self.arena.gBuffer, GBuffer.Indexes.Albedo)
-    self.projector:addSource(self.arena.gBuffer, GBuffer.Indexes.Normal)
-    self.projector:addSource(self.arena.gBuffer, GBuffer.Indexes.Ids)
-    self.projector:addSource(self.arena.gBuffer, GBuffer.Indexes.Velocity)
-    self.projector:addSource(self.arena.gBuffer, GBuffer.Indexes.DepthStencil)
+    self.projector:addSource(self.arena.gBuffer, GBuffer.Index.Albedo)
+    self.projector:addSource(self.arena.gBuffer, GBuffer.Index.Normal)
+    self.projector:addSource(self.arena.gBuffer, GBuffer.Index.Ids)
+    self.projector:addSource(self.arena.gBuffer, GBuffer.Index.Velocity)
+    self.projector:addSource(self.arena.gBuffer, GBuffer.Index.DepthStencil)
      
     local touchBeginPoint = nil
     

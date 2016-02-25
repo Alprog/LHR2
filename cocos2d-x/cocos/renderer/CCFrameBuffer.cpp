@@ -234,11 +234,11 @@ FrameBuffer::~FrameBuffer()
     }
 }
 
-GLuint pboids[2] = {0, 0};
-int pboIndex = 0;
-
-Vec4 FrameBuffer::getTexel(int x, int y)
+Vec4 FrameBuffer::getTexel(int colorTarget, int x, int y)
 {
+	static GLuint pboids[2] = { 0, 0 };
+	static int pboIndex = 0;
+
 	if (pboids[0] == 0)
 	{
 		glGenBuffers(2, pboids);
@@ -256,7 +256,7 @@ Vec4 FrameBuffer::getTexel(int x, int y)
 
 	uint8_t texel[4];
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, pboids[pboIndex]);
-	glReadBuffer(GL_COLOR_ATTACHMENT2); // hardcoded ids texture
+	glReadBuffer(GL_COLOR_ATTACHMENT0 + colorTarget);
 	glReadPixels(x, y, 1, 1, GL_BGRA, GL_UNSIGNED_BYTE, 0);
 
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, pboids[1 - pboIndex]);

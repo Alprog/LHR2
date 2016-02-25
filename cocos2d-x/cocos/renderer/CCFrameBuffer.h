@@ -90,7 +90,7 @@ public:
     
     bool init(uint8_t fid);
 public:
-	Vec4 getTexel(int x, int y);
+	Vec4 getTexel(int colorTarget, int x, int y);
 
     GLuint getFBO() const { return _fbo; }
     GLuint getFID() const { return _fid; }

@@ -14,6 +14,7 @@
 -- 
 -- @function [parent=#FrameBuffer] getTexel 
 -- @param self
+-- @param #int colorTarget
 -- @param #int x
 -- @param #int y
 -- @return vec4_table#vec4_table ret (return value: vec4_table)

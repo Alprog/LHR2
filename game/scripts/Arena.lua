@@ -42,7 +42,6 @@ function Arena:initCamera()
 end
 
 function Arena:update(deltaTime)
-    
     self.tasks:update(deltaTime)
     self.camera:update(deltaTime)
     
@@ -72,16 +71,15 @@ function Arena:checkHover()
 end
 
 function Arena:getObjectFromScreenPos(pos)
-    local texel = self.gBuffer:getTexel(pos.x, pos.y)
-    print(texel.x, texel.y)
+    local texel = self.gBuffer:getTexel(GBuffer.Index.Ids, pos.x, pos.y)
     local index = bytesToIndex(texel.x, texel.y)
     return Object:fromIndex(index)
 end
 
 function Arena:onResize(size)
     self:setTransformUpdated()
-    --self.gBuffer:onResize(size)
-    --self.frameBuffer:onResize(size)
+    self.gBuffer:onResize(size)
+    self.frameBuffer:onResize(size)
     self.camera.dirty = true
 end
 
@@ -141,84 +139,9 @@ function Arena:spawn(unit)
     self.unitLayer:addChild(unit)
 end
 
-function Arena:addObstacles()
-    local map = {
-        {2, 0, 0, 1, 6, 5, 4, 6, 5, 6 },
-        {2, 0, 0, 0, 6, 4, 0, 0, 0, 6 },
-        {4, 0, 0, 0, 5, 0, 0, 0, 0, 4 },
-        {2, 0, 0, 0, 2, 0, 0, 0, 0, 6 },        
-        {2, 0, 0, 0, 8, 0, 0, 0, 0, 4 },
-        {2, 0, 0, 0, 2, 0, 0, 0, 4, 6 },
-        {2, 0, 0, 0, 2, 0, 0, 0, 0, 4 },
-        {5, 3, 3, 3, 4, 3, 7, 3, 3, 5 },
-        {0, 1, 0, 0, 0, 0, 0, 0, 0, 9 },
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-    }
-    
-    local floorMap = {
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        {0, 0, 0, 0, 0, 0,11,11,10, 0 },
-        {0, 0, 0, 0, 0, 0,12,11, 0, 0 },
-        {0, 0, 0, 0, 0,11,11,11, 0, 0 },        
-        {0, 0, 0, 0, 0,11,12,11, 0, 0 },
-        {0, 0, 0, 0, 0,11,11,11, 0, 0 },
-        {0, 0, 0, 0, 0,11,12,11, 0, 0 },
-        {0, 0, 0, 0, 0,11,11,11, 0, 0 },
-        {0, 0, 0, 0, 0,11,12,11,11,11 },
-        {0, 0, 0, 0, 0,11,11,11,11,11 }
-    }
-    
-    local pathes =
-    {
-        'models/obstacles/barrel01.c3b',
-        'models/obstacles/wall_thin01_R.c3b',
-        'models/obstacles/wall_thin01_L.c3b',
-        'models/obstacles/wall_cube01.c3b',
-        'models/obstacles/wall_blockWall.c3b',
-        'models/obstacles/wall_blockSimple.c3b',
-        'models/obstacles/door01_L.c3b',
-        'models/obstacles/door01_R.c3b',
-        'models/obstacles/chest_brown.c3b',
-        'models/obstacles/chest_green.c3b',
-        'models/obstacles/ground_stone.c3b',
-        'models/obstacles/ground_grate.c3b',
-    }
-    
-    
-    for cell in iter(self.terrain.cells) do
-        local pos = cell:getPosition3D()
-        for j = 1, 2 do
-            local arr = j == 1 and map or floorMap
-            local index = arr[pos.z][pos.x]
-            local path = pathes[index]
-            if path then
-                local obstacle = Model:create(path)
-                obstacle:setScale(0.01)
-                obstacle:setPosition3D(Vec(0, 0, 0))
-                obstacle:setForceDepthWrite(true)
-                if index == 7 or index == 8 then
-                   --obstacle:play('Take 001', true, 0.4)
-                   obstacle:setRotation3D(Vec(0, 0, 0))
-                end
-                if j ~= 2 then
-                    cell.object = obstacle
-                    obstacle.cell = cell
-                else
-                    local pos = obstacle:getPosition3D()
-                    pos.y = pos.y + 0.002
-                    obstacle:setPosition3D(pos)
-                end
-                cell:addChild(obstacle)
-            end
-        end
-    end
-end
-
-function Arena:render()
-    
+function Arena:render()    
     self:setTechnique(0)
     self.camera:render(self, cc.CameraFlag.DEFAULT, self.gBuffer)
-
     thePostProcessor:setup(self.gBuffer, self.frameBuffer)
     thePostProcessor:perform()
 end
