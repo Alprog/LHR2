@@ -28,30 +28,32 @@ function Unit:loadModel(name)
     local model = Model:create(fileName)
     model:setForceDepthWrite(true)
     
+        
+    local material = cc.Material:create()
+    
+    -- default
+    local program = getShader('skin', 'defaultMRT')
+    local state = cc.GLProgramState:create(program)
+    state:setUniformTexture('mainTexture', getTexture('models/diffuse.png'))
+    local h, l = indexToBytes(self.index)
+    state:setUniformVec2('u_id', Vec(h / 255, l / 255))
+    local technique = cc.Technique:createWithGLProgramState(state)
+    material:setTechnique(RenderMode.Default, technique)
+    
+    -- silhouette
+    program = getShader('fatskin', 'uColorMRT')
+    state = cc.GLProgramState:create(program)
+    state:setUniformVec4('u_color', Vec(1, 0, 1, 1))
+    technique = cc.Technique:createWithGLProgramState(state)
+    material:setTechnique(2, technique)
+    
+    model:setMaterial(material)
+    
+    ------------------------------------------
+    
     model:play('idle', true)
     
-    local silhouette = model:copy()
-    silhouette:setShaders('fatskin', 'uColor3d')
-    silhouette:setUniformVec4('u_color', Vec(1, 1, 1, 1))
-    silhouette:setVisible(false)
-       
-    silhouette:setLocalZOrder(1)
-    silhouette:setForceDepthWrite(false)
-    model:setLocalZOrder(2)
-
-    self.silhouette = silhouette
-
-    local mask = model:copy()
-    mask:setShaders('skin', 'uColor')
-    local r, g, b = indexToBytes(self.index)
-    local color = Vec(r / 255, g / 255, b / 255, 1)
-    mask:setUniformVec4('u_color', color)
-    mask:setCameraMask(MASK_LAYER)
-    mask:setForceDepthWrite(true)
-    
     self:addChild(model)
-    self:addChild(silhouette)
-    self:addChild(mask)
     
     self.model = model
     
@@ -59,12 +61,12 @@ function Unit:loadModel(name)
 end
 
 function Unit:setHighlight(color)
-    if color == nil then
+    --[[if color == nil then
         self.silhouette:setVisible(false)
     else
         self.silhouette:setVisible(true)
         self.silhouette:setUniformVec4('u_color', color)
-    end
+    end]]
 end
 
 function Unit:setRotation(rotation)

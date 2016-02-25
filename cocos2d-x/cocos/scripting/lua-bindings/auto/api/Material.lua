@@ -24,51 +24,37 @@
 -- @return Material#Material self (return value: cc.Material)
         
 --------------------------------
---  Returns a Technique by index. <br>
--- returns `nullptr` if the index is invalid.
--- @function [parent=#Material] getTechniqueByIndex 
--- @param self
--- @param #long index
--- @return Technique#Technique ret (return value: cc.Technique)
-        
---------------------------------
 -- / returns the material name
 -- @function [parent=#Material] getName 
 -- @param self
 -- @return string#string ret (return value: string)
         
 --------------------------------
---  Returns the list of Techniques 
--- @function [parent=#Material] getTechniques 
--- @param self
--- @return array_table#array_table ret (return value: array_table)
-        
---------------------------------
---  Sets the current technique 
+--  Adds a Technique into the Material 
 -- @function [parent=#Material] setTechnique 
 -- @param self
--- @param #string techniqueName
--- @return Material#Material self (return value: cc.Material)
-        
---------------------------------
---  Returns a Technique by its name.<br>
--- returns `nullptr` if the Technique can't be found.
--- @function [parent=#Material] getTechniqueByName 
--- @param self
--- @param #string name
--- @return Technique#Technique ret (return value: cc.Technique)
-        
---------------------------------
---  Adds a Technique into the Material 
--- @function [parent=#Material] addTechnique 
--- @param self
+-- @param #int index
 -- @param #cc.Technique technique
 -- @return Material#Material self (return value: cc.Material)
         
 --------------------------------
+--  Sets the current technique 
+-- @function [parent=#Material] selectTechnique 
+-- @param self
+-- @param #int index
+-- @return Material#Material self (return value: cc.Material)
+        
+--------------------------------
 --  Returns the Technique used by the Material 
+-- @function [parent=#Material] getCurrentTechnique 
+-- @param self
+-- @return Technique#Technique ret (return value: cc.Technique)
+        
+--------------------------------
+-- 
 -- @function [parent=#Material] getTechnique 
 -- @param self
+-- @param #long index
 -- @return Technique#Technique ret (return value: cc.Technique)
         
 --------------------------------
@@ -80,6 +66,12 @@
 -- @function [parent=#Material] createWithFilename 
 -- @param self
 -- @param #string path
+-- @return Material#Material ret (return value: cc.Material)
+        
+--------------------------------
+-- 
+-- @function [parent=#Material] create 
+-- @param self
 -- @return Material#Material ret (return value: cc.Material)
         
 --------------------------------

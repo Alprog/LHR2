@@ -49,6 +49,7 @@ class CC_DLL Pass : public RenderState
 public:
     /** Creates a Pass with a GLProgramState.
      */
+	static Pass* createWithGLProgramState(GLProgramState* programState);
     static Pass* createWithGLProgramState(Technique* parent, GLProgramState* programState);
 
     static Pass* create(Technique* parent);

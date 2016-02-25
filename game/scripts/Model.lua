@@ -144,6 +144,13 @@ function Model:fadeOut(animate)
     animate.fadeOut = true
 end
 
+function Model:selectTechnique(index)
+    local count = self:getMeshCount()
+    for i = 0, count - 1 do
+       self:getMaterial(i):selectTechnique(index) 
+    end
+end
+
 function Model:setShaders(vert, frag)
     local program = getShader(vert, frag)
     local state = cc.GLProgramState:create(program)

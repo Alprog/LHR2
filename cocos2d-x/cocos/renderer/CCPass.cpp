@@ -55,6 +55,11 @@ Pass* Pass::create(Technique* technique)
     return nullptr;
 }
 
+Pass* Pass::createWithGLProgramState(GLProgramState* programState)
+{
+	return createWithGLProgramState(nullptr, programState);
+}
+
 Pass* Pass::createWithGLProgramState(Technique* technique, GLProgramState* programState)
 {
     auto pass = new (std::nothrow) Pass();

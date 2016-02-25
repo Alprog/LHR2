@@ -266,8 +266,7 @@ void Director::drawScene()
     }
 
     _renderer->clear();
-    experimental::FrameBuffer::clearAllFBOs();
-    
+        
     pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODEL);
     
 	_renderer->clearDrawStats();
@@ -277,6 +276,8 @@ void Director::drawScene()
 		_scheduler->update(_deltaTime);
 		_eventDispatcher->dispatchEvent(_eventAfterUpdate);
 	}
+
+	experimental::FrameBuffer::clearAllFBOs();
 
 #if (CC_USE_PHYSICS || (CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION) || CC_USE_NAVMESH)
     _runningScene->stepPhysicsAndNavigation(_deltaTime);

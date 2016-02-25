@@ -79,8 +79,8 @@ function Terrain:buildNavGraph()
 end
 
 function Terrain:getColorFromIndex(index)
-    local r, g, b = indexToBytes(index)
-    return cc.c4f(r / 255, g / 255, b / 255, 1) 
+    local h, l = indexToBytes(index)
+    return cc.c4f(h / 255, l / 255, 0, 1) 
 end
 
 function Terrain:batch()
@@ -101,20 +101,18 @@ function Terrain:batch()
         table.insert(infos, info)
     end
     
-    local mesh = combineMesh(infos)
+    local batchGfx = cc.Sprite3D:create()
+    batchGfx:addMesh(combineMesh(infos))
     
-    local batchGfx = Carcase:create('tiles/ground.png', mesh)
+    local shader = getShader('default3d', 'batchedMRT')
+    local state = cc.GLProgramState:create(shader)
+    state:setUniformTexture('mainTexture', getTexture('tiles/ground.png'))
+    local material = cc.Material:createWithGLStateProgram(state)
+    batchGfx:setMaterial(material)
+    
     batchGfx:setForceDepthWrite(true)
-    batchGfx:setGlobalZOrder(-6)
     batchGfx:setCullFaceEnabled(false)
     self:addChild(batchGfx)
-    
-    local material = createMaterial('default3d', 'vColor')
-    local batchMask = Carcase:create(nil, mesh, material)
-    batchMask:setCameraMask(MASK_LAYER)
-    batchMask:setForceDepthWrite(true)
-    batchMask:setGlobalZOrder(-6)
-    self:addChild(batchMask)
 end
 
 

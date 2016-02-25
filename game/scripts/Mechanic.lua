@@ -12,11 +12,5 @@ end
 function Mechanic:initGfx()
     local model = self:loadModel('jrpg')
     self.gfx = model
-    self:setScale(0.01)
-    
-    local children = self.gfx:getChildren()
-    self.gfx:setShaders('skin', 'default3d')
-    self.gfx:setTexture(getTexture('models/diffuse.png'))
-    
-    --self.gfx:setUniformVec4('u_color', Vec(1, 1, 1, 1))
+    self:setScale(0.01)     
 end

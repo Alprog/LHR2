@@ -36,6 +36,7 @@
 #include "renderer/CCTechnique.h"
 #include "base/CCRef.h"
 #include "base/CCVector.h"
+#include "base/CCMap.h"
 #include "math/Vec2.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"
@@ -62,6 +63,8 @@ class CC_DLL Material : public RenderState
     friend class Mesh;
 
 public:
+	static Material* create();
+
     /**
      * Creates a Material using the data from the Properties object defined at the specified URL,
      * where the URL is of the format "<file-path>.<extension>#<namespace-id>/<namespace-id>/.../<namespace-id>"
@@ -93,30 +96,22 @@ public:
     /// sets the material name
     void setName(const std::string& name);
 
-    /** Returns a Technique by its name.
-     returns `nullptr` if the Technique can't be found.
-     */
-    Technique* getTechniqueByName(const std::string& name);
-
-    /** Returns a Technique by index. 
-     returns `nullptr` if the index is invalid.
-     */
-    Technique* getTechniqueByIndex(ssize_t index);
-
     /** Returns the Technique used by the Material */
-    Technique* getTechnique() const;
+    Technique* getCurrentTechnique() const;
+
+	Technique* getTechnique(ssize_t index);
 
     /** Returns the list of Techniques */
-    const Vector<Technique*>& getTechniques() const;
+    const Map<int, Technique*>& getTechniques() const;
 
     /** Returns the number of Techniques in the Material. */
     ssize_t getTechniqueCount() const;
 
     /** Adds a Technique into the Material */
-    void addTechnique(Technique* technique);
+    void setTechnique(int index, Technique* technique);
 
     /** Sets the current technique */
-    void setTechnique(const std::string& techniqueName);
+    void selectTechnique(int index);
 
     /** returns a clone (deep-copy) of the material */
     Material* clone() const;
@@ -143,7 +138,7 @@ protected:
     std::string _name;
 
     // array of techniques
-    Vector<Technique*> _techniques;
+    Map<int, Technique*> _techniques;
 
     // weak pointer since it is being help by _techniques
     Technique* _currentTechnique;

@@ -418,9 +418,10 @@ void Mesh::setMaterial(Material* material)
 
     if (_material)
     {
-        for (auto technique: _material->getTechniques())
+        for (auto pair : _material->getTechniques())
         {
-            for (auto pass: technique->getPasses())
+			auto technique = pair.second;
+            for (auto pass : technique->getPasses())
             {
                 auto vertexAttribBinding = VertexAttribBinding::create(_meshIndexData, pass->getGLProgramState());
                 pass->setVertexAttribBinding(vertexAttribBinding);
@@ -476,6 +477,7 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
 	auto MVP = director->getVPMat().viewProjection * transform;
 	auto deltaTime = director->getDeltaTime();
 
+	auto isSame = (frame - _prevFrame) == 0;
 	auto isPrevValid = (frame - _prevFrame) == 1;
 	
 	auto technique = _material->_currentTechnique;
@@ -502,14 +504,20 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
 			programState->setUniformVec4v("u_prevMatrixPalette", paletteSize, isPrevValid ? _prevMatrixPalette + s0 : matrixPalette);
 		}
 
-		if (_prevMatrixPalette == nullptr)
+		if (!isSame)
 		{
-			_prevMatrixPalette = new (std::nothrow) Vec4[paletteSize * 2];
+			if (_prevMatrixPalette == nullptr)
+			{
+				_prevMatrixPalette = new (std::nothrow) Vec4[paletteSize * 2];
+			}
+			memcpy(_prevMatrixPalette + s1, matrixPalette, paletteSize * sizeof(Vec4));
 		}
-		memcpy(_prevMatrixPalette + s1, matrixPalette, paletteSize * sizeof(Vec4));
 	}
 
-	_prevMVP = MVP;
+	if (!isSame)
+	{
+		_prevMVP = MVP;
+	}
 	_prevFrame = frame;
 	
     renderer->addCommand(&_meshCommand);

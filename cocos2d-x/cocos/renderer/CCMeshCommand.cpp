@@ -267,15 +267,19 @@ void MeshCommand::execute()
 
     if (_material)
     {
-        for(const auto& pass: _material->_currentTechnique->_passes)
-        {
-            pass->bind(_m, true);
+		auto technique = _material->_currentTechnique;
+		if (technique && technique->_enabled)
+		{
+			for (const auto& pass : technique->_passes)
+			{
+				pass->bind(_m, true);
 
-            glDrawElements(_primitive, (GLsizei)_indexCount, _indexFormat, 0);
-            CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(1, _indexCount);
+				glDrawElements(_primitive, (GLsizei)_indexCount, _indexFormat, 0);
+				CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(1, _indexCount);
 
-            pass->unbind();
-        }
+				pass->unbind();
+			}
+		}
     }
     else
     {

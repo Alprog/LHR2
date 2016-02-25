@@ -11,10 +11,30 @@
 -- @return long#long ret (return value: long)
         
 --------------------------------
+-- 
+-- @function [parent=#Technique] setEnabled 
+-- @param self
+-- @param #bool enabled
+-- @return Technique#Technique self (return value: cc.Technique)
+        
+--------------------------------
+-- 
+-- @function [parent=#Technique] setName 
+-- @param self
+-- @param #string name
+-- @return Technique#Technique self (return value: cc.Technique)
+        
+--------------------------------
 --  Returns a new clone of the Technique 
 -- @function [parent=#Technique] clone 
 -- @param self
 -- @return Technique#Technique ret (return value: cc.Technique)
+        
+--------------------------------
+-- 
+-- @function [parent=#Technique] isEnabled 
+-- @param self
+-- @return bool#bool ret (return value: bool)
         
 --------------------------------
 --  Adds a new pass to the Technique.<br>
@@ -51,12 +71,12 @@
 -- @return Technique#Technique ret (return value: cc.Technique)
         
 --------------------------------
---  Creates a new Technique with a GLProgramState.<br>
--- Method added to support legacy code
--- @function [parent=#Technique] createWithGLProgramState 
+-- @overload self, cc.Material, cc.GLProgramState         
+-- @overload self, cc.GLProgramState         
+-- @function [parent=#Technique] createWithGLProgramState
 -- @param self
 -- @param #cc.Material parent
 -- @param #cc.GLProgramState state
 -- @return Technique#Technique ret (return value: cc.Technique)
-        
+
 return nil

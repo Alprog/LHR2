@@ -1,11 +1,13 @@
 
 require 'Battle.lua'
-require 'FrameBuffer.lua'
 require 'Marine.lua'
 require 'BigRobot.lua'
 require 'Mechanic.lua'
 require 'Renegade.lua'
 require 'Avatar.lua'
+
+require 'FrameBuffer/FrameBuffer.lua'
+require 'FrameBuffer/GBuffer.lua'
 
 BattleScreen = Derive('BattleScreen', Scene)
 
@@ -25,11 +27,11 @@ function BattleScreen:init()
    
     local battle = Battle:create()
     battle:setTeamCount(2)
-    for i = 1, 6 do
+    for i = 1, 1 do
         local mechanic = Mechanic:create()
         table.insert(battle.teams[2], mechanic)
     end
-    for i = 1, 6 do
+    for i = 1, 1 do
         local mechanic = Mechanic:create()
         table.insert(battle.teams[1], mechanic)
     end
@@ -45,11 +47,12 @@ function BattleScreen:init()
     
     self.projector = Projector:create(self:getChildByName('3DScreen'))
     self.projector:addSource(self.arena.frameBuffer, 0)
-    self.projector:addSource(self.arena.gBuffer, 0)
-    self.projector:addSource(self.arena.gBuffer, 1)
-    self.projector:addSource(self.arena.gBuffer, 2)
-    self.projector:addSource(self.arena.maskFrameBuffer, 0)
-    
+    self.projector:addSource(self.arena.gBuffer, GBuffer.Indexes.Albedo)
+    self.projector:addSource(self.arena.gBuffer, GBuffer.Indexes.Normal)
+    self.projector:addSource(self.arena.gBuffer, GBuffer.Indexes.Ids)
+    self.projector:addSource(self.arena.gBuffer, GBuffer.Indexes.Velocity)
+    self.projector:addSource(self.arena.gBuffer, GBuffer.Indexes.DepthStencil)
+     
     local touchBeginPoint = nil
     
     local function onTouchBegan(touch, event)

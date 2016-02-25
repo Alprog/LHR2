@@ -49,6 +49,13 @@ NS_CC_BEGIN
 static const char* getOptionalString(Properties* properties, const char* key, const char* defaultValue);
 static bool isValidUniform(const char* name);
 
+Material* Material::create()
+{
+	auto mat = new (std::nothrow) Material();
+	mat->autorelease();
+	return mat;
+}
+
 Material* Material::createWithFilename(const std::string& filepath)
 {
     auto validfilename = FileUtils::getInstance()->fullPathForFilename(filepath);
@@ -93,7 +100,7 @@ bool Material::initWithGLProgramState(cocos2d::GLProgramState *state)
 {
     auto technique = Technique::createWithGLProgramState(this, state);
     if (technique) {
-        _techniques.pushBack(technique);
+		setTechnique(0, technique);
 
         // weak pointer
         _currentTechnique = technique;
@@ -154,7 +161,7 @@ bool Material::parseProperties(Properties* materialProperties)
 bool Material::parseTechnique(Properties* techniqueProperties)
 {
     auto technique = Technique::create(this);
-    _techniques.pushBack(technique);
+    _techniques.insert(_techniques.size(), technique);
 
     // first one is the default one
     if (!_currentTechnique)
@@ -439,57 +446,46 @@ Material* Material::clone() const
     {
         RenderState::cloneInto(material);
 
-        for (const auto& technique: _techniques)
+        for (const auto& pair: _techniques)
         {
-            auto t = technique->clone();
-            material->_techniques.pushBack(t);
+			material->setTechnique(pair.first, pair.second->clone());
         }
 
-        // current technique
-        auto name = _currentTechnique->getName();
-        material->_currentTechnique = material->getTechniqueByName(name);
+		material->_currentTechnique = material->_techniques.at(0);
 
         material->autorelease();
     }
     return material;
 }
 
-Technique* Material::getTechnique() const
+Technique* Material::getCurrentTechnique() const
 {
     return _currentTechnique;
 }
 
-const Vector<Technique*>& Material::getTechniques() const
+Technique* Material::getTechnique(ssize_t index)
+{
+	return _techniques.at(index);
+}
+
+const Map<int, Technique*>& Material::getTechniques() const
 {
     return _techniques;
 }
 
-Technique* Material::getTechniqueByName(const std::string& name)
+void Material::setTechnique(int index, Technique* technique)
 {
-    for(const auto& technique : _techniques) {
-        if (technique->getName().compare(name)==0)
-            return technique;
-    }
-    return nullptr;
+	technique->setParent(this);
+    _techniques.insert(index, technique);
+	if (_currentTechnique == nullptr)
+	{
+		_currentTechnique = technique;
+	}
 }
 
-Technique* Material::getTechniqueByIndex(ssize_t index)
+void Material::selectTechnique(int index)
 {
-    CC_ASSERT(index>=0 && index<_techniques.size() && "Invalid size");
-
-    return _techniques.at(index);
-}
-
-void Material::addTechnique(Technique* technique)
-{
-    _techniques.pushBack(technique);
-}
-
-void Material::setTechnique(const std::string& techniqueName)
-{
-    auto technique = getTechniqueByName(techniqueName);
-    if (technique)
-        _currentTechnique = technique;
+	_currentTechnique = _techniques.at(index);
 }
 
 ssize_t Material::getTechniqueCount() const

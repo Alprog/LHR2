@@ -56,6 +56,7 @@ public:
     /** Creates a new Technique with a GLProgramState.
      Method added to support legacy code
      */
+	static Technique* createWithGLProgramState(GLProgramState* state);
     static Technique* createWithGLProgramState(Material* parent, GLProgramState* state);
     static Technique* create(Material* parent);
 
@@ -79,15 +80,19 @@ public:
     /** Returns a new clone of the Technique */
     Technique* clone() const;
 
+	inline void setEnabled(bool enabled) { _enabled = enabled; };
+	inline bool isEnabled() { return _enabled; }
+
+	void setName(const std::string& name);
+
 protected:
     Technique();
     ~Technique();
     bool init(Material* parent);
 
-    void setName(const std::string& name);
-
     std::string _name;
     Vector<Pass*> _passes;
+	bool _enabled;
 };
 
 NS_CC_END

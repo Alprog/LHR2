@@ -34,6 +34,11 @@
 
 NS_CC_BEGIN
 
+Technique* Technique::createWithGLProgramState(GLProgramState* state)
+{
+	return createWithGLProgramState(nullptr, state);
+}
+
 Technique* Technique::createWithGLProgramState(Material* parent, GLProgramState* state)
 {
     auto technique = new (std::nothrow) Technique();
@@ -86,7 +91,7 @@ Technique* Technique::clone() const
         for (const auto pass: _passes)
         {
             auto p = pass->clone();
-            technique->_passes.pushBack(p);
+			technique->addPass(p);
         }
 
         technique->autorelease();
@@ -96,6 +101,7 @@ Technique* Technique::clone() const
 
 void Technique::addPass(Pass *pass)
 {
+	pass->setParent(this);
     _passes.pushBack(pass);
 }
 

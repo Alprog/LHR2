@@ -318,15 +318,13 @@ function yawPitchRoll(yaw, pitch, roll)
 end
 
 function indexToBytes(index)
-    c = index % 256
-    index = (index - c) / 256
-    b = index % 256
-    a = (index - b) / 256
-    return a, b, c
+    local l = index % 256
+    local h = (index - l) / 256
+    return h, l
 end
 
-function bytesToIndex(a, b, c)
-    return a * 65536 + b * 256 + c
+function bytesToIndex(h, l)
+    return h * 256 + l
 end
 
 function iter(t)

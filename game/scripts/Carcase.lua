@@ -21,7 +21,7 @@ end
 function Carcase:getMaterial(textureName)
     local cache = theApp.director:getTextureCache()
     local texture = cache:addImage(textureName)
-    local program = getShader('default3d', 'default3d')
+    local program = getShader('default3d', 'defaultMRT')
     local state = cc.GLProgramState:create(program)
     state:setUniformTexture('mainTexture', texture)
     return cc.Material:createWithGLStateProgram(state)

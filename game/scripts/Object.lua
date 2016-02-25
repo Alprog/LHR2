@@ -21,7 +21,7 @@ end
 function Object:setDebugIndex()
     local index = nil 
     repeat
-        index = math.random(0, 16777215)
+        index = math.random(0, 65535)
     until not objects[index]
     self.index = index
 end

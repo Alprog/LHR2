@@ -11,7 +11,6 @@ Arena = Derive("Arena", cc.Node)
 
 function Arena:init()
     self.unitLayer = self:createChild()
-    self.lightNode = self:createChild()
     
     self:listenTouches()
     self:scheduleUpdate()
@@ -19,9 +18,11 @@ function Arena:init()
     self.tasks = TaskManager:create()
     self:initCamera()
         
-    self.gBuffer = FrameBuffer:create(self, 3, true)
-    self.maskFrameBuffer = FrameBuffer:create(self, 1, true, 0, 4, true)
-    self.frameBuffer = FrameBuffer:create(self, 1, false)
+    self.gBuffer = GBuffer:create(self)
+    self.frameBuffer = FrameBuffer:create(self, function(sender, size)
+        sender:setSize(size.width, size.height)
+        sender:attachNewTexture(0, size, cc.BGRA8888)
+    end)
 
     self.hoverEnabled = true
 end
@@ -45,21 +46,16 @@ function Arena:update(deltaTime)
     self.tasks:update(deltaTime)
     self.camera:update(deltaTime)
     
-    self:renderMask()
     if self.hoverEnabled then
         self:checkHover()
     end
-    
-    self:sortUnits()
 end
 
-function Arena:renderMask()
-    local pos = Input.mousePos
-    local k = self.maskFrameBuffer.downScale
-    local rect = cc.rect(pos.x / k - 1, pos.y / k - 1, 3, 3)
-    
-    self.camera:setScissors(rect)
-    self.camera:render(self, MASK_LAYER, self.maskFrameBuffer)
+function Arena:setTechnique(index)
+    local units = self.unitLayer:getChildren() 
+    for unit in iter(units) do
+        unit.gfx:selectTechnique(index)
+    end
 end
 
 function Arena:checkHover()
@@ -76,31 +72,17 @@ function Arena:checkHover()
 end
 
 function Arena:getObjectFromScreenPos(pos)
-    local texel = self.maskFrameBuffer:getTexel(pos.x, pos.y)
-    local index = bytesToIndex(texel.x, texel.y, texel.z)
-    return Object:fromIndex(index) 
-end
-
-function Arena:sortUnits()
-    local units = self.unitLayer:getChildren()
-    for unit in iter(units) do
-        local order = unit.silhouette:isVisible() and 3 or 1
-        unit.model:setGlobalZOrder(order)
-        unit.silhouette:setGlobalZOrder(order)
-    end
+    local texel = self.gBuffer:getTexel(pos.x, pos.y)
+    print(texel.x, texel.y)
+    local index = bytesToIndex(texel.x, texel.y)
+    return Object:fromIndex(index)
 end
 
 function Arena:onResize(size)
     self:setTransformUpdated()
-    self.gBuffer:resize(size)
-    self.maskFrameBuffer:resize(size)
-    self.frameBuffer:resize(size)
+    --self.gBuffer:onResize(size)
+    --self.frameBuffer:onResize(size)
     self.camera.dirty = true
-end
-
-function Arena:addObject(object)
-    object.arena = self
-    self:addChild(object)
 end
 
 function Arena:onTouchEnded(touch, event)
@@ -213,7 +195,6 @@ function Arena:addObstacles()
                 local obstacle = Model:create(path)
                 obstacle:setScale(0.01)
                 obstacle:setPosition3D(Vec(0, 0, 0))
-                obstacle:setGlobalZOrder(-6)
                 obstacle:setForceDepthWrite(true)
                 if index == 7 or index == 8 then
                    --obstacle:play('Take 001', true, 0.4)
@@ -235,13 +216,9 @@ end
 
 function Arena:render()
     
-    self.camera:setScissors(nil)
+    self:setTechnique(0)
     self.camera:render(self, cc.CameraFlag.DEFAULT, self.gBuffer)
 
     thePostProcessor:setup(self.gBuffer, self.frameBuffer)
     thePostProcessor:perform()
-    
-    --[[self.camera:render(self, cc.CameraFlag.Ambient, self.frameBuffer)
-    self.camera:render(self, cc.CameraFlag.Lights, self.frameBuffer)
-    self.camera:render(self, cc.CameraFlag.Transparents, self.frameBuffer)]]
 end

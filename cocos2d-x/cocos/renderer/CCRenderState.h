@@ -80,6 +80,9 @@ public:
      */
     void bind(Pass* pass);
 
+	inline void setParent(RenderState* parent) { _parent = parent; }
+	inline RenderState* getParent() { return _parent; }
+
     /**
      * Returns the topmost RenderState in the hierarchy below the given RenderState.
      */

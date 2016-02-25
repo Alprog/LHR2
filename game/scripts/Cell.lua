@@ -8,7 +8,6 @@ function Cell:initGfx()
     self.gfx:setScale(0.01)
     self.gfx:setPosition3D(Vec(0, 0, 0))]]
     
-    self.gfx:setGlobalZOrder(-6)
     self.gfx:setForceDepthWrite(true)
     
     local selection = Carcase:create('tiles/select.png')

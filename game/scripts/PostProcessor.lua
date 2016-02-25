@@ -32,7 +32,7 @@ function PostProcessor:setup(gBuffer, outBuffer)
     
     state:setUniformTexture('colorTexture', gBuffer:getRenderTarget(0))
     state:setUniformTexture('normalTexture', gBuffer:getRenderTarget(1))
-    --state:setUniformTexture('velocityTexture', gBuffer:getRenderTarget(2))
+    --state:setUniformTexture('velocityTexture', gBuffer:getRenderTarget(3))
     
     self.sprite:setGLProgramState(state)
     

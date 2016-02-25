@@ -30,6 +30,7 @@ require 'Carcase.lua'
 require 'Vector.lua'
 require 'ParticlesEffect.lua'
 require 'Projector.lua'
+require 'RenderMode.lua'
 
 require 'ContentPipeline.lua'
 contentPipeline()

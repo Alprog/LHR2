@@ -13,6 +13,12 @@
 -- @return RenderState#RenderState self (return value: cc.RenderState)
         
 --------------------------------
+-- 
+-- @function [parent=#RenderState] getParent 
+-- @param self
+-- @return RenderState#RenderState ret (return value: cc.RenderState)
+        
+--------------------------------
 -- Returns the topmost RenderState in the hierarchy below the given RenderState.
 -- @function [parent=#RenderState] getTopmost 
 -- @param self
@@ -45,6 +51,13 @@
 -- @function [parent=#RenderState] getStateBlock 
 -- @param self
 -- @return RenderState::StateBlock#RenderState::StateBlock ret (return value: cc.RenderState::StateBlock)
+        
+--------------------------------
+-- 
+-- @function [parent=#RenderState] setParent 
+-- @param self
+-- @param #cc.RenderState parent
+-- @return RenderState#RenderState self (return value: cc.RenderState)
         
 --------------------------------
 -- Static initializer that is called during game startup.

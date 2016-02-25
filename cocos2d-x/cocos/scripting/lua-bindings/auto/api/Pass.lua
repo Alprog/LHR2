@@ -63,11 +63,12 @@
 -- @return Pass#Pass ret (return value: cc.Pass)
         
 --------------------------------
---  Creates a Pass with a GLProgramState.
--- @function [parent=#Pass] createWithGLProgramState 
+-- @overload self, cc.Technique, cc.GLProgramState         
+-- @overload self, cc.GLProgramState         
+-- @function [parent=#Pass] createWithGLProgramState
 -- @param self
 -- @param #cc.Technique parent
 -- @param #cc.GLProgramState programState
 -- @return Pass#Pass ret (return value: cc.Pass)
-        
+
 return nil

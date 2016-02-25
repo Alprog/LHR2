@@ -256,6 +256,7 @@ Vec4 FrameBuffer::getTexel(int x, int y)
 
 	uint8_t texel[4];
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, pboids[pboIndex]);
+	glReadBuffer(GL_COLOR_ATTACHMENT2); // hardcoded ids texture
 	glReadPixels(x, y, 1, 1, GL_BGRA, GL_UNSIGNED_BYTE, 0);
 
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, pboids[1 - pboIndex]);

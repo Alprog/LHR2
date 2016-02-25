@@ -18,10 +18,6 @@ function ParticlesEffect:init(model, filePath, deltaTime)
     local state = cc.GLProgramState:create(shader)
     self:setGLProgramState(state)
     
-    self:setGlobalZOrder(10)
-       
-    --self:setGlobalZOrder(5)
-    
     self:step(deltaTime)
     self:scheduleUpdate()
 end
