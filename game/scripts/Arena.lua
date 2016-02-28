@@ -6,10 +6,13 @@ require 'TaskManager.lua'
 require 'SortedList.lua'
 require 'Camera.lua'
 require 'Terrain.lua'
+require 'World3D.lua'
 
-Arena = Derive("Arena", cc.Node)
+Arena = Derive("Arena", World3D)
 
 function Arena:init()
+    World3D.init(self)
+    
     self.unitLayer = self:createChild()
     
     self:listenTouches()
@@ -18,15 +21,6 @@ function Arena:init()
     self.tasks = TaskManager:create()
     self:initCamera()
         
-    self.shadowBuffer = FrameBuffer:create(self, cc.size(2048, 2048), function(sender, size)
-        sender:attachNewTexture(FrameBuffer.Index.DepthStencil, size, cc.DEPTH24_STENCIL8)
-    end)
-        
-    self.gBuffer = GBuffer:create(self, theApp.windowSize)
-    self.frameBuffer = FrameBuffer:create(self, theApp.windowSize, function(sender, size)
-        sender:attachNewTexture(0, size, cc.BGRA8888)
-    end)
-
     self.hoverEnabled = true
 end
 
@@ -88,13 +82,6 @@ function Arena:getObjectFromScreenPos(pos)
     return Object:fromIndex(index)
 end
 
-function Arena:onResize(size)
-    self:setTransformUpdated()
-    self.gBuffer:resize(size)
-    self.frameBuffer:resize(size)
-    self.camera:setWindowAspect()
-end
-
 function Arena:onTouchEnded(touch, event)
     if touch.dragging then
        return 
@@ -149,16 +136,4 @@ function Arena:spawn(unit)
     
     unit.arena = self
     self.unitLayer:addChild(unit)
-end
-
-function Arena:render()   
-    self:setTechnique(RenderMode.Default)
-    self.camera:render(self, cc.CameraFlag.DEFAULT, self.gBuffer)
-    
-    self:setTechnique(RenderMode.Default)
-    self.lightCamera:render(self, cc.CameraFlag.DEFAULT, self.shadowBuffer)
-
-    
-    thePostProcessor:setup(self.gBuffer, self.shadowBuffer, self.frameBuffer, self.camera, self.lightCamera)
-    thePostProcessor:perform()
 end

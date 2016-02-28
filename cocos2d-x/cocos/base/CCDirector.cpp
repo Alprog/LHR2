@@ -277,8 +277,6 @@ void Director::drawScene()
 		_eventDispatcher->dispatchEvent(_eventAfterUpdate);
 	}
 
-	experimental::FrameBuffer::clearAllFBOs();
-
 #if (CC_USE_PHYSICS || (CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION) || CC_USE_NAVMESH)
     _runningScene->stepPhysicsAndNavigation(_deltaTime);
 #endif

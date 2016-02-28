@@ -15,7 +15,7 @@ function PostProcessor:init(app)
     --self.frameBuffer:retain()
 end
 
-function PostProcessor:setup(gBuffer, shadowBuffer, outBuffer, sceneCamera, lightCamera)
+function PostProcessor:setup(gBuffer, shadowMapBuffer, outBuffer, sceneCamera, lightCamera)
     
     self.frameBuffer = outBuffer
     
@@ -35,7 +35,7 @@ function PostProcessor:setup(gBuffer, shadowBuffer, outBuffer, sceneCamera, ligh
     state:setUniformTexture('depthTexture', gBuffer:getDepthStencilTexture())
     --state:setUniformTexture('velocityTexture', gBuffer:getRenderTarget(3))
     
-    state:setUniformTexture('shadowMapTexture', shadowBuffer:getDepthStencilTexture())
+    state:setUniformTexture('shadowMapTexture', shadowMapBuffer:getDepthStencilTexture())
     
     self.sprite:setGLProgramState(state)
     
