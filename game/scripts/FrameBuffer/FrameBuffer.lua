@@ -27,6 +27,10 @@ function FrameBuffer:resize(size)
     end   
 end
 
+function FrameBuffer:getDepthStencilTexture()
+    return self:getRenderTarget(FrameBuffer.Index.DepthStencil)
+end
+
 function FrameBuffer:attachNewTexture(index, size, format, multisamples)
     self:attachNewTarget(cc.Texture2D, index, size, format, multisamples)
 end

@@ -24,17 +24,20 @@ function BattleScreen:init()
    
     local battle = Battle:create()
     battle:setTeamCount(2)
-    for i = 1, 1 do
+    for i = 1, 3 do
         local warrior = Warrior:create()
         table.insert(battle.teams[2], warrior)
     end
-    for i = 1, 1 do
+    for i = 1, 3 do
         local warrior = Warrior:create()
         table.insert(battle.teams[1], warrior)
     end
     
     --arena:addObstacles()        
-    self:getChildByName('ArenaLayer'):addChild(self.arena)
+    --self:getChildByName('ArenaLayer'):addChild(self.arena)
+    theApp.scene:addChild(self.arena)
+    --self:keepObject(self.arena)
+    self:enableNodeEvents()
     
     battle:setArena(self.arena)
     battle:setScene(self)
@@ -60,6 +63,12 @@ function BattleScreen:init()
         
     self.battle:selectPlayerByIndex(1)
     self:updateUI()
+end
+
+function BattleScreen:onCleanup()
+    if theApp.running then
+        self.arena:removeFromParent()
+    end
 end
 
 function BattleScreen:initUI()

@@ -63,6 +63,12 @@ function App:run(sceneManager)
     self.scene = cc.Scene:create()
     self.scene:addChild(self.sceneManager.root)
     self.scene:retain()
+
+    self.running = true
+    self.scene:enableNodeEvents()
+    self.scene.onCleanup = function()
+       self.running = false 
+    end
     
     self.director:runWithScene(self.scene)
     --self.director:startAnimation()

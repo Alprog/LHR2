@@ -35,7 +35,3 @@ function GBuffer:getVelocityTexture()
     return self:getRenderTarget(GBuffer.Index.Velocity)
 end
 
-function GBuffer:getDepthStencilTexture()
-    return self:getRenderTarget(GBuffer.Index.DepthStencil)
-end
-

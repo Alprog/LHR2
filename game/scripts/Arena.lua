@@ -18,7 +18,7 @@ function Arena:init()
     self.tasks = TaskManager:create()
     self:initCamera()
         
-    self.shadowBuffer = FrameBuffer:create(self, cc.size(1024, 1024), function(sender, size)
+    self.shadowBuffer = FrameBuffer:create(self, cc.size(2048, 2048), function(sender, size)
         sender:attachNewTexture(FrameBuffer.Index.DepthStencil, size, cc.DEPTH24_STENCIL8)
     end)
         
@@ -151,13 +151,14 @@ function Arena:spawn(unit)
     self.unitLayer:addChild(unit)
 end
 
-function Arena:render()
-    self:setTechnique(RenderMode.Default)
-    self.lightCamera:render(self, cc.CameraFlag.DEFAULT, self.shadowBuffer)
-    
+function Arena:render()   
     self:setTechnique(RenderMode.Default)
     self.camera:render(self, cc.CameraFlag.DEFAULT, self.gBuffer)
     
-    thePostProcessor:setup(self.gBuffer, self.frameBuffer, self.camera, self.lightCamera)
+    self:setTechnique(RenderMode.Default)
+    self.lightCamera:render(self, cc.CameraFlag.DEFAULT, self.shadowBuffer)
+
+    
+    thePostProcessor:setup(self.gBuffer, self.shadowBuffer, self.frameBuffer, self.camera, self.lightCamera)
     thePostProcessor:perform()
 end
