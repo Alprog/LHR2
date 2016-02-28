@@ -96,7 +96,7 @@ void MeshCommand::init(float globalZOrder,
 void MeshCommand::init(float globalZOrder,
                        GLuint textureID,
                        GLProgramState* glProgramState,
-                       RenderState::StateBlock* stateBlock,
+                       StateBlock* stateBlock,
                        GLuint vertexBuffer,
                        GLuint indexBuffer,
                        GLenum primitive,
@@ -255,7 +255,7 @@ void MeshCommand::postBatchDraw()
 
         // restore the default state since we don't know
         // if the next command will need the default state or not
-        RenderState::StateBlock::restore(0);
+        StateBlock::restore(0);
     }
 }
 

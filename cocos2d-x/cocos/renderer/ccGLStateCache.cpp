@@ -110,16 +110,16 @@ static void SetBlending(GLenum sfactor, GLenum dfactor)
 	if (sfactor == GL_ONE && dfactor == GL_ZERO)
     {
 		glDisable(GL_BLEND);
-        RenderState::StateBlock::_defaultState->setBlend(false);
+        StateBlock::_defaultState->setBlend(false);
 	}
     else
     {
 		glEnable(GL_BLEND);
 		glBlendFunc(sfactor, dfactor);
 
-        RenderState::StateBlock::_defaultState->setBlend(true);
-        RenderState::StateBlock::_defaultState->setBlendSrc((RenderState::Blend)sfactor);
-        RenderState::StateBlock::_defaultState->setBlendSrc((RenderState::Blend)dfactor);
+        StateBlock::_defaultState->setBlend(true);
+        StateBlock::_defaultState->setBlendSrc((Blend)sfactor);
+        StateBlock::_defaultState->setBlendSrc((Blend)dfactor);
     }
 }
 

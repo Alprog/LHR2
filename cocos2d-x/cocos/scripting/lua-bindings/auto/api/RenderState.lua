@@ -50,7 +50,7 @@
 -- 
 -- @function [parent=#RenderState] getStateBlock 
 -- @param self
--- @return RenderState::StateBlock#RenderState::StateBlock ret (return value: cc.RenderState::StateBlock)
+-- @return StateBlock#StateBlock ret (return value: cc.StateBlock)
         
 --------------------------------
 -- 

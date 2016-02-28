@@ -389,10 +389,10 @@ void Grid3D::beforeBlit()
         CHECK_GL_ERROR_DEBUG();
 
         glEnable(GL_DEPTH_TEST);
-        RenderState::StateBlock::_defaultState->setDepthTest(true);
+        StateBlock::_defaultState->setDepthTest(true);
 
         glDepthMask(true);
-        RenderState::StateBlock::_defaultState->setDepthWrite(true);
+        StateBlock::_defaultState->setDepthWrite(true);
     }
 }
 
@@ -404,10 +404,10 @@ void Grid3D::afterBlit()
             glEnable(GL_DEPTH_TEST);
         else
             glDisable(GL_DEPTH_TEST);
-        RenderState::StateBlock::_defaultState->setDepthTest(_oldDepthTestValue);
+        StateBlock::_defaultState->setDepthTest(_oldDepthTestValue);
 
         glDepthMask(_oldDepthWriteValue);
-        RenderState::StateBlock::_defaultState->setDepthWrite(_oldDepthWriteValue);
+        StateBlock::_defaultState->setDepthWrite(_oldDepthWriteValue);
     }
 }
 

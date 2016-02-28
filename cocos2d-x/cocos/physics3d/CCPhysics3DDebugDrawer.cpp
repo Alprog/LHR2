@@ -162,7 +162,7 @@ void Physics3DDebugDrawer::drawImplementation( const Mat4 &transform, uint32_t f
     CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(1,_bufferCount);
 
     glDisable(GL_DEPTH_TEST);
-    RenderState::StateBlock::_defaultState->setDepthTest(false);
+    StateBlock::_defaultState->setDepthTest(false);
 }
 
 void Physics3DDebugDrawer::init()

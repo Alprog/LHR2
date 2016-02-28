@@ -278,7 +278,7 @@ Terrain::Terrain()
 , _lightMap(nullptr)
 , _lightDir(-1.f, -1.f, 0.f)
 {
-    _stateBlock = RenderState::StateBlock::create();
+    _stateBlock = StateBlock::create();
     CC_SAFE_RETAIN(_stateBlock);
 
     _customCommand.setTransparent(false);

@@ -1157,6 +1157,11 @@
 
 
 --------------------------------------------------------
+-- the cc StateBlock
+-- @field [parent=#cc] StateBlock#StateBlock StateBlock preloaded module
+
+
+--------------------------------------------------------
 -- the cc RenderState
 -- @field [parent=#cc] RenderState#RenderState RenderState preloaded module
 

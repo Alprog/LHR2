@@ -79,11 +79,11 @@ PUBillboardChain::PUBillboardChain(const std::string& name, const std::string &t
                                _vertexBuffer(nullptr)
 {
 
-    _stateBlock = RenderState::StateBlock::create();
+    _stateBlock = StateBlock::create();
     CC_SAFE_RETAIN(_stateBlock);
 
     _stateBlock->setCullFace(false);
-    _stateBlock->setCullFaceSide(RenderState::CULL_FACE_SIDE_BACK);
+    _stateBlock->setCullFaceSide(CULL_FACE_SIDE_BACK);
     _stateBlock->setDepthTest(false);
     _stateBlock->setDepthWrite(false);
     _stateBlock->setBlend(true);
@@ -680,7 +680,7 @@ void PUBillboardChain::init( const std::string &texFile )
     _meshCommand->setTransparent(true);
     _stateBlock->setDepthTest(true);
     _stateBlock->setDepthWrite(false);
-    _stateBlock->setCullFaceSide(RenderState::CULL_FACE_SIDE_BACK);
+    _stateBlock->setCullFaceSide(CULL_FACE_SIDE_BACK);
     _stateBlock->setCullFace(true);
 }
 

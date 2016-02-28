@@ -93,7 +93,7 @@ private:
     Primitive *_currentPrimitive;
     GLProgram *_program;
     CustomCommand _customCmd;
-    RenderState::StateBlock* _stateBlock;
+    StateBlock* _stateBlock;
     GLenum _primitiveType;
     bool _currentDepthMask;
     GLuint _vbo;

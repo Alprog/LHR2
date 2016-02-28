@@ -83,7 +83,7 @@ protected:
         Vec4 color;
     };
     MeshCommand* _meshCommand;
-    RenderState::StateBlock* _stateBlock;
+    StateBlock* _stateBlock;
     Texture2D*             _texture;
     GLProgramState*        _glProgramState;
     IndexBuffer*           _indexBuffer; //index buffer

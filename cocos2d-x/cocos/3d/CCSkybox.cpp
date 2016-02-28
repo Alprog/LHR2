@@ -167,19 +167,19 @@ void Skybox::onDraw(const Mat4& transform, uint32_t flags)
     state->setUniformMat4("u_cameraRot", cameraModelMat);
 
     glEnable(GL_DEPTH_TEST);
-    RenderState::StateBlock::_defaultState->setDepthTest(true);
+    StateBlock::_defaultState->setDepthTest(true);
 
     glDepthFunc(GL_LEQUAL);
-    RenderState::StateBlock::_defaultState->setDepthFunction(RenderState::DEPTH_LEQUAL);
+    StateBlock::_defaultState->setDepthFunction(DEPTH_LEQUAL);
 
     glEnable(GL_CULL_FACE);
-    RenderState::StateBlock::_defaultState->setCullFace(true);
+    StateBlock::_defaultState->setCullFace(true);
 
     glCullFace(GL_BACK);
-    RenderState::StateBlock::_defaultState->setCullFaceSide(RenderState::CULL_FACE_SIDE_BACK);
+    StateBlock::_defaultState->setCullFaceSide(CULL_FACE_SIDE_BACK);
     
     glDisable(GL_BLEND);
-    RenderState::StateBlock::_defaultState->setBlend(false);
+    StateBlock::_defaultState->setBlend(false);
 
     if (Configuration::getInstance()->supportsShareableVAO())
     {

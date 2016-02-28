@@ -209,7 +209,7 @@ bool Particle3DQuadRender::initQuadRender( const std::string& texFile )
     _stateBlock->setDepthTest(_depthTest);
     _stateBlock->setDepthWrite(_depthWrite);
     _stateBlock->setCullFace(true);
-    _stateBlock->setCullFaceSide(RenderState::CULL_FACE_SIDE_BACK);
+    _stateBlock->setCullFaceSide(CULL_FACE_SIDE_BACK);
     return true;
 }
 
@@ -293,11 +293,11 @@ Particle3DRender::Particle3DRender()
 , _depthTest(true)
 , _depthWrite(false)
 {
-    _stateBlock = RenderState::StateBlock::create();
+    _stateBlock = StateBlock::create();
     _stateBlock->retain();
 
     _stateBlock->setCullFace(false);
-    _stateBlock->setCullFaceSide(RenderState::CULL_FACE_SIDE_BACK);
+    _stateBlock->setCullFaceSide(CULL_FACE_SIDE_BACK);
     _stateBlock->setDepthTest(false);
     _stateBlock->setDepthWrite(false);
     _stateBlock->setBlend(true);

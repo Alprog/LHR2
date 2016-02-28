@@ -79,7 +79,7 @@ CC_CONSTRUCTOR_ACCESS:
     
 protected:
     ParticleSystem3D *_particleSystem;
-    RenderState::StateBlock* _stateBlock;
+    StateBlock* _stateBlock;
     bool  _isVisible;
     Vec3 _rendererScale;
     bool _depthTest;

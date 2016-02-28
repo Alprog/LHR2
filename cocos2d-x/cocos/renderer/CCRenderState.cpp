@@ -35,7 +35,7 @@
 
 NS_CC_BEGIN
 
-RenderState::StateBlock* RenderState::StateBlock::_defaultState = nullptr;
+StateBlock* StateBlock::_defaultState = nullptr;
 
 
 RenderState::RenderState()
@@ -153,7 +153,7 @@ RenderState* RenderState::getTopmost(RenderState* below)
     return NULL;
 }
 
-RenderState::StateBlock* RenderState::getStateBlock() const
+StateBlock* RenderState::getStateBlock() const
 {
     return _state;
 }
@@ -178,9 +178,9 @@ void RenderState::cloneInto(RenderState* renderState) const
 //
 // StateBlock
 //
-RenderState::StateBlock* RenderState::StateBlock::create()
+StateBlock* StateBlock::create()
 {
-    auto state = new (std::nothrow) RenderState::StateBlock();
+    auto state = new (std::nothrow) StateBlock();
     if (state)
     {
         state->autorelease();
@@ -194,23 +194,23 @@ RenderState::StateBlock* RenderState::StateBlock::create()
 // _depthWriteEnabled is FALSE
 // _depthTestEnabled is TRUE
 // _blendEnabled is TRUE
-RenderState::StateBlock::StateBlock()
+StateBlock::StateBlock()
 : _cullFaceEnabled(false)
-, _depthTestEnabled(true), _depthWriteEnabled(false), _depthFunction(RenderState::DEPTH_LESS)
-, _blendEnabled(true), _blendSrc(RenderState::BLEND_ONE), _blendDst(RenderState::BLEND_ZERO)
+, _depthTestEnabled(true), _depthWriteEnabled(false), _depthFunction(DEPTH_LESS)
+, _blendEnabled(true), _blendSrc(BLEND_ONE), _blendDst(BLEND_ZERO)
 , _cullFaceSide(CULL_FACE_SIDE_BACK), _frontFace(FRONT_FACE_CCW)
 , _stencilTestEnabled(false), _stencilWrite(RS_ALL_ONES)
-, _stencilFunction(RenderState::STENCIL_ALWAYS), _stencilFunctionRef(0), _stencilFunctionMask(RS_ALL_ONES)
-, _stencilOpSfail(RenderState::STENCIL_OP_KEEP), _stencilOpDpfail(RenderState::STENCIL_OP_KEEP), _stencilOpDppass(RenderState::STENCIL_OP_KEEP)
+, _stencilFunction(STENCIL_ALWAYS), _stencilFunctionRef(0), _stencilFunctionMask(RS_ALL_ONES)
+, _stencilOpSfail(STENCIL_OP_KEEP), _stencilOpDpfail(STENCIL_OP_KEEP), _stencilOpDppass(STENCIL_OP_KEEP)
 , _bits(0L)
 {
 }
 
-RenderState::StateBlock::~StateBlock()
+StateBlock::~StateBlock()
 {
 }
 
-void RenderState::StateBlock::bind()
+void StateBlock::bind()
 {
     // When the public bind() is called with no RenderState object passed in,
     // we assume we are being called to bind the state of a single StateBlock,
@@ -222,7 +222,7 @@ void RenderState::StateBlock::bind()
     bindNoRestore();
 }
 
-void RenderState::StateBlock::bindNoRestore()
+void StateBlock::bindNoRestore()
 {
     CC_ASSERT(_defaultState);
 
@@ -312,7 +312,7 @@ void RenderState::StateBlock::bindNoRestore()
     _defaultState->_bits |= _bits;
 }
 
-void RenderState::StateBlock::restore(long stateOverrideBits)
+void StateBlock::restore(long stateOverrideBits)
 {
     CC_ASSERT(_defaultState);
 
@@ -334,8 +334,8 @@ void RenderState::StateBlock::restore(long stateOverrideBits)
     {
         GL::blendFunc(GL_ONE, GL_ZERO);
         _defaultState->_bits &= ~RS_BLEND_FUNC;
-        _defaultState->_blendSrc = RenderState::BLEND_ONE;
-        _defaultState->_blendDst = RenderState::BLEND_ZERO;
+        _defaultState->_blendSrc = BLEND_ONE;
+        _defaultState->_blendDst = BLEND_ZERO;
     }
     if (!(stateOverrideBits & RS_CULL_FACE) && (_defaultState->_bits & RS_CULL_FACE))
     {
@@ -347,13 +347,13 @@ void RenderState::StateBlock::restore(long stateOverrideBits)
     {
         glCullFace((GLenum)GL_BACK);
         _defaultState->_bits &= ~RS_CULL_FACE_SIDE;
-        _defaultState->_cullFaceSide = RenderState::CULL_FACE_SIDE_BACK;
+        _defaultState->_cullFaceSide = CULL_FACE_SIDE_BACK;
     }
     if (!(stateOverrideBits & RS_FRONT_FACE) && (_defaultState->_bits & RS_FRONT_FACE))
     {
         glFrontFace((GLenum)GL_CCW);
         _defaultState->_bits &= ~RS_FRONT_FACE;
-        _defaultState->_frontFace = RenderState::FRONT_FACE_CCW;
+        _defaultState->_frontFace = FRONT_FACE_CCW;
     }
 	if (!(stateOverrideBits & RS_DEPTH_TEST) && (_defaultState->_bits & RS_DEPTH_TEST))
     {
@@ -371,7 +371,7 @@ void RenderState::StateBlock::restore(long stateOverrideBits)
     {
         glDepthFunc((GLenum)GL_LESS);
         _defaultState->_bits &= ~RS_DEPTH_FUNC;
-        _defaultState->_depthFunction = RenderState::DEPTH_LESS;
+        _defaultState->_depthFunction = DEPTH_LESS;
     }
 //    if (!(stateOverrideBits & RS_STENCIL_TEST) && (_defaultState->_bits & RS_STENCIL_TEST))
 //    {
@@ -403,7 +403,7 @@ void RenderState::StateBlock::restore(long stateOverrideBits)
 //    }
 }
 
-void RenderState::StateBlock::enableDepthWrite()
+void StateBlock::enableDepthWrite()
 {
     CC_ASSERT(_defaultState);
 
@@ -418,7 +418,7 @@ void RenderState::StateBlock::enableDepthWrite()
     }
 }
 
-void RenderState::StateBlock::cloneInto(StateBlock* state) const
+void StateBlock::cloneInto(StateBlock* state) const
 {
     CC_ASSERT(state);
 
@@ -468,163 +468,163 @@ static unsigned int parseUInt(const std::string& value)
 
 }
 
-static RenderState::Blend parseBlend(const std::string& value)
+static Blend parseBlend(const std::string& value)
 {
     // Convert the string to uppercase for comparison.
     std::string upper(value);
     std::transform(upper.begin(), upper.end(), upper.begin(), (int(*)(int))toupper);
     if (upper == "ZERO")
-        return RenderState::BLEND_ZERO;
+        return BLEND_ZERO;
     else if (upper == "ONE")
-        return RenderState::BLEND_ONE;
+        return BLEND_ONE;
     else if (upper == "SRC_COLOR")
-        return RenderState::BLEND_SRC_COLOR;
+        return BLEND_SRC_COLOR;
     else if (upper == "ONE_MINUS_SRC_COLOR")
-        return RenderState::BLEND_ONE_MINUS_SRC_COLOR;
+        return BLEND_ONE_MINUS_SRC_COLOR;
     else if (upper == "DST_COLOR")
-        return RenderState::BLEND_DST_COLOR;
+        return BLEND_DST_COLOR;
     else if (upper == "ONE_MINUS_DST_COLOR")
-        return RenderState::BLEND_ONE_MINUS_DST_COLOR;
+        return BLEND_ONE_MINUS_DST_COLOR;
     else if (upper == "SRC_ALPHA")
-        return RenderState::BLEND_SRC_ALPHA;
+        return BLEND_SRC_ALPHA;
     else if (upper == "ONE_MINUS_SRC_ALPHA")
-        return RenderState::BLEND_ONE_MINUS_SRC_ALPHA;
+        return BLEND_ONE_MINUS_SRC_ALPHA;
     else if (upper == "DST_ALPHA")
-        return RenderState::BLEND_DST_ALPHA;
+        return BLEND_DST_ALPHA;
     else if (upper == "ONE_MINUS_DST_ALPHA")
-        return RenderState::BLEND_ONE_MINUS_DST_ALPHA;
+        return BLEND_ONE_MINUS_DST_ALPHA;
     else if (upper == "CONSTANT_ALPHA")
-        return RenderState::BLEND_CONSTANT_ALPHA;
+        return BLEND_CONSTANT_ALPHA;
     else if (upper == "ONE_MINUS_CONSTANT_ALPHA")
-        return RenderState::BLEND_ONE_MINUS_CONSTANT_ALPHA;
+        return BLEND_ONE_MINUS_CONSTANT_ALPHA;
     else if (upper == "SRC_ALPHA_SATURATE")
-        return RenderState::BLEND_SRC_ALPHA_SATURATE;
+        return BLEND_SRC_ALPHA_SATURATE;
     else
     {
         CCLOG("Unsupported blend value (%s). (Will default to BLEND_ONE if errors are treated as warnings)", value.c_str());
-        return RenderState::BLEND_ONE;
+        return BLEND_ONE;
     }
 }
 
-static RenderState::DepthFunction parseDepthFunc(const std::string& value)
+static DepthFunction parseDepthFunc(const std::string& value)
 {
     // Convert string to uppercase for comparison
     std::string upper(value);
     std::transform(upper.begin(), upper.end(), upper.begin(), (int(*)(int))toupper);
     if (upper == "NEVER")
-        return RenderState::DEPTH_NEVER;
+        return DEPTH_NEVER;
     else if (upper == "LESS")
-        return RenderState::DEPTH_LESS;
+        return DEPTH_LESS;
     else if (upper == "EQUAL")
-        return RenderState::DEPTH_EQUAL;
+        return DEPTH_EQUAL;
     else if (upper == "LEQUAL")
-        return RenderState::DEPTH_LEQUAL;
+        return DEPTH_LEQUAL;
     else if (upper == "GREATER")
-        return RenderState::DEPTH_GREATER;
+        return DEPTH_GREATER;
     else if (upper == "NOTEQUAL")
-        return RenderState::DEPTH_NOTEQUAL;
+        return DEPTH_NOTEQUAL;
     else if (upper == "GEQUAL")
-        return RenderState::DEPTH_GEQUAL;
+        return DEPTH_GEQUAL;
     else if (upper == "ALWAYS")
-        return RenderState::DEPTH_ALWAYS;
+        return DEPTH_ALWAYS;
     else
     {
         CCLOG("Unsupported depth function value (%s). Will default to DEPTH_LESS if errors are treated as warnings)", value.c_str());
-        return RenderState::DEPTH_LESS;
+        return DEPTH_LESS;
     }
 }
 
-static RenderState::CullFaceSide parseCullFaceSide(const std::string& value)
+static CullFaceSide parseCullFaceSide(const std::string& value)
 {
     // Convert string to uppercase for comparison
     std::string upper(value);
     std::transform(upper.begin(), upper.end(), upper.begin(), (int(*)(int))toupper);
     if (upper == "BACK")
-        return RenderState::CULL_FACE_SIDE_BACK;
+        return CULL_FACE_SIDE_BACK;
     else if (upper == "FRONT")
-        return RenderState::CULL_FACE_SIDE_FRONT;
+        return CULL_FACE_SIDE_FRONT;
     else if (upper == "FRONT_AND_BACK")
-        return RenderState::CULL_FACE_SIDE_FRONT_AND_BACK;
+        return CULL_FACE_SIDE_FRONT_AND_BACK;
     else
     {
         CCLOG("Unsupported cull face side value (%s). Will default to BACK if errors are treated as warnings.", value.c_str());
-        return RenderState::CULL_FACE_SIDE_BACK;
+        return CULL_FACE_SIDE_BACK;
     }
 }
 
-static RenderState::FrontFace parseFrontFace(const std::string& value)
+static FrontFace parseFrontFace(const std::string& value)
 {
     // Convert string to uppercase for comparison
     std::string upper(value);
     std::transform(upper.begin(), upper.end(), upper.begin(), (int(*)(int))toupper);
     if (upper == "CCW")
-        return RenderState::FRONT_FACE_CCW;
+        return FRONT_FACE_CCW;
     else if (upper == "CW")
-        return RenderState::FRONT_FACE_CW;
+        return FRONT_FACE_CW;
     else
     {
         CCLOG("Unsupported front face side value (%s). Will default to CCW if errors are treated as warnings.", value.c_str());
-        return RenderState::FRONT_FACE_CCW;
+        return FRONT_FACE_CCW;
     }
 }
 
-static RenderState::StencilFunction parseStencilFunc(const std::string& value)
+static StencilFunction parseStencilFunc(const std::string& value)
 {
     // Convert string to uppercase for comparison
     std::string upper(value);
     std::transform(upper.begin(), upper.end(), upper.begin(), (int(*)(int))toupper);
     if (upper == "NEVER")
-        return RenderState::STENCIL_NEVER;
+        return STENCIL_NEVER;
     else if (upper == "LESS")
-        return RenderState::STENCIL_LESS;
+        return STENCIL_LESS;
     else if (upper == "EQUAL")
-        return RenderState::STENCIL_EQUAL;
+        return STENCIL_EQUAL;
     else if (upper == "LEQUAL")
-        return RenderState::STENCIL_LEQUAL;
+        return STENCIL_LEQUAL;
     else if (upper == "GREATER")
-        return RenderState::STENCIL_GREATER;
+        return STENCIL_GREATER;
     else if (upper == "NOTEQUAL")
-        return RenderState::STENCIL_NOTEQUAL;
+        return STENCIL_NOTEQUAL;
     else if (upper == "GEQUAL")
-        return RenderState::STENCIL_GEQUAL;
+        return STENCIL_GEQUAL;
     else if (upper == "ALWAYS")
-        return RenderState::STENCIL_ALWAYS;
+        return STENCIL_ALWAYS;
     else
     {
         CCLOG("Unsupported stencil function value (%s). Will default to STENCIL_ALWAYS if errors are treated as warnings)", value.c_str());
-        return RenderState::STENCIL_ALWAYS;
+        return STENCIL_ALWAYS;
     }
 }
 
-static RenderState::StencilOperation parseStencilOp(const std::string& value)
+static StencilOperation parseStencilOp(const std::string& value)
 {
     // Convert string to uppercase for comparison
     std::string upper(value);
     std::transform(upper.begin(), upper.end(), upper.begin(), (int(*)(int))toupper);
     if (upper == "KEEP")
-        return RenderState::STENCIL_OP_KEEP;
+        return STENCIL_OP_KEEP;
     else if (upper == "ZERO")
-        return RenderState::STENCIL_OP_ZERO;
+        return STENCIL_OP_ZERO;
     else if (upper == "REPLACE")
-        return RenderState::STENCIL_OP_REPLACE;
+        return STENCIL_OP_REPLACE;
     else if (upper == "INCR")
-        return RenderState::STENCIL_OP_INCR;
+        return STENCIL_OP_INCR;
     else if (upper == "DECR")
-        return RenderState::STENCIL_OP_DECR;
+        return STENCIL_OP_DECR;
     else if (upper == "INVERT")
-        return RenderState::STENCIL_OP_INVERT;
+        return STENCIL_OP_INVERT;
     else if (upper == "INCR_WRAP")
-        return RenderState::STENCIL_OP_INCR_WRAP;
+        return STENCIL_OP_INCR_WRAP;
     else if (upper == "DECR_WRAP")
-        return RenderState::STENCIL_OP_DECR_WRAP;
+        return STENCIL_OP_DECR_WRAP;
     else
     {
         CCLOG("Unsupported stencil operation value (%s). Will default to STENCIL_OP_KEEP if errors are treated as warnings)", value.c_str());
-        return RenderState::STENCIL_OP_KEEP;
+        return STENCIL_OP_KEEP;
     }
 }
 
-void RenderState::StateBlock::setState(const std::string& name, const std::string& value)
+void StateBlock::setState(const std::string& name, const std::string& value)
 {
     if (name.compare("blend") == 0)
     {
@@ -700,19 +700,19 @@ void RenderState::StateBlock::setState(const std::string& name, const std::strin
     }
 }
 
-bool RenderState::StateBlock::isDirty() const
+bool StateBlock::isDirty() const
 {
     // XXX
     return true;
 }
 
-uint32_t RenderState::StateBlock::getHash() const
+uint32_t StateBlock::getHash() const
 {
     // XXX
     return 0x12345678;
 }
 
-void RenderState::StateBlock::invalidate(long stateBits)
+void StateBlock::invalidate(long stateBits)
 {
     CCASSERT(_defaultState, "_default state not created yet. Cannot be invalidated");
 
@@ -720,7 +720,7 @@ void RenderState::StateBlock::invalidate(long stateBits)
     _defaultState->restore(0);
 }
 
-void RenderState::StateBlock::setBlend(bool enabled)
+void StateBlock::setBlend(bool enabled)
 {
     _blendEnabled = enabled;
     if (enabled)
@@ -733,13 +733,13 @@ void RenderState::StateBlock::setBlend(bool enabled)
     }
 }
 
-void RenderState::StateBlock::setBlendFunc(const BlendFunc& blendFunc)
+void StateBlock::setBlendFunc(const BlendFunc& blendFunc)
 {
-    setBlendSrc((RenderState::Blend)blendFunc.src);
-    setBlendDst((RenderState::Blend)blendFunc.dst);
+    setBlendSrc((Blend)blendFunc.src);
+    setBlendDst((Blend)blendFunc.dst);
 }
 
-void RenderState::StateBlock::setBlendSrc(Blend blend)
+void StateBlock::setBlendSrc(Blend blend)
 {
     _blendSrc = blend;
     if (_blendSrc == BLEND_ONE && _blendDst == BLEND_ZERO)
@@ -753,7 +753,7 @@ void RenderState::StateBlock::setBlendSrc(Blend blend)
     }
 }
 
-void RenderState::StateBlock::setBlendDst(Blend blend)
+void StateBlock::setBlendDst(Blend blend)
 {
     _blendDst = blend;
     if (_blendSrc == BLEND_ONE && _blendDst == BLEND_ZERO)
@@ -767,7 +767,7 @@ void RenderState::StateBlock::setBlendDst(Blend blend)
     }
 }
 
-void RenderState::StateBlock::setCullFace(bool enabled)
+void StateBlock::setCullFace(bool enabled)
 {
     _cullFaceEnabled = enabled;
     if (!enabled)
@@ -780,7 +780,7 @@ void RenderState::StateBlock::setCullFace(bool enabled)
     }
 }
 
-void RenderState::StateBlock::setCullFaceSide(CullFaceSide side)
+void StateBlock::setCullFaceSide(CullFaceSide side)
 {
     _cullFaceSide = side;
     if (_cullFaceSide == CULL_FACE_SIDE_BACK)
@@ -794,7 +794,7 @@ void RenderState::StateBlock::setCullFaceSide(CullFaceSide side)
     }
 }
 
-void RenderState::StateBlock::setFrontFace(FrontFace winding)
+void StateBlock::setFrontFace(FrontFace winding)
 {
     _frontFace = winding;
     if (_frontFace == FRONT_FACE_CCW)
@@ -808,7 +808,7 @@ void RenderState::StateBlock::setFrontFace(FrontFace winding)
     }
 }
 
-void RenderState::StateBlock::setDepthTest(bool enabled)
+void StateBlock::setDepthTest(bool enabled)
 {
     _depthTestEnabled = enabled;
     if (enabled)
@@ -821,7 +821,7 @@ void RenderState::StateBlock::setDepthTest(bool enabled)
     }
 }
 
-void RenderState::StateBlock::setDepthWrite(bool enabled)
+void StateBlock::setDepthWrite(bool enabled)
 {
     _depthWriteEnabled = enabled;
     if (!enabled)
@@ -834,7 +834,7 @@ void RenderState::StateBlock::setDepthWrite(bool enabled)
     }
 }
 
-void RenderState::StateBlock::setDepthFunction(DepthFunction func)
+void StateBlock::setDepthFunction(DepthFunction func)
 {
     _depthFunction = func;
     if (_depthFunction == DEPTH_LESS)
@@ -848,7 +848,7 @@ void RenderState::StateBlock::setDepthFunction(DepthFunction func)
     }
 }
 
-//void RenderState::StateBlock::setStencilTest(bool enabled)
+//void StateBlock::setStencilTest(bool enabled)
 //{
 //    _stencilTestEnabled = enabled;
 //    if (!enabled)
@@ -861,7 +861,7 @@ void RenderState::StateBlock::setDepthFunction(DepthFunction func)
 //    }
 //}
 //
-//void RenderState::StateBlock::setStencilWrite(unsigned int mask)
+//void StateBlock::setStencilWrite(unsigned int mask)
 //{
 //    _stencilWrite = mask;
 //    if (mask == RS_ALL_ONES)
@@ -875,7 +875,7 @@ void RenderState::StateBlock::setDepthFunction(DepthFunction func)
 //    }
 //}
 //
-//void RenderState::StateBlock::setStencilFunction(StencilFunction func, int ref, unsigned int mask)
+//void StateBlock::setStencilFunction(StencilFunction func, int ref, unsigned int mask)
 //{
 //    _stencilFunction = func;
 //    _stencilFunctionRef = ref;
@@ -891,7 +891,7 @@ void RenderState::StateBlock::setDepthFunction(DepthFunction func)
 //    }
 //}
 //
-//void RenderState::StateBlock::setStencilOperation(StencilOperation sfail, StencilOperation dpfail, StencilOperation dppass)
+//void StateBlock::setStencilOperation(StencilOperation sfail, StencilOperation dpfail, StencilOperation dppass)
 //{
 //    _stencilOpSfail = sfail;
 //    _stencilOpDpfail = dpfail;

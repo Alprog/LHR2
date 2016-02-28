@@ -48,7 +48,7 @@ public:
 
     void init(float globalZOrder, Material* material, GLuint vertexBuffer, GLuint indexBuffer, GLenum primitive, GLenum indexFormat, ssize_t indexCount, const Mat4 &mv, uint32_t flags);
 
-    void init(float globalZOrder, GLuint textureID, GLProgramState* glProgramState, RenderState::StateBlock* stateBlock, GLuint vertexBuffer, GLuint indexBuffer, GLenum primitive, GLenum indexFormat, ssize_t indexCount, const Mat4 &mv, uint32_t flags);
+    void init(float globalZOrder, GLuint textureID, GLProgramState* glProgramState, StateBlock* stateBlock, GLuint vertexBuffer, GLuint indexBuffer, GLenum primitive, GLenum indexFormat, ssize_t indexCount, const Mat4 &mv, uint32_t flags);
 
     void setDisplayColor(const Vec4& color);
     void setMatrixPalette(const Vec4* matrixPalette);
@@ -108,7 +108,7 @@ protected:
     // Mode B: StateBlock
     // weak ref
     GLProgramState* _glProgramState;
-    RenderState::StateBlock* _stateBlock;
+    StateBlock* _stateBlock;
     GLuint _textureID;
 
 

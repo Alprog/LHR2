@@ -178,7 +178,7 @@ Node* Pass::getTarget() const
 
 void Pass::unbind()
 {
-    RenderState::StateBlock::restore(0);
+    StateBlock::restore(0);
 
     _vertexAttribBinding->unbind();
 }

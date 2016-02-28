@@ -514,7 +514,7 @@ protected:
     GLint _lightMapLocation;
     GLint _detailMapSizeLocation[4];
     GLint _lightDirLocation;
-    RenderState::StateBlock* _stateBlock;
+    StateBlock* _stateBlock;
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
     EventListenerCustom* _backToForegroundListener;

@@ -183,7 +183,7 @@ void CameraBackgroundDepthBrush::drawBackground(Camera* camera)
          The other values don't need to be updated since they were restored to their original values
          */
         glStencilMask(0xFFFFF);
-        //        RenderState::StateBlock::_defaultState->setStencilWrite(0xFFFFF);
+        //        StateBlock::_defaultState->setStencilWrite(0xFFFFF);
         
         /* BUG: RenderState does not support glColorMask yet. */
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -306,22 +306,22 @@ void CameraBackgroundSkyBoxBrush::drawBackground(Camera* camera)
     _glProgramState->setUniformMat4("u_cameraRot", cameraModelMat);
     
     glEnable(GL_DEPTH_TEST);
-    RenderState::StateBlock::_defaultState->setDepthTest(true);
+    StateBlock::_defaultState->setDepthTest(true);
     
     glDepthMask(GL_TRUE);
-    RenderState::StateBlock::_defaultState->setDepthWrite(true);
+    StateBlock::_defaultState->setDepthWrite(true);
     
     glDepthFunc(GL_ALWAYS);
-    RenderState::StateBlock::_defaultState->setDepthFunction(RenderState::DEPTH_ALWAYS);
+    StateBlock::_defaultState->setDepthFunction(DEPTH_ALWAYS);
     
     glEnable(GL_CULL_FACE);
-    RenderState::StateBlock::_defaultState->setCullFace(true);
+    StateBlock::_defaultState->setCullFace(true);
     
     glCullFace(GL_BACK);
-    RenderState::StateBlock::_defaultState->setCullFaceSide(RenderState::CULL_FACE_SIDE_BACK);
+    StateBlock::_defaultState->setCullFaceSide(CULL_FACE_SIDE_BACK);
     
     glDisable(GL_BLEND);
-    RenderState::StateBlock::_defaultState->setBlend(false);
+    StateBlock::_defaultState->setBlend(false);
     
     if (Configuration::getInstance()->supportsShareableVAO())
     {

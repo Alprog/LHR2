@@ -39,7 +39,7 @@ NavMeshDebugDraw::NavMeshDebugDraw()
 , _currentPrimitive(nullptr)
 , _currentDepthMask(true)
 {
-    _stateBlock = RenderState::StateBlock::create();
+    _stateBlock = StateBlock::create();
     _stateBlock->setCullFace(true);
     _stateBlock->setCullFaceSide(RenderState::CullFaceSide::CULL_FACE_SIDE_BACK);
     _stateBlock->setDepthTest(true);
