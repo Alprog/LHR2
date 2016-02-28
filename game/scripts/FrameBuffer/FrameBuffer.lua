@@ -1,6 +1,11 @@
 
 FrameBuffer = Class('FrameBuffer', ccexp.FrameBuffer)
 
+FrameBuffer.Index =
+{
+    DepthStencil = 4    
+}
+
 function FrameBuffer:instantinate()
     return FrameBuffer.__create(1)
 end

@@ -35,5 +35,8 @@ function Projector:refreshScreen()
         local state = cc.GLProgramState:create(shader)
         state:setUniformTexture('mainTexture', texture)
         self.screen:setGLProgramState(state)
+        
+        state:setUniformFloat('zNear', 10)
+        state:setUniformFloat('zFar', 1000)
     end
 end

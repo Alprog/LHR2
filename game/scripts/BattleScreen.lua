@@ -48,7 +48,8 @@ function BattleScreen:init()
     self.projector:addSource(self.arena.gBuffer, GBuffer.Index.Normal)
     self.projector:addSource(self.arena.gBuffer, GBuffer.Index.Ids)
     self.projector:addSource(self.arena.gBuffer, GBuffer.Index.Velocity)
-    self.projector:addSource(self.arena.gBuffer, GBuffer.Index.DepthStencil)
+    self.projector:addSource(self.arena.gBuffer, GBuffer.Index.DepthStencil, 'depth')
+    self.projector:addSource(self.arena.shadowBuffer, FrameBuffer.Index.DepthStencil, 'depth')
      
     local touchBeginPoint = nil
     

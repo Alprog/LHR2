@@ -158,7 +158,7 @@ function Camera:refreshView()
     --pass:setOrthographic(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0.1, 1000)
       
     local nativePosition = self.position + multVecQuat(Vector(0, 0, 0), self.rotation)
-    cc.Camera.setPerspective(self, 10, aspect, 0.1, 1000)
+    cc.Camera.setPerspective(self, 10, aspect, 10, 1000)
     cc.Node.setPosition3D(self, nativePosition)
     cc.Node.setRotationQuat(self, self.rotation)
 end

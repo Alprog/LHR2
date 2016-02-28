@@ -18,6 +18,11 @@ function Arena:init()
     self.tasks = TaskManager:create()
     self:initCamera()
         
+    self.shadowBuffer = FrameBuffer:create(self, function(sender, size)
+        sender:setSize(size.width, size.height)
+        sender:attachNewTexture(FrameBuffer.Index.DepthStencil, size, cc.DEPTH24_STENCIL8)
+    end)
+        
     self.gBuffer = GBuffer:create(self)
     self.frameBuffer = FrameBuffer:create(self, function(sender, size)
         sender:setSize(size.width, size.height)
@@ -39,6 +44,10 @@ function Arena:initCamera()
     self.camera:setPosition(Vec(-delta + 5, height, delta + 5))
         
     self.camera:lookAt(Vector(5, 0, 5), Vector(0, 1, 0))
+    
+    self.lightCamera = Camera:create(self)
+    self.lightCamera:setPosition(Vec(-20, 50, 70))
+    self.lightCamera:lookAt(Vector(5, 0, 5), Vector(0, 1, 0))
 end
 
 function Arena:update(deltaTime)
@@ -78,6 +87,7 @@ end
 
 function Arena:onResize(size)
     self:setTransformUpdated()
+    self.shadowBuffer:onResize(size)
     self.gBuffer:onResize(size)
     self.frameBuffer:onResize(size)
     self.camera.dirty = true
@@ -139,8 +149,11 @@ function Arena:spawn(unit)
     self.unitLayer:addChild(unit)
 end
 
-function Arena:render()    
-    self:setTechnique(0)
+function Arena:render()
+    self:setTechnique(RenderMode.Default)
+    self.lightCamera:render(self, cc.CameraFlag.DEFAULT, self.shadowBuffer)
+    
+    self:setTechnique(RenderMode.Default)
     self.camera:render(self, cc.CameraFlag.DEFAULT, self.gBuffer)
     thePostProcessor:setup(self.gBuffer, self.frameBuffer)
     thePostProcessor:perform()
