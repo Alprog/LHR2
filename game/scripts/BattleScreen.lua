@@ -33,8 +33,7 @@ function BattleScreen:init()
         table.insert(battle.teams[1], warrior)
     end
     
-    --arena:addObstacles()
-            
+    --arena:addObstacles()        
     self:getChildByName('ArenaLayer'):addChild(self.arena)
     
     battle:setArena(self.arena)

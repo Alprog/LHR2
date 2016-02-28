@@ -1,7 +1,7 @@
 
 varying vec2 v_texCoord;
 
-uniform sampler2D colorTexture;
+uniform sampler2D albedoTexture;
 uniform sampler2D velocityTexture;
 uniform vec2 texelSize;
 uniform float velocityScale;
@@ -16,12 +16,12 @@ void main()
     float len = length(velocity / texelSize);
     int count = clamp(int(len), 1, 15);
     
-    vec4 color = texture2D(colorTexture, v_texCoord);
+    vec4 color = texture2D(albedoTexture, v_texCoord);
     for (int i = 1; i < count; i++) 
     {
         vec2 offset = velocity * (float(i) / float(count) - 0.5);
         vec2 pos = v_texCoord - offset;
-        color += texture2D(colorTexture, pos);
+        color += texture2D(albedoTexture, pos);
     }
     color /= count;
 

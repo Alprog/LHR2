@@ -36,7 +36,7 @@ function Projector:refreshScreen()
         state:setUniformTexture('mainTexture', texture)
         self.screen:setGLProgramState(state)
         
-        state:setUniformFloat('zNear', 10)
+        state:setUniformFloat('zNear', 4)
         state:setUniformFloat('zFar', 1000)
     end
 end

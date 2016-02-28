@@ -34,7 +34,7 @@ function Arena:initCamera()
     self.camera = Camera:create(self)   
     self.camera:setWindowAspect()
     
-    local far = 50 
+    local far = 50
     local angle = 30 * math.pi / 180
     local s = math.sin(angle)
     local height = math.sin(angle) * far
@@ -56,6 +56,10 @@ function Arena:update(deltaTime)
     if self.hoverEnabled then
         self:checkHover()
     end
+    
+    --[[local pos = self.terrain:getPosition3D()
+    pos.x = pos.x - deltaTime * 1
+    self.terrain:setPosition3D(pos)]]
 end
 
 function Arena:setTechnique(index)
@@ -153,6 +157,7 @@ function Arena:render()
     
     self:setTechnique(RenderMode.Default)
     self.camera:render(self, cc.CameraFlag.DEFAULT, self.gBuffer)
-    thePostProcessor:setup(self.gBuffer, self.frameBuffer)
+    
+    thePostProcessor:setup(self.gBuffer, self.frameBuffer, self.camera, self.lightCamera)
     thePostProcessor:perform()
 end

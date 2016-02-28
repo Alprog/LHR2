@@ -15,7 +15,7 @@ function PostProcessor:init(app)
     --self.frameBuffer:retain()
 end
 
-function PostProcessor:setup(gBuffer, outBuffer)
+function PostProcessor:setup(gBuffer, outBuffer, sceneCamera, lightCamera)
     
     self.frameBuffer = outBuffer
     
@@ -30,8 +30,9 @@ function PostProcessor:setup(gBuffer, outBuffer)
     local position = Vec(-20, 50, 70)    
     state:setUniformVec3('lightPosition', position)
     
-    state:setUniformTexture('colorTexture', gBuffer:getRenderTarget(0))
-    state:setUniformTexture('normalTexture', gBuffer:getRenderTarget(1))
+    state:setUniformTexture('albedoTexture', gBuffer:getAlbedoTexture())
+    state:setUniformTexture('normalTexture', gBuffer:getNormalTexture())
+    state:setUniformTexture('depthTexture', gBuffer:getDepthStencilTexture())
     --state:setUniformTexture('velocityTexture', gBuffer:getRenderTarget(3))
     
     self.sprite:setGLProgramState(state)
@@ -40,10 +41,24 @@ function PostProcessor:setup(gBuffer, outBuffer)
     state:setUniformTexture('normalTexture', gBuffer:getRenderTarget(1))
     state:setUniformTexture('wrapTexture', getTexture('wrap.png'))
     
+    local worldToScreen = sceneCamera:getProjectionMatrix()
+    local proj = Vec(worldToScreen[0], worldToScreen[5], worldToScreen[10], worldToScreen[11])
+    state:setUniformVec4('proj', proj)
+    
+    local projectedToWorld = cc.mat4.getInversed(sceneCamera:getViewProjectionMatrix())
+    local worldToShadowMap = lightCamera:getViewProjectionMatrix()
+    state:setUniformMat4('projectedToWorld', projectedToWorld)
+    state:setUniformMat4('viewToWorld', cc.mat4.getInversed(sceneCamera:getViewMatrix()))
+    state:setUniformMat4('worldToShadowMap', worldToShadowMap)
+    
+    state:setUniformMat4('view', sceneCamera:getViewMatrix())
+    state:setUniformMat4('projection', sceneCamera:getProjectionMatrix())
+    state:setUniformMat4('viewProjection', sceneCamera:getViewProjectionMatrix())
+    
     --local rt = gBuffer:getRenderTarget(0)
     --self.frameBuffer:attachRenderTarget(rt, i - 1)
-    
 end
+
 
 function PostProcessor:perform()
     self.camera:render(self.sprite, cc.CameraFlag.DEFAULT, self.frameBuffer)
