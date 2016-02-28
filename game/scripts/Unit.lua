@@ -47,8 +47,7 @@ function Unit:loadModel(name)
     
     model:setMaterial(material)
     
-    local stateBlock = material:getStateBlock()
-    print(stateBlock)
+
     
     ------------------------------------------
     
