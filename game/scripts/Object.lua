@@ -11,9 +11,6 @@ function Object:init()
     self.index = globalIndex
     self:setDebugIndex()
     objects[self.index] = self
-    if self.initGfx then
-        self:initGfx()
-    end
 end
 
 function Object:fromIndex(index)

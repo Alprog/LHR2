@@ -31,6 +31,7 @@ require 'Vector.lua'
 require 'ParticlesEffect.lua'
 require 'Projector.lua'
 require 'RenderMode.lua'
+require 'Material.lua'
 
 require 'ContentPipeline.lua'
 contentPipeline()
@@ -38,7 +39,10 @@ contentPipeline()
 cc.Node.className = 'cc.Node'
 cc.Sprite3D.className = 'cc.Sprite3D'
 cc.AttachNode.className = 'cc.AttachNode'
-
+cc.GLProgramState.className = 'cc.GLProgramState'
+cc.Material.className = 'cc.Material'
+cc.Technique.className = 'cc.Technique'
+cc.Pass.className = 'cc.Pass'
 
 local function main()
     collectgarbage("setpause", 100)

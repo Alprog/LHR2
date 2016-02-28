@@ -61,3 +61,8 @@ function clearShaderCache()
     end
     shaders = {}
 end
+
+function createState(vsName, psName)
+    local program = getShader(vsName, psName)
+    return cc.GLProgramState:create(program)
+end

@@ -1,10 +1,10 @@
 
 Cell = Derive('Cell', Object)
 
-function Cell:initGfx()
-    self.gfx = Carcase:create('tiles/ground.png')
+function Cell:init()
+    Object.init(self)
     
-    self.gfx:setForceDepthWrite(true)
+    self.gfx = Carcase:create('tiles/ground.png')
     
     local selection = Carcase:create('tiles/select.png')
     selection:setVisible(false)

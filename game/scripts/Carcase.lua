@@ -16,6 +16,8 @@ function Carcase:init(name, mesh, material)
     if material then
         self:setMaterial(material)
     end
+    
+    self:setForceDepthWrite(true)
 end
 
 function Carcase:getMaterial(textureName)

@@ -9,11 +9,13 @@ local walkTime = 0.33
 local jumpTime = 0.5
 local rotationSpeed = math.pi * 2.5
 
-function Unit:init()
+function Unit:init(modelName)
     Object.init(self)
+    self:loadModel(modelName)
     self.healthPoints = Points:create(100)
     self.motionPoints = Points:create(3)
     self.actionPoints = Points:create(2)
+    self:setScale(0.01)
     self.isUnit = true
 end
 
@@ -24,12 +26,13 @@ function Unit:loadModel(name)
     local fileName = 'models/'.. name .. '.c3b'
         
     local model = Model:create(fileName)
-            
+    self:addChild(model)
+   
+      
     local material = cc.Material:create()
     
     -- default
-    local program = getShader('skin', 'defaultMRT')
-    local state = cc.GLProgramState:create(program)
+    local state = createState('skin', 'defaultMRT')
     state:setUniformTexture('mainTexture', getTexture('models/diffuse.png'))
     local h, l = indexToBytes(self.index)
     state:setUniformVec2('u_id', Vec(h / 255, l / 255))
@@ -37,20 +40,19 @@ function Unit:loadModel(name)
     material:setTechnique(RenderMode.Default, technique)
     
     -- silhouette
-    program = getShader('fatskin', 'uColorMRT')
-    state = cc.GLProgramState:create(program)
+    state = createState('fatskin', 'uColorMRT')
     state:setUniformVec4('u_color', Vec(1, 0, 1, 1))
     technique = cc.Technique:createWithGLProgramState(state)
     material:setTechnique(2, technique)
     
     model:setMaterial(material)
     
+    local stateBlock = material:getStateBlock()
+    print(stateBlock)
+    
     ------------------------------------------
     
     model:play('idle', true)
-    
-    self:addChild(model)
-    
     self.model = model
     
     return model
@@ -154,29 +156,29 @@ end
 
 function Unit:walkTo(cell)
     local pos = cell:getPosition3D()
-    self.gfx:playLoop('run', self.walkAnimSpeed or 1)
+    self.model:playLoop('run', self.walkAnimSpeed or 1)
     self:linearMove(pos, walkTime)    
     self:setCell(cell)
 end
 
 function Unit:jumpTo(cell)
     local pos = cell:getPosition3D()
-    self.gfx:play('jump')
+    self.model:play('jump')
     
     self.arena.tasks:run(function()
         self:parabolaJump(pos, jumpTime)
     end)
     coroutine.yield()
     
-    wait(jumpTime - self.gfx:getFadeTime('jump'))
-    self.gfx:play('idle', true)
+    wait(jumpTime - self.model:getFadeTime('jump'))
+    self.model:play('idle', true)
         
     self:setCell(cell)
     wait(0.2)
 end
 
 function Unit:stop()
-    self.gfx:playLoop('idle')
+    self.model:playLoop('idle')
 end
 
 function Unit:getAngle(srcPos, dstPos)
@@ -240,9 +242,9 @@ end
 
 function Unit:attack(enemy)
     self:rotateToCell(enemy.cell)
-    self.gfx:play('attack')
-    self.gfx:waitAnimation()
-    self.gfx:playLoop('idle')
+    self.model:play('attack')
+    self.model:waitAnimation()
+    self.model:playLoop('idle')
 end
 
 function Unit:setSelection(value)
