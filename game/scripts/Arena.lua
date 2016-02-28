@@ -18,14 +18,12 @@ function Arena:init()
     self.tasks = TaskManager:create()
     self:initCamera()
         
-    self.shadowBuffer = FrameBuffer:create(self, function(sender, size)
-        sender:setSize(size.width, size.height)
+    self.shadowBuffer = FrameBuffer:create(self, cc.size(1024, 1024), function(sender, size)
         sender:attachNewTexture(FrameBuffer.Index.DepthStencil, size, cc.DEPTH24_STENCIL8)
     end)
         
-    self.gBuffer = GBuffer:create(self)
-    self.frameBuffer = FrameBuffer:create(self, function(sender, size)
-        sender:setSize(size.width, size.height)
+    self.gBuffer = GBuffer:create(self, theApp.windowSize)
+    self.frameBuffer = FrameBuffer:create(self, theApp.windowSize, function(sender, size)
         sender:attachNewTexture(0, size, cc.BGRA8888)
     end)
 
@@ -34,6 +32,7 @@ end
 
 function Arena:initCamera()
     self.camera = Camera:create(self)   
+    self.camera:setWindowAspect()
     
     local far = 50 
     local angle = 30 * math.pi / 180
@@ -87,10 +86,9 @@ end
 
 function Arena:onResize(size)
     self:setTransformUpdated()
-    self.shadowBuffer:onResize(size)
-    self.gBuffer:onResize(size)
-    self.frameBuffer:onResize(size)
-    self.camera.dirty = true
+    self.gBuffer:resize(size)
+    self.frameBuffer:resize(size)
+    self.camera:setWindowAspect()
 end
 
 function Arena:onTouchEnded(touch, event)

@@ -9,6 +9,7 @@ function Camera:init(space)
     self.position = Vector(0, 0, 0)
     self.rotation = cc.quaternion(0, 0, 0, 1)
     self.perspective = 0
+    self.aspect = 1
     space:addChild(self)
     
     self.dirty = true
@@ -148,17 +149,24 @@ function Camera:lookAt(lookAtPos, up)
     self.dirty = true
 end
 
-function Camera:refreshView()   
-    local viewHeight = 9
-    
-    local wSize = theApp.windowSize
-    local aspect = wSize.width / wSize.height
-    local viewWidth = viewHeight * aspect
-    
+function Camera:setWindowAspect()
+    local size = theApp.windowSize
+    local aspect = size.width / size.height
+    self:setAspect(aspect)
+end
+
+function Camera:setAspect(aspect)
+    self.aspect = aspect
+    self.dirty = true
+end
+
+function Camera:refreshView()
+    --local viewHeight = 9
+    --local viewWidth = viewHeight * aspect   
     --pass:setOrthographic(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0.1, 1000)
       
     local nativePosition = self.position + multVecQuat(Vector(0, 0, 0), self.rotation)
-    cc.Camera.setPerspective(self, 10, aspect, 10, 1000)
+    cc.Camera.setPerspective(self, 10, self.aspect, 10, 1000)
     cc.Node.setPosition3D(self, nativePosition)
     cc.Node.setRotationQuat(self, self.rotation)
 end
