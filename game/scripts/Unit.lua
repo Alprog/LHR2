@@ -34,8 +34,7 @@ function Unit:loadModel(name)
     -- default
     local state = createState('skin', 'defaultMRT')
     state:setUniformTexture('mainTexture', getTexture('models/diffuse.png'))
-    local h, l = indexToBytes(self.index)
-    state:setUniformVec2('u_id', Vec(h / 255, l / 255))
+    state:setUniformVec2('u_id', self:getUniformId())
     local technique = cc.Technique:createWithGLProgramState(state)
     material:setTechnique(RenderMode.Default, technique)
     

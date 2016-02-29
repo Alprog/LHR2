@@ -33,5 +33,10 @@ function Object:setCell(cell)
     cell.object = self
 end
 
+function Object:getUniformId()
+    local h, l = indexToBytes(self.index)
+    return Vec(h / 255, l / 255)
+end
+
 function Object:onHover(state)
 end

@@ -38,10 +38,10 @@ function Terrain:initDefault()
             local cell = Cell:create()
             local pos = Vec(x, 0, z)
             
-            if z == 8 and x == 2 then pos.y = 0.16 end
-            if z == 8 and x == 3 then pos.y = 0.32 end
-            if z == 8 and x == 4 then pos.y = 0.48 end
-            if z == 8 and x == 5 then pos.y = 0.64 end
+            if z == 8 and x == 2 then pos.y = 0.25 end
+            if z == 8 and x == 3 then pos.y = 0.50 end
+            if z == 8 and x == 4 then pos.y = 0.75 end
+            if z == 8 and x == 5 then pos.y = 1.00 end
                         
             cell:setPosition3D(pos)
             cell.ways = {}
@@ -52,7 +52,7 @@ function Terrain:initDefault()
         end
     end
     
-    self:batch()
+    --self:batch()
 end
 
 function connectCells(a, b)

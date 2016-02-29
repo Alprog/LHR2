@@ -4,9 +4,12 @@ Cell = Derive('Cell', Object)
 function Cell:init()
     Object.init(self)
     
-    self.gfx = Carcase:create('tiles/ground.png')
+ 
+    local textureName = 'tiles/ground.png'
+
+    self.gfx = Carcase:create(textureName, nil, self:getMaterial(textureName))
     
-    local selection = Carcase:create('tiles/select.png')
+    local selection = Carcase:create('tiles/select.png', nil, self:getMaterial('tiles/select.png'))
     selection:setVisible(false)
     selection:setPosition3D(Vec(0, 0.01, 0))
     selection:setForceDepthWrite(true)
@@ -14,5 +17,12 @@ function Cell:init()
     
     self:addChild(self.gfx)
     self:addChild(self.selection)
-    self.selection:setScale(0.4)
+end
+
+function Cell:getMaterial(textureName)
+    local texture = getTexture(textureName)
+    local state = createState('default3d', 'defaultMRT')
+    state:setUniformTexture('mainTexture', texture)
+    state:setUniformVec2('u_id', self:getUniformId())
+    return cc.Material:createWithGLStateProgram(state)
 end

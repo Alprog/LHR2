@@ -6,7 +6,6 @@ Carcase = Derive("Carcase", cc.Sprite3D)
 function Carcase:init(name, mesh, material)
     if name then
         mesh = mesh or Carcase:getMesh(name)
-        material = material or Carcase:getMaterial(name)
     end
     
     if mesh then
@@ -18,15 +17,6 @@ function Carcase:init(name, mesh, material)
     end
     
     self:setForceDepthWrite(true)
-end
-
-function Carcase:getMaterial(textureName)
-    local cache = theApp.director:getTextureCache()
-    local texture = cache:addImage(textureName)
-    local program = getShader('default3d', 'defaultMRT')
-    local state = cc.GLProgramState:create(program)
-    state:setUniformTexture('mainTexture', texture)
-    return cc.Material:createWithGLStateProgram(state)
 end
 
 local mesh = nil

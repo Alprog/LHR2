@@ -12,6 +12,22 @@ function World3D:init()
     end) 
 end
 
+function World3D:createTexture(size, format)
+    return cc.Texture2D:create(size.width, size.height, format or cc.BGRA8888)
+end
+
+function World3D:initTextures(size)
+    self.albedoTexture = createTexture(size)
+    self.normalTexture = createTexture(size)
+    self.idsTexture = createTexture(size)
+    self.velocityTexture = createTexture(size, cc.RG16F)
+    self.depthStencil = createTexture(size, cc.DEPTH24_STENCIL8)
+    
+    self.shadowMapTexture = createTexture(cc.size(1024, 1024), cc.DEPTH24_STENCIL8)
+    self.historyTexture = createTexture(size)
+    
+end
+
 function World3D:onResize(size)
     self:setTransformUpdated()
     self.gBuffer:resize(size)
@@ -20,15 +36,37 @@ function World3D:onResize(size)
 end
 
 function World3D:render()
-    -- G Buffer
+    self:renderGeometry()
+    self:bakeShadows()
+    self:lighting()
+    self:renderTranparent()
+    self:temporalAA()
+end
+
+function World3D:renderGeometry()
     self.gBuffer:clearFBO()
     self.camera:render(self, cc.CameraFlag.DEFAULT, self.gBuffer)
-    
-    -- Shadows
+end
+
+function World3D:bakeShadows()
     self.shadowMapBuffer:clearFBO()
     self.lightCamera:render(self, cc.CameraFlag.DEFAULT, self.shadowMapBuffer)
-
+    
     self.frameBuffer:clearFBO()
     thePostProcessor:setup(self.gBuffer, self.shadowMapBuffer, self.frameBuffer, self.camera, self.lightCamera)
     thePostProcessor:perform()
 end
+
+function World3D:lighting()
+    
+end
+
+function World3D:renderTranparent()
+    
+end
+
+function World3D:temporalAA()
+    
+end
+
+
