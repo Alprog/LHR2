@@ -33,6 +33,13 @@
 -- @return vec2_table#vec2_table ret (return value: vec2_table)
         
 --------------------------------
+-- 
+-- @function [parent=#Touch] setButtonId 
+-- @param self
+-- @param #int buttonId
+-- @return Touch#Touch self (return value: cc.Touch)
+        
+--------------------------------
 --  Returns the start touch location in OpenGL coordinates.<br>
 -- return The start touch location in OpenGL coordinates.
 -- @function [parent=#Touch] getStartLocation 
@@ -66,6 +73,12 @@
 -- @function [parent=#Touch] getLocationInView 
 -- @param self
 -- @return vec2_table#vec2_table ret (return value: vec2_table)
+        
+--------------------------------
+-- 
+-- @function [parent=#Touch] getButtonId 
+-- @param self
+-- @return int#int ret (return value: int)
         
 --------------------------------
 --  Returns the previous touch location in OpenGL coordinates.<br>

@@ -25,6 +25,7 @@
           <Project Name="Layer.csd" Type="Layer" />
           <Project Name="ListDialog.csd" Type="Node" />
           <Project Name="ControlPanel.csd" Type="Node" />
+          <Project Name="LevelEditor.csd" Type="Node" />
         </Folder>
         <Folder Name="back">
           <Image Name="mainmenu.jpg" />

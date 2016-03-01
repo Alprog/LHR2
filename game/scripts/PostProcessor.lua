@@ -45,10 +45,12 @@ function PostProcessor:setup(gBuffer, shadowMapBuffer, outBuffer, sceneCamera, l
     
     
     local screenToWorld = cc.mat4.getInversed(sceneCamera:getViewProjectionMatrix())
-    local worldToShadowMap = lightCamera:getViewProjectionMatrix()
     state:setUniformMat4('screenToWorld', screenToWorld)
-    state:setUniformMat4('worldToShadowMap', worldToShadowMap)
     
+    if lightCamera then
+        local worldToShadowMap = lightCamera:getViewProjectionMatrix()
+        state:setUniformMat4('worldToShadowMap', worldToShadowMap)
+    end
     
     --local rt = gBuffer:getRenderTarget(0)
     --self.frameBuffer:attachRenderTarget(rt, i - 1)

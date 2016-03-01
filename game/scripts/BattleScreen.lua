@@ -17,10 +17,6 @@ function BattleScreen:init()
     self:initUI()
     
     self.arena = Arena:create()
-    WithoutDebug(function()
-        self.arena:createTerrain()
-    end)
-    self.arena:update(0)
    
     local battle = Battle:create()
     battle:setTeamCount(2)

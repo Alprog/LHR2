@@ -56,8 +56,9 @@ public:
      * @js ctor
      */
     Touch() 
-        : _id(0),
-        _startPointCaptured(false)
+        : _id(0)
+		, _startPointCaptured(false)
+		, _buttonId(0)
     {}
 
     /** Returns the current touch location in OpenGL coordinates.
@@ -126,8 +127,19 @@ public:
         return _id;
     }
 
+	void setButtonId(int buttonId)
+	{
+		_buttonId = buttonId;
+	}
+
+	int getButtonId() const
+	{
+		return _buttonId;
+	}
+
 private:
     int _id;
+	int _buttonId;
     bool _startPointCaptured;
     Vec2 _startPoint;
     Vec2 _point;

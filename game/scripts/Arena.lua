@@ -22,6 +22,12 @@ function Arena:init()
     self:initCamera()
         
     self.hoverEnabled = true
+    
+    WithoutDebug(function()
+        self:createTerrain()
+    end)
+    self:update(0)
+
 end
 
 function Arena:initCamera()
@@ -76,17 +82,8 @@ function Arena:checkHover()
     end   
 end
 
-function Arena:getObjectFromScreenPos(pos)
-    local texel = self.gBuffer:getTexel(GBuffer.Index.Ids, pos.x, pos.y)
-    local index = bytesToIndex(texel.x, texel.y)
-    return Object:fromIndex(index)
-end
-
 function Arena:onTouchEnded(touch, event)
-    if touch.dragging then
-       return 
-    end
-    
+
     local pos = touch:getLocation()    
     
     if self.hoverObject then

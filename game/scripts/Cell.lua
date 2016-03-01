@@ -5,7 +5,7 @@ function Cell:init()
     Object.init(self)
     
  
-    local textureName = 'tiles/ground.png'
+    local textureName = 'tiles/soil2.png'
 
     self.gfx = Carcase:create(textureName, nil, self:getMaterial(textureName))
     

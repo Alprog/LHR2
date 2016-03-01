@@ -264,8 +264,7 @@ static keyCodeItem g_keyCodeStructArray[] = {
 
 
 GLViewImpl::GLViewImpl()
-: _captured(false)
-, _supportTouch(false)
+: _supportTouch(false)
 , _isInRetinaMonitor(false)
 , _isRetinaEnabled(false)
 , _retinaFactor(1)
@@ -275,6 +274,11 @@ GLViewImpl::GLViewImpl()
 , _mouseX(0.0f)
 , _mouseY(0.0f)
 {
+	for (int i = 0; i < MOUSE_BUTTON_COUNT; i++)
+	{
+		_captured[i] = false;
+	}
+
     _viewName = "cocos2dx";
     g_keyCodeMap.clear();
     for (auto& item : g_keyCodeStructArray)
@@ -655,28 +659,28 @@ void GLViewImpl::onGLFWError(int errorID, const char* errorDesc)
 
 void GLViewImpl::onGLFWMouseCallBack(GLFWwindow* window, int button, int action, int modify)
 {
-    if(GLFW_MOUSE_BUTTON_LEFT == button)
-    {
-        if(GLFW_PRESS == action)
-        {
-            _captured = true;
-            if (this->getViewPortRect().equals(Rect::ZERO) || this->getViewPortRect().containsPoint(Vec2(_mouseX,_mouseY)))
-            {
-                intptr_t id = 0;
-                this->handleTouchesBegin(1, &id, &_mouseX, &_mouseY);
-            }
-        }
-        else if(GLFW_RELEASE == action)
-        {
-            if (_captured)
-            {
-                _captured = false;
-                intptr_t id = 0;
-                this->handleTouchesEnd(1, &id, &_mouseX, &_mouseY);
-            }
-        }
-    }
-    
+	if (button < MOUSE_BUTTON_COUNT)
+	{
+		if (GLFW_PRESS == action)
+		{
+			_captured[button] = true;
+			if (this->getViewPortRect().equals(Rect::ZERO) || this->getViewPortRect().containsPoint(Vec2(_mouseX, _mouseY)))
+			{
+				intptr_t id = button;
+				this->handleTouchesBegin(1, &id, &_mouseX, &_mouseY);
+			}
+		}
+		else if (GLFW_RELEASE == action)
+		{
+			if (_captured[button])
+			{
+				_captured[button] = false;
+				intptr_t id = button;
+				this->handleTouchesEnd(1, &id, &_mouseX, &_mouseY);
+			}
+		}
+	}
+
     //Because OpenGL and cocos2d-x uses different Y axis, we need to convert the coordinate here
     float cursorX = (_mouseX - _viewPortRect.origin.x) / _scaleX;
     float cursorY = (_viewPortRect.origin.y + _viewPortRect.size.height - _mouseY) / _scaleY;
@@ -714,10 +718,13 @@ void GLViewImpl::onGLFWMouseMoveCallBack(GLFWwindow* window, double x, double y)
         }
     }
 
-    if (_captured)
+	for (int i = 0; i < MOUSE_BUTTON_COUNT; i++)
     {
-        intptr_t id = 0;
-        this->handleTouchesMove(1, &id, &_mouseX, &_mouseY);
+		if (_captured[i])
+		{
+			intptr_t id = 0;
+			this->handleTouchesMove(1, &id, &_mouseX, &_mouseY);
+		}
     }
     
     //Because OpenGL and cocos2d-x uses different Y axis, we need to convert the coordinate here

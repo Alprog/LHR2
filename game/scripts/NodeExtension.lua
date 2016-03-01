@@ -24,6 +24,13 @@ function Node:listenTouches()
     self:regListener(listener)
 end
 
+function Node:listenMouse()
+    local listener = cc.EventListenerMouse:create()
+    self:regCallback(listener, cc.Handler.EVENT_MOUSE_DOWN, self.onMouseDown)
+    self:regCallback(listener, cc.Handler.EVENT_MOUSE_UP, self.onMouseUp)
+    self:regListener(listener)
+end
+
 function Node:listenWheel()
     local listener = cc.EventListenerMouse:create()
     self:regCallback(listener, cc.Handler.EVENT_MOUSE_SCROLL, self.onMouseWheel)

@@ -2244,6 +2244,56 @@ int lua_cocos2dx_Touch_getStartLocationInView(lua_State* tolua_S)
 
     return 0;
 }
+int lua_cocos2dx_Touch_setButtonId(lua_State* tolua_S)
+{
+    int argc = 0;
+    cocos2d::Touch* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"cc.Touch",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (cocos2d::Touch*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_cocos2dx_Touch_setButtonId'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 1) 
+    {
+        int arg0;
+
+        ok &= luaval_to_int32(tolua_S, 2,(int *)&arg0, "cc.Touch:setButtonId");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_Touch_setButtonId'", nullptr);
+            return 0;
+        }
+        cobj->setButtonId(arg0);
+        lua_settop(tolua_S, 1);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "cc.Touch:setButtonId",argc, 1);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_Touch_setButtonId'.",&tolua_err);
+#endif
+
+    return 0;
+}
 int lua_cocos2dx_Touch_getStartLocation(lua_State* tolua_S)
 {
     int argc = 0;
@@ -2441,6 +2491,53 @@ int lua_cocos2dx_Touch_getLocationInView(lua_State* tolua_S)
 
     return 0;
 }
+int lua_cocos2dx_Touch_getButtonId(lua_State* tolua_S)
+{
+    int argc = 0;
+    cocos2d::Touch* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"cc.Touch",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (cocos2d::Touch*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_cocos2dx_Touch_getButtonId'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_Touch_getButtonId'", nullptr);
+            return 0;
+        }
+        int ret = cobj->getButtonId();
+        tolua_pushnumber(tolua_S,(lua_Number)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "cc.Touch:getButtonId",argc, 0);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_Touch_getButtonId'.",&tolua_err);
+#endif
+
+    return 0;
+}
 int lua_cocos2dx_Touch_getPreviousLocation(lua_State* tolua_S)
 {
     int argc = 0;
@@ -2542,10 +2639,12 @@ int lua_register_cocos2dx_Touch(lua_State* tolua_S)
         tolua_function(tolua_S,"getLocation",lua_cocos2dx_Touch_getLocation);
         tolua_function(tolua_S,"getDelta",lua_cocos2dx_Touch_getDelta);
         tolua_function(tolua_S,"getStartLocationInView",lua_cocos2dx_Touch_getStartLocationInView);
+        tolua_function(tolua_S,"setButtonId",lua_cocos2dx_Touch_setButtonId);
         tolua_function(tolua_S,"getStartLocation",lua_cocos2dx_Touch_getStartLocation);
         tolua_function(tolua_S,"getId",lua_cocos2dx_Touch_getID);
         tolua_function(tolua_S,"setTouchInfo",lua_cocos2dx_Touch_setTouchInfo);
         tolua_function(tolua_S,"getLocationInView",lua_cocos2dx_Touch_getLocationInView);
+        tolua_function(tolua_S,"getButtonId",lua_cocos2dx_Touch_getButtonId);
         tolua_function(tolua_S,"getPreviousLocation",lua_cocos2dx_Touch_getPreviousLocation);
     tolua_endmodule(tolua_S);
     std::string typeName = typeid(cocos2d::Touch).name();

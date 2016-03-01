@@ -275,6 +275,12 @@ function table:clone()
     return clone
 end
 
+function table:insertRange(values)
+    for i = 1, #values do
+        table.insert(self, values[i])
+    end
+end
+
 function table:join(delimiter)
     local str = tostring(self[1])
     for i = 2, #self do

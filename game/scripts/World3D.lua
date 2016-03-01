@@ -25,7 +25,6 @@ function World3D:initTextures(size)
     
     self.shadowMapTexture = createTexture(cc.size(1024, 1024), cc.DEPTH24_STENCIL8)
     self.historyTexture = createTexture(size)
-    
 end
 
 function World3D:onResize(size)
@@ -50,8 +49,10 @@ end
 
 function World3D:bakeShadows()
     self.shadowMapBuffer:clearFBO()
-    self.lightCamera:render(self, cc.CameraFlag.DEFAULT, self.shadowMapBuffer)
-    
+    if self.lightCamera then
+        self.lightCamera:render(self, cc.CameraFlag.DEFAULT, self.shadowMapBuffer)
+    end
+
     self.frameBuffer:clearFBO()
     thePostProcessor:setup(self.gBuffer, self.shadowMapBuffer, self.frameBuffer, self.camera, self.lightCamera)
     thePostProcessor:perform()
@@ -69,4 +70,8 @@ function World3D:temporalAA()
     
 end
 
-
+function World3D:getObjectFromScreenPos(pos)
+    local texel = self.gBuffer:getTexel(GBuffer.Index.Ids, pos.x, pos.y)
+    local index = bytesToIndex(texel.x, texel.y)
+    return Object:fromIndex(index)
+end

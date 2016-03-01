@@ -53,6 +53,8 @@ THE SOFTWARE.
 
 NS_CC_BEGIN
 
+const int MOUSE_BUTTON_COUNT = 4;
+
 class CC_DLL GLViewImpl : public GLView
 {
 public:
@@ -137,7 +139,7 @@ protected:
     void onGLFWWindowSizeFunCallback(GLFWwindow *window, int width, int height);
     void onGLFWWindowIconifyCallback(GLFWwindow* window, int iconified);
 
-    bool _captured;
+    bool _captured[MOUSE_BUTTON_COUNT];
     bool _supportTouch;
     bool _isInRetinaMonitor;
     bool _isRetinaEnabled;

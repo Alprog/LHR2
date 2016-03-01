@@ -445,10 +445,7 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
 	if (isTransparent)
 		flags |= Node::FLAGS_RENDER_AS_3D;
 
-	if (!forceDepthWrite)
-		_material->getStateBlock()->setDepthWrite(false);
-	else
-		_material->getStateBlock()->setDepthWrite(true);
+	_material->getStateBlock()->setDepthWrite(true);
 
 
 	_meshCommand.init(globalZ,

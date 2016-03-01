@@ -298,7 +298,8 @@ void GLView::handleTouchesBegin(int num, intptr_t ids[], float xs[], float ys[])
             Touch* touch = g_touches[unusedIndex] = new (std::nothrow) Touch();
             touch->setTouchInfo(unusedIndex, (x - _viewPortRect.origin.x) / _scaleX,
                                      (y - _viewPortRect.origin.y) / _scaleY);
-            
+			touch->setButtonId(id);
+
             CCLOGINFO("x = %f y = %f", touch->getLocationInView().x, touch->getLocationInView().y);
             
             g_touchIdReorderMap.insert(std::make_pair(id, unusedIndex));
