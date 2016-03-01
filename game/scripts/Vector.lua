@@ -59,6 +59,10 @@ function Vector.cross(a, b)
     )
 end
 
+function Vector.dot(a, b)
+    return a.x * b.x + a.y * b.y + a.z * b.z
+end
+
 function Vector:copy()
     return Vector(self.x, self.y, self.z)
 end
@@ -74,4 +78,16 @@ function Vector:normalize()
         self.y = self.y / len
         self.z = self.z / len
     end
+end
+
+function Vector:getNormalized()
+    local len = self:length()
+    if len == 0 then 
+        len = 1
+    end
+    return Vector(
+        self.x / len,
+        self.y / len,
+        self.z / len
+    )    
 end

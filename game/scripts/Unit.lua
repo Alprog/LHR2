@@ -3,7 +3,7 @@ require 'Object.lua'
 require 'Model.lua'
 require 'Points.lua'
 
-Unit = Derive('Unit', Model, Object)
+Unit = Derive('Unit', Object)
 
 local walkTime = 0.33
 local jumpTime = 0.5

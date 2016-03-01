@@ -47,8 +47,19 @@ end
 function LevelEditor:onKeyPress(keyCode)
     if keyCode == cc.KeyCode.KEY_F2 then
         self.projector:nextSource()
+    elseif keyCode == cc.KeyCode.KEY_Z then
+        self:skew(-1)
+    elseif keyCode == cc.KeyCode.KEY_X then
+        self:skew(1)
     else
         Scene.onKeyPress(self, keyCode)
+    end
+end
+
+function LevelEditor:skew(value)
+    local object = self.scene3D.hoverObject
+    if object then
+        object:skew(value)
     end
 end
 

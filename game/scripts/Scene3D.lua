@@ -56,13 +56,9 @@ function Scene3D:update(deltaTime)
     
     if self.hoverEnabled then
         self:checkHover()
-    end
-    
-    --[[local pos = self.terrain:getPosition3D()
-    pos.x = pos.x - deltaTime * 1
-    self.terrain:setPosition3D(pos)]]
+    end    
 end
-
+ 
 function Scene3D:setTechnique(index)
     local units = self.unitLayer:getChildren() 
     for unit in iter(units) do
