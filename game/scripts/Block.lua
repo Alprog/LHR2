@@ -7,7 +7,7 @@ function Block:init()
     Object.init(self)
     
     self.height = 0
-    self.textureName = 'tiles/soil3.png'
+    self.textureName = 'tiles/soil.png'
     self:initGfx()
 end
 
@@ -53,13 +53,20 @@ function Block:getMesh()
         
     local meshBuilder = MeshBuilder:create()
     
-    meshBuilder:quad(
-        Vector(-0.5, 0, -0.5),
-        Vector(0.5, 0, -0.5),
-        Vector(-0.5, 0, 0.5),
-        Vector(0.5, 0, 0.5)
-    )
-        
+    local v = {}
+    v[0] = Vector(-0.5, 0, -0.5)
+    v[1] = Vector(0.5, 0, -0.5)
+    v[2] = Vector(-0.5, 0, 0.5)
+    v[3] = Vector(0.5, 0, 0.5)
+    
+    local s = Vector(0, 1, 0)
+    
+    meshBuilder:quad(v[0], v[1], v[2], v[3])
+    meshBuilder:quad(v[0], v[2], v[0] - s, v[2] - s)
+    meshBuilder:quad(v[2], v[3], v[2] - s, v[3] - s)
+    meshBuilder:quad(v[3], v[1], v[3] - s, v[1] - s)
+    meshBuilder:quad(v[1], v[0], v[1] - s, v[0] - s)
+     
     mesh = meshBuilder:build()
     
     --mesh:retain()

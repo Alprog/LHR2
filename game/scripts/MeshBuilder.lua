@@ -12,6 +12,8 @@ end
 local ccwTexs = { Vec(0, 1), Vec(1, 1), Vec(0, 0), Vec(1, 0) }
 
 function MeshBuilder:quad(v0, v1, v2, v3)
+    local c = #self.positions
+    
     table.insertRange(self.positions, {v0, v1, v2, v3})    
     table.insertRange(self.texs, ccwTexs)
     
@@ -21,7 +23,6 @@ function MeshBuilder:quad(v0, v1, v2, v3)
         table.insert(self.normals, normal)
     end
 
-    local c = #self.indices
     local indices = 
     {    
         0 + c, 2 + c, 1 + c,
