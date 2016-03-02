@@ -5,7 +5,7 @@ varying vec2 v_screenPos;
 varying vec2 v_prevScreenPos;
 uniform vec2 u_id;
 uniform sampler2D mainTexture;
-uniform sampler2D addTexture;
+uniform sampler2D cornerTexture;
 uniform vec3 u_addColor;
 
 #include "utils.inc"
@@ -13,10 +13,10 @@ uniform vec3 u_addColor;
 void main()
 {	
     vec4 mainColor = texture2D(mainTexture, v_texCoord);
-    vec4 addColor = texture2D(addTexture, v_texCoord);
+    float cornerMask = texture2D(cornerTexture, v_texCoord).r / 2;
     
     vec3 albedo = mainColor.rgb + u_addColor;
-    albedo = mix(albedo, vec3(1, 0, 0), addColor.r / 2);
+    albedo = mix(albedo, vec3(1, 0, 0), cornerMask);
     
     vec2 velocity = v_screenPos - v_prevScreenPos;
     outputGBuffer(albedo, v_normal, u_id, velocity);

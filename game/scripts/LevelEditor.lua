@@ -39,11 +39,10 @@ function LevelEditor:update(dt)
     self.scene3D:checkHover()
     local object = self.scene3D.hoveredObject
     if object then
-        if Input.keys[cc.KeyCode.KEY_CTRL] then
-            object:highlightNearestCorner(self.scene3D.camera)
-        else
-            object:clearCornerHighlight()
-        end
+        local corners = Input.keys[cc.KeyCode.KEY_CTRL]
+        local sides = Input.keys[cc.KeyCode.KEY_SHIFT]
+        local affectNeighbors = Input.keys[cc.KeyCode.KEY_ALT]
+        object:setHighlight(corners, sides, affectNeighbors, self.scene3D.camera)
     end
 end
 

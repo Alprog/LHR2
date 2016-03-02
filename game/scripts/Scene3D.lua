@@ -87,7 +87,7 @@ function Scene3D:onTouchEnded(touch, event)
         
         if object.className == 'Block' then
             local value = 0.25 * (touch:getButtonId() == 0 and 1 or -1)
-            object:move(value)
+            object:extrude(value)
         end
         
     end

@@ -21,18 +21,26 @@ function MeshBuilder:clear()
     self.indices = {}
 end
 
-function MeshBuilder:quad(p0, p1, p2, p3)
+function MeshBuilder:addQuad(p0, p1, p2, p3, bitangent)
+    self:addPolygon(p0, p1, p2, p3, bitangent)
+end
+
+function MeshBuilder:addTriangle(p0, p1, p2, bitangent)
+    self:addPolygon(p0, p1, p2, nil, bitangent)
+end
+
+function MeshBuilder:addPolygon(p0, p1, p2, p3, bitangent)
     local c = #self.positions
     
     local positions = {p0, p1, p2, p3}
     table.insertRange(self.positions, positions)    
    
-    local normal = Vector.getNormalized((p2 - p0) ^ (p3 - p1)) 
-    for i = 1, 4 do
+    local normal = Vector.getNormalized((p2 - p1) ^ (p0 - p1)) 
+    for i = 1, #positions do
         table.insert(self.normals, normal)
     end
 
-    local bitangent = Vector.getNormalized(p3 - p0)
+    bitangent = bitangent or Vector.getNormalized(p2 - p1)
     local tangent = bitangent ^ normal
     
     for p in iter(positions) do
@@ -41,12 +49,10 @@ function MeshBuilder:quad(p0, p1, p2, p3)
         table.insert(self.texs, Vec(u, v))
     end
     
-    local indices = 
-    {    
-        0 + c, 1 + c, 2 + c,
-        0 + c, 2 + c, 3 + c
-    }
-    table.insertRange(self.indices, indices)
+    table.insertRange(self.indices, {0 + c, 1 + c, 2 + c})
+    if p3 then
+        table.insertRange(self.indices, {0 + c, 2 + c, 3 + c})
+    end
 end
 
 function MeshBuilder:build()

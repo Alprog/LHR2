@@ -494,7 +494,7 @@ end
 
 function cc.mat4.transformPoint(self, v)
     local v = cc.mat4.transformVector4(self, Vec(v.x, v.y, v.z, 1))
-    return Vec(v.x / v.w, v.y / v.w, v.z / v.w)
+    return Vector(v.x / v.w, v.y / v.w, v.z / v.w)
 end
 
 function cc.mat4.transformVector(self, v)
