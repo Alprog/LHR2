@@ -3,7 +3,7 @@ require 'Debug.lua'
 
 Input = {}
 Input.keys = {}
-Input.mousePos = Vec(0, 0)
+Input.mousePos = Vector(0, 0)
 
 local function OnMouseMove(event)
     Input.mousePos = Vec(event:getCursorX(), event:getCursorY())

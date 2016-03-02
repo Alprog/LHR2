@@ -492,12 +492,28 @@ function cc.mat4.getInversed(self)
     return mat4_getInversed(self)
 end
 
-function cc.mat4.transformVector(self, vector, dst)
-    return mat4_transformVector(self, vector, dst)
+function cc.mat4.transformPoint(self, v)
+    local v = cc.mat4.transformVector4(self, Vec(v.x, v.y, v.z, 1))
+    return Vec(v.x / v.w, v.y / v.w, v.z / v.w)
+end
+
+function cc.mat4.transformVector(self, v)
+    return cc.mat4.transformVector4(self, Vec(v.x, v.y, v.z, 0))
+end
+
+function cc.mat4.transformVector4(m, v)
+    return Vec(
+        v.x * m[1] + v.y * m[5] + v.z * m[9] + v.w * m[13],
+        v.x * m[2] + v.y * m[6] + v.z * m[10] + v.w * m[14],
+        v.x * m[3] + v.y * m[7] + v.z * m[11] + v.w * m[15],
+        v.x * m[4] + v.y * m[8] + v.z * m[12] + v.w * m[16]
+    ) 
 end
 
 function cc.mat4.multiply(self, mat)
-    return mat4_multiply(self, mat)
+    local result = mat4_multiply(self, mat)
+    setmetatable(result, {__index = cc.mat4})
+    return result
 end
 
 function cc.mat4.decompose(self, scale, rotation, translation)

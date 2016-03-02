@@ -23,8 +23,7 @@ function Scene3D:init()
     self:initCamera()
         
     self.hoverEnabled = true
-    
-    
+
     self.level = Level:create()
     self:addChild(self.level)
     self:update(0)
@@ -52,11 +51,7 @@ end
 
 function Scene3D:update(deltaTime)
     self.tasks:update(deltaTime)
-    self.camera:update(deltaTime)
-    
-    if self.hoverEnabled then
-        self:checkHover()
-    end    
+    self.camera:update(deltaTime)  
 end
  
 function Scene3D:setTechnique(index)
@@ -68,13 +63,13 @@ end
 
 function Scene3D:checkHover()
     local object = self:getObjectFromScreenPos(Input.mousePos)
-    if self.hoverObject ~= object then
-        if self.hoverObject then
-            self.hoverObject:onHover(false) 
+    if self.hoveredObject ~= object then
+        if self.hoveredObject then
+            self.hoveredObject:onHover(false) 
         end
-        self.hoverObject = object
-        if self.hoverObject then
-            self.hoverObject:onHover(true)
+        self.hoveredObject = object
+        if self.hoveredObject then
+            self.hoveredObject:onHover(true)
         end
     end   
 end
@@ -85,8 +80,8 @@ end
 
 function Scene3D:onTouchEnded(touch, event)
    
-    if self.hoverObject then
-        local object = self.hoverObject
+    if self.hoveredObject then
+        local object = self.hoveredObject
         
         print('id', touch:getButtonId())
         

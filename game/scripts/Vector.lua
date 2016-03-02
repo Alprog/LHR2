@@ -67,8 +67,20 @@ function Vector:copy()
     return Vector(self.x, self.y, self.z)
 end
 
+function Vector:squaredLength()
+    return self.x * self.x + self.y * self.y + self.z * self.z
+end
+
 function Vector:length()
     return math.sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
+end
+
+function Vector.lerp(a, b, k)
+    return Vector(
+        a.x * (1 - k) + b.x * k,
+        a.y * (1 - k) + b.y * k,
+        a.z * (1 - k) + b.z * k
+    );
 end
 
 function Vector:normalize()

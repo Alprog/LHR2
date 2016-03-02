@@ -71,13 +71,13 @@ end
 
 function Arena:checkHover()
     local object = self:getObjectFromScreenPos(Input.mousePos)
-    if self.hoverObject ~= object then
-        if self.hoverObject then
-            self.hoverObject:onHover(false) 
+    if self.hoveredObject ~= object then
+        if self.hoveredObject then
+            self.hoveredObject:onHover(false) 
         end
-        self.hoverObject = object
-        if self.hoverObject then
-            self.hoverObject:onHover(true)
+        self.hoveredObject = object
+        if self.hoveredObject then
+            self.hoveredObject:onHover(true)
         end
     end   
 end
@@ -86,12 +86,12 @@ function Arena:onTouchEnded(touch, event)
 
     local pos = touch:getLocation()    
     
-    if self.hoverObject then
-        if self.hoverObject.isUnit then
-            self.battle:selectPlayer(self.hoverObject)
+    if self.hoveredObject then
+        if self.hoveredObject.isUnit then
+            self.battle:selectPlayer(self.hoveredObject)
             self.battle.scene:updateUI()
         else
-            self.battle:onCellClick(self.hoverObject)
+            self.battle:onCellClick(self.hoveredObject)
         end    
     end
     

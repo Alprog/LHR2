@@ -7,7 +7,6 @@ function LevelEditor:init()
     self:scheduleUpdate()
     
     self.scene3D = Scene3D:create()
-
    
     theApp.scene:addChild(self.scene3D)
     self:enableNodeEvents()
@@ -37,29 +36,44 @@ function LevelEditor:onCleanup()
 end
 
 function LevelEditor:update(dt)
+    self.scene3D:checkHover()
+    local object = self.scene3D.hoveredObject
+    if object then
+        if Input.keys[cc.KeyCode.KEY_CTRL] then
+            object:highlightNearestCorner(self.scene3D.camera)
+        else
+            object:clearCornerHighlight()
+        end
+    end
 end
 
 function LevelEditor:render()
-    self.scene3D:render()    
+    self.scene3D:render()
     Scene.render(self)
 end
 
 function LevelEditor:onKeyPress(keyCode)
     if keyCode == cc.KeyCode.KEY_F2 then
         self.projector:nextSource()
-    elseif keyCode == cc.KeyCode.KEY_Z then
-        self:skew(-1)
-    elseif keyCode == cc.KeyCode.KEY_X then
-        self:skew(1)
     else
         Scene.onKeyPress(self, keyCode)
     end
+    
+    local block = self.scene3D.hoveredObject
+    if block then
+        self:onBlockKeyPress(block, keyCode)
+    end
 end
 
-function LevelEditor:skew(value)
-    local object = self.scene3D.hoverObject
-    if object then
-        object:skew(value)
+function LevelEditor:onBlockKeyPress(block, keyCode)
+   if keyCode == cc.KeyCode.KEY_Z then
+        block:skew(-1)
+    elseif keyCode == cc.KeyCode.KEY_X then
+        block:skew(1)
+    elseif keyCode == cc.KeyCode.KEY_C then
+        block:rotate()
+    elseif keyCode == cc.KeyCode.KEY_V then
+        block:setScaleZ(0.5)
     end
 end
 
