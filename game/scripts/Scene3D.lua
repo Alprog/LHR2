@@ -15,19 +15,10 @@ function Scene3D:init()
     
     self.unitLayer = self:createChild()
     
-    self:listenTouches()
-    self:listenMouse()
     self:scheduleUpdate()
     
     self.tasks = TaskManager:create()
-    self:initCamera()
-        
-    self.hoverEnabled = true
-
-    self.level = Level:create()
-    self:addChild(self.level)
-    self:update(0)
-    
+    self:initCamera()   
 end
 
 function Scene3D:initCamera()
@@ -53,13 +44,6 @@ function Scene3D:update(deltaTime)
     self.tasks:update(deltaTime)
     self.camera:update(deltaTime)  
 end
- 
-function Scene3D:setTechnique(index)
-    local units = self.unitLayer:getChildren() 
-    for unit in iter(units) do
-        unit:selectTechnique(index)
-    end
-end
 
 function Scene3D:checkHover()
     local object = self:getObjectFromScreenPos(Input.mousePos)
@@ -72,63 +56,4 @@ function Scene3D:checkHover()
             self.hoveredObject:onHover(true)
         end
     end   
-end
-
-function Scene3D:onMouseDown(event)
-    print('down')
-end
-
-function Scene3D:onTouchEnded(touch, event)
-   
-    if self.hoveredObject then
-        local object = self.hoveredObject
-        
-        print('id', touch:getButtonId())
-        
-        if object.className == 'Block' then
-            local value = 0.25 * (touch:getButtonId() == 0 and 1 or -1)
-            object:extrude(value)
-        end
-        
-    end
-    
-    local pos = touch:getLocation()    
-    pos = self:convertToNodeSpace(pos)
-    self:onClick(pos)
-end
-
-function Scene3D:onClick(pos)    
-    --print(pos)
-end
-
-function Scene3D:createTerrain()
-    self.terrain = Terrain:create()
-    self.terrain:initDefault()
-    self.terrain:buildNavGraph()
-    self:addChild(self.terrain)
-end
-
-function Scene3D:getRandomCell()
-    return table.randomItem(self.terrain.cells)
-end
-
-function Scene3D:getRandomFreeCell()
-    while true do
-        local cell = self:getRandomCell()
-        if not cell.object then
-            return cell
-        end
-    end
-end
-
-function Scene3D:spawn(unit)
-    local cell = self:getRandomFreeCell()
-    unit:teleportToCell(cell)
-    
-    local angles = { 0, 90, 180, 270 }
-    local angle = angles[math.random(#angles)]
-    unit:setRotation(angle * math.pi / 180)
-    
-    unit.arena = self
-    self.unitLayer:addChild(unit)
 end

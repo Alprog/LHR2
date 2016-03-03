@@ -5,17 +5,21 @@ Block = Class('Block', Object)
 
 local defaultUV = { Vec(0, 0), Vec(1, 0), Vec(1, 1), Vec(0, 1) }
 
-function Block:init()
+function Block:init(section, floor)
     Object.init(self)
+    
+    self.section = section
+    self.floor = floor
     
     self.heights = { [0] = 0, 0, 0, 0 }
     self.rotation = 0
     
     self.textureNames = { 'tiles/grass.png', 'tiles/soil.png' }
-    self:reloadGfx()
+
+    section:addChild(self)
 end
 
-function Block:reloadGfx()
+function Block:recreateGfx()
     if self.gfx then
         self.gfx:removeFromParent()
         self.gfx = nil
@@ -24,6 +28,9 @@ function Block:reloadGfx()
 end
 
 function Block:initGfx()
+    if self.gfx ~= nil then
+        return
+    end
 
     self.gfx = Carcase:create()
     
@@ -90,6 +97,8 @@ function Block:getMeshes()
     table.insert(meshes, meshBuilder:build())
     meshBuilder:clear()
     
+    local neighbors = self:getNeighbors()
+    
     local up = Vec(0, 1, 0)
     for i = 0, 3 do
         local j = (i + 1) % 4
@@ -110,11 +119,6 @@ function Block:onHover(value)
     end
 end
 
-function Block:skew(value)
-    self.offset = self.offset + value / 4
-    self:reloadGfx()
-end
-
 function Block:extrude(value)
     local index = self.cornerType
     
@@ -132,7 +136,7 @@ function Block:extrude(value)
         end
     end
     
-    self:reloadGfx()
+    self.section.level:onReliefChange(self)
 end
 
 function Block:changeHeight(index, value)
@@ -213,4 +217,13 @@ function Block:setPartHighlight(type)
     local texture = type and getTexture('editor/highlight/'..type..'.png') or 0
     state:setUniformTexture('highlightTexture', texture)
     self.cornerType = type
+end
+
+function Block:getSection()
+    return self:getParent() 
+end
+
+function Block:getNeighbors()
+    local section = self.section
+    return section.level:getNeighbors(section.x, section.z, self.floor)
 end

@@ -7,7 +7,6 @@ function LevelEditor:init()
     self:scheduleUpdate()
     
     self.scene3D = Scene3D:create()
-   
     theApp.scene:addChild(self.scene3D)
     self:enableNodeEvents()
     
@@ -27,6 +26,12 @@ function LevelEditor:init()
         touchBeginPoint = {x = location.x, y = location.y}
         return true
     end
+    
+        
+    self.level = Level:create()
+    self.scene3D:addChild(self.level)
+    
+    self:listenTouches()
 end
 
 function LevelEditor:onCleanup()
@@ -88,3 +93,19 @@ function LevelEditor:onResize(size)
     self.scene3D:onResize(size)
     self.projector:refreshScreen()
 end
+
+function LevelEditor:onTouchEnded(touch, event)
+   
+    if self.scene3D.hoveredObject then
+        local object = self.scene3D.hoveredObject
+        
+        print('id', touch:getButtonId())
+        
+        if object.className == 'Block' then
+            local value = 0.25 * (touch:getButtonId() == 0 and 1 or -1)
+            object:extrude(value)
+        end
+        
+    end
+end
+
