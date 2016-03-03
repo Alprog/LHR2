@@ -3,7 +3,17 @@ require 'MeshBuilder.lua'
 
 Block = Class('Block', Object)
 
+-- 3          2  +x           
+--  +-------+             
+--  |     / |             ^  bitangent (v)
+--  |   /   |             |      
+--  | /     |             |              
+--  +-------+             +-----> tangent (u)
+-- 0          1
+-- +z
+
 local defaultUV = { Vec(0, 0), Vec(1, 0), Vec(1, 1), Vec(0, 1) }
+local oppositeIndexes = { {3, 2}, {0, 3}, {1, 0}, {2, 1} }
 
 function Block:init(section, floor)
     Object.init(self)
@@ -36,7 +46,7 @@ function Block:initGfx()
     
     self.gfx = cc.Sprite3D:create()
     
-    local meshes = self:getMeshes()
+    local meshes = self:createMeshes()
     
     for i = 1, #meshes do
         local mesh = meshes[i]
@@ -50,7 +60,7 @@ function Block:initGfx()
         self.gfx:addMesh(mesh)
     end
 
-    self.gfx:setCullFaceEnabled(true)
+    self.gfx:setCullFaceEnabled(false)
     
     self:addChild(self.gfx)
 end
@@ -65,6 +75,14 @@ function Block:getCorners()
     return p
 end
 
+function Block:createMeshes()
+    return 
+    {   
+        self:createSiteMesh(),
+        self:createWallsMesh()
+    }
+end
+
 function triangleHelper(meshBuilder, p, i1, i2, i3)
     meshBuilder:addTriangle(p[i1], p[i2], p[i3])
     table.insert(meshBuilder.uv1, defaultUV[i1 + 1])
@@ -72,12 +90,8 @@ function triangleHelper(meshBuilder, p, i1, i2, i3)
     table.insert(meshBuilder.uv1, defaultUV[i3 + 1])
 end
 
-function Block:getMeshes()
-    local meshes = {}
-        
-    local meshBuilder = MeshBuilder:create()   
-    local s = Vector(0, 0.25, 0)
-    
+function Block:createSiteMesh()
+    local meshBuilder = MeshBuilder:create() 
     local p = self:getCorners()
        
     local delta = (p[0].y + p[2].y) - (p[1].y + p[3].y)
@@ -94,22 +108,58 @@ function Block:getMeshes()
         end
     end
         
-    table.insert(meshes, meshBuilder:build())
-    meshBuilder:clear()
+    return meshBuilder:build()
+end
+
+function Block:getOppositeHeights(side)
+    local indexes = oppositeIndexes[side]
+    local a, b = indexes[1], indexes[2]
+    return self.heights[a], self.heights[b]
+end
+
+function Block:createWallsMesh()
+    local meshBuilder = MeshBuilder:create() 
+    local p = self:getCorners()
+    
+    local s = Vector(0, 0.25, 0)
+    local up = Vec(0, 1, 0)
     
     local neighbors = self:getNeighbors()
     
-    local up = Vec(0, 1, 0)
-    for i = 0, 3 do
-        local j = (i + 1) % 4
-        meshBuilder:addQuad(p[i] - s, p[j] - s, p[j], p[i], up)
-        table.insertRange(meshBuilder.uv1, defaultUV)
+    for i = 1, 4 do
+        local a, b = p[i - 1], p[i % 4]
+        local ai, bi
+        
+        local neighbor = neighbors[i]
+        if neighbor then
+            local ay, by = neighbor:getOppositeHeights(i)
+            ai = Vector(a.x, math.min(a.y, ay), a.z)
+            bi = Vector(b.x, math.min(b.y, by), b.z)
+        else
+            ai = a - s
+            bi = b - s
+        end
+        
+        local isA, isB = a.y ~= ai.y, b.y ~= bi.y
+        if isA or isB then
+            if isA and isB then
+                meshBuilder:addQuad(b, a, ai, bi, up)
+                table.insertRange(meshBuilder.uv1, defaultUV)
+            else
+                if isA then
+                    meshBuilder:addTriangle(b, a, ai, up)
+                else
+                    meshBuilder:addTriangle(b, ai, bi, up)
+                end
+                local zeroUV = {Vec(0, 0), Vec(0, 0), Vec(0, 0)}
+                table.insertRange(meshBuilder.uv1, zeroUV)
+            end
+        end
     end
 
-    table.insert(meshes, meshBuilder:build())
-    meshBuilder:clear()
-    
-    return meshes
+    if meshBuilder:hasGeometry() then
+        return meshBuilder:build()
+    end
 end
 
 function Block:onHover(value)

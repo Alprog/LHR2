@@ -105,7 +105,7 @@ function LevelEditor:onTouchEnded(touch, event)
             local value = 0.25 * (touch:getButtonId() == 0 and 1 or -1)
             object:extrude(value)
         end
-        
+        self.level:refreshGfx()
     end
 end
 

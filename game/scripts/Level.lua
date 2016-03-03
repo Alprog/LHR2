@@ -4,10 +4,7 @@ Level = Class('Level', cc.Node)
 function Level:init()
     self.sections = {{}}
     self:extend(cc.size(10, 10))
-    self:initGfx()
-    
-    self:scheduleUpdate()
-    self.dirtyBlocks = {}
+    self:refreshGfx()
 end
 
 function Level:extend(size)
@@ -38,9 +35,9 @@ function Level:getBlock(x, z, floor)
 end
 
 function Level:onReliefChange(block)
-    table.insert(self.dirtyBlocks, block)
+    block.gfx.dirty = true
     for _, neighbor in pairs(block:getNeighbors()) do
-        table.insert(self.dirtyBlocks, neighbor)
+        neighbor.gfx.dirty = true
     end
 end
 
@@ -53,21 +50,14 @@ function Level:getNeighbors(x, z, floor)
     return neighbors
 end
 
-function Level:initGfx()
+function Level:refreshGfx()
     for line in iter(self.sections) do
         for section in iter(line) do
             for block in iter(section.floors) do
-                block:initGfx()
+                if not block.gfx or block.gfx.dirty then
+                    block:recreateGfx()
+                end
             end
         end
-    end
-end
-
-function Level:update()
-    if #self.dirtyBlocks then
-        for block in iter(self.dirtyBlocks) do
-            block:recreateGfx()
-        end
-        self.dirtyBlocks = {}
     end
 end

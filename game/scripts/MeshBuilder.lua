@@ -60,3 +60,7 @@ end
 function MeshBuilder:build()
     return createMesh(self)
 end
+
+function MeshBuilder:hasGeometry()
+    return #self.positions > 0
+end
