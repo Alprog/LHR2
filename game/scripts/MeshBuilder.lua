@@ -16,8 +16,10 @@ end
 
 function MeshBuilder:clear()
     self.positions = {}
-    self.texs = {}
     self.normals = {}
+    self.uv0 = {}
+    self.uv1 = {}
+    self.uv = self.uv0
     self.indices = {}
 end
 
@@ -46,7 +48,7 @@ function MeshBuilder:addPolygon(p0, p1, p2, p3, bitangent)
     for p in iter(positions) do
         local u = Vector.dot(p - p0, tangent)
         local v = Vector.dot(p - p0, bitangent)
-        table.insert(self.texs, Vec(u, v))
+        table.insert(self.uv, Vec(u, v))
     end
     
     table.insertRange(self.indices, {0 + c, 1 + c, 2 + c})

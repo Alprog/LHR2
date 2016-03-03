@@ -3,6 +3,8 @@ require 'MeshBuilder.lua'
 
 Block = Class('Block', Object)
 
+local defaultUV = { Vec(0, 0), Vec(1, 0), Vec(1, 1), Vec(0, 1) }
+
 function Block:init()
     Object.init(self)
     
@@ -56,6 +58,13 @@ function Block:getCorners()
     return p
 end
 
+function triangleHelper(meshBuilder, p, i1, i2, i3)
+    meshBuilder:addTriangle(p[i1], p[i2], p[i3])
+    table.insert(meshBuilder.uv1, defaultUV[i1 + 1])
+    table.insert(meshBuilder.uv1, defaultUV[i2 + 1])
+    table.insert(meshBuilder.uv1, defaultUV[i3 + 1])
+end
+
 function Block:getMeshes()
     local meshes = {}
         
@@ -63,17 +72,18 @@ function Block:getMeshes()
     local s = Vector(0, 0.25, 0)
     
     local p = self:getCorners()
-    
+       
     local delta = (p[0].y + p[2].y) - (p[1].y + p[3].y)
     if delta == 0 then
         meshBuilder:addQuad(p[0], p[1], p[2], p[3])
+        table.insertRange(meshBuilder.uv1, defaultUV)
     else
-        if delta > 0 then
-            meshBuilder:addTriangle(p[0], p[1], p[2])
-            meshBuilder:addTriangle(p[0], p[2], p[3])
+        if delta < 0 then
+            triangleHelper(meshBuilder, p, 0, 1, 2)
+            triangleHelper(meshBuilder, p, 0, 2, 3)
         else
-            meshBuilder:addTriangle(p[1], p[2], p[3])
-            meshBuilder:addTriangle(p[1], p[3], p[0])
+            triangleHelper(meshBuilder, p, 1, 2, 3)
+            triangleHelper(meshBuilder, p, 1, 3, 0)
         end
     end
         
@@ -84,6 +94,7 @@ function Block:getMeshes()
     for i = 0, 3 do
         local j = (i + 1) % 4
         meshBuilder:addQuad(p[i] - s, p[j] - s, p[j], p[i], up)
+        table.insertRange(meshBuilder.uv1, defaultUV)
     end
 
     table.insert(meshes, meshBuilder:build())
@@ -200,6 +211,6 @@ end
 function Block:setPartHighlight(type)
     local state = self.gfx:getMeshByIndex(0):getGLProgramState()
     local texture = type and getTexture('editor/highlight/'..type..'.png') or 0
-    state:setUniformTexture('cornerTexture', texture)
+    state:setUniformTexture('highlightTexture', texture)
     self.cornerType = type
 end

@@ -829,6 +829,8 @@ extern bool luaval_to_std_vector_vec2(lua_State* L, int lo, std::vector<cocos2d:
  */
 extern bool luaval_to_std_vector_vec3(lua_State* L, int lo, std::vector<cocos2d::Vec3>* ret, const char* funcName = "");
 
+extern bool luaval_to_std_vector_vec4(lua_State* L, int lo, std::vector<cocos2d::Vec4>* ret, const char* funcName = "");
+
 extern bool luaval_to_std_map_string_string(lua_State* L, int lo, std::map<std::string, std::string>* ret, const char* funcName);
 
 /**@}**/
@@ -1283,7 +1285,9 @@ void texParams_to_luaval(lua_State* L, const cocos2d::Texture2D::TexParams& inVa
  * @param L the current lua_State.
  * @param inValue a std::vector<cocos2d::Vec3> vaule.
  */
+void std_vector_vec2_to_luaval(lua_State* L, const std::vector<cocos2d::Vec2>& inValue);
 void std_vector_vec3_to_luaval(lua_State* L, const std::vector<cocos2d::Vec3>& inValue);
+void std_vector_vec4_to_luaval(lua_State* L, const std::vector<cocos2d::Vec4>& inValue);
 
 /**
  * Push a Lua dict table converted from a std::map<std::string, std::string> into the Lua stack.

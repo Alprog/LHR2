@@ -65,6 +65,8 @@ public:
     /**create mesh from positions, normals, and so on, sigle SubMesh*/
     static Mesh* create(const std::vector<float>& positions, const std::vector<float>& normals, const std::vector<float>& texs, const IndexArray& indices);
     
+	static Mesh* create(const std::vector<Vec3>& positions, const std::vector<Vec3>& normals, const std::vector<Vec2>& texs, const std::vector<Vec2>& texs2, const IndexArray& indices);
+
     /**
      * @lua NA
      */

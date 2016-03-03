@@ -271,6 +271,71 @@ Mesh* Mesh::combine(Vector<Mesh*>& meshes, std::vector<float>& data)
 	return _create(vertices, vertexSizeInFloat, indices, attribs);
 }
 
+inline MeshVertexAttrib Attribute(int size, int vertexAttribute)
+{
+	return MeshVertexAttrib { size, GL_FLOAT, vertexAttribute, (int)(size * sizeof(float)) };
+}
+
+Mesh* Mesh::create(const std::vector<Vec3>& positions, const std::vector<Vec3>& normals, const std::vector<Vec2>& texs, const std::vector<Vec2>& texs2, const IndexArray& indices)
+{
+	int perVertexSizeInFloat = 0;
+	std::vector<float> vertices;
+	std::vector<MeshVertexAttrib> attribs;
+
+	bool hasNormal = (normals.size() != 0);
+	bool hasTexCoord0 = (texs.size() != 0);
+	bool hasTexCoord1 = (texs2.size() != 0);
+
+	if (positions.size())
+	{
+		perVertexSizeInFloat += 3;
+		attribs.push_back(Attribute(3, GLProgram::VERTEX_ATTRIB_POSITION));
+	}
+	if (hasNormal)
+	{
+		perVertexSizeInFloat += 3;
+		attribs.push_back(Attribute(3, GLProgram::VERTEX_ATTRIB_NORMAL));
+	}
+	if (hasTexCoord0)
+	{
+		perVertexSizeInFloat += 2;
+		attribs.push_back(Attribute(2, GLProgram::VERTEX_ATTRIB_TEX_COORD));
+	}
+	if (hasTexCoord1)
+	{
+		perVertexSizeInFloat += 2;
+		attribs.push_back(Attribute(2, GLProgram::VERTEX_ATTRIB_TEX_COORD1));
+	}
+
+	size_t vertexNum = positions.size();
+	vertices.reserve(vertexNum * perVertexSizeInFloat);
+
+	for (size_t i = 0; i < vertexNum; i++)
+	{
+		float* p = (float*)&positions[i];
+		vertices.insert(std::end(vertices), p, p + 3);
+
+		if (hasNormal)
+		{
+			p = (float*)&normals[i];
+			vertices.insert(std::end(vertices), p, p + 3);
+		}
+
+		if (hasTexCoord0)
+		{
+			p = (float*)&texs[i];
+			vertices.insert(std::end(vertices), p, p + 2);
+		}
+
+		if (hasTexCoord1)
+		{
+			p = (float*)&texs2[i];
+			vertices.insert(std::end(vertices), p, p + 2);
+		}
+	}
+	return _create(vertices, perVertexSizeInFloat, indices, attribs);
+}
+
 Mesh* Mesh::create(const std::vector<float>& positions, const std::vector<float>& normals, const std::vector<float>& texs, const IndexArray& indices)
 {
     int perVertexSizeInFloat = 0;

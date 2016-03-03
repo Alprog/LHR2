@@ -1,10 +1,12 @@
 
 attribute vec4 a_position;
 attribute vec2 a_texCoord;
+attribute vec2 a_texCoord1;
 attribute vec3 a_normal;
 attribute vec4 a_color;
 
 varying vec2 v_texCoord;
+varying vec2 v_texCoord1;
 varying vec3 v_normal;
 varying vec4 v_color;
 varying vec2 v_screenPos;
@@ -21,6 +23,7 @@ void main()
     gl_Position = pos;
     
     v_texCoord = vec2(a_texCoord.x, 1 - a_texCoord.y);
+    v_texCoord1 = vec2(a_texCoord1.x, 1 - a_texCoord1.y);
 	v_color = a_color;
     v_normal = (CC_MMatrix * vec4(a_normal, 0)).xyz;
 }

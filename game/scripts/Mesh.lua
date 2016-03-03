@@ -46,8 +46,8 @@ function combineMesh(infos)
 end
 
 function createMesh(meshData)
-    local positions = flat(meshData.positions)
-    local normals = flat(meshData.normals)
-    local texs = flat(meshData.texs)
-    return cc.Mesh:create(positions, normals, texs, meshData.indices)
+    local normals = meshData.normals or {}
+    local uv0 = meshData.uv0 or meshData.uv or {}
+    local uv1 = meshData.uv1 or {}
+    return cc.Mesh:create(meshData.positions, normals, uv0, uv1, meshData.indices)
 end

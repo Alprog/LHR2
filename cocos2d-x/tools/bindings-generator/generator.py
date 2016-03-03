@@ -380,7 +380,7 @@ class NativeType(object):
         use_typedef = False
 
         typedef_name = self.canonical_type.name if None != self.canonical_type else None
-
+		
         if None != typedef_name:
             if NativeType.dict_has_key_re(to_native_dict, [typedef_name]) or NativeType.dict_has_key_re(from_native_dict, [typedef_name]):
                 use_typedef = True

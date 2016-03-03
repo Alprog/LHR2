@@ -153,13 +153,15 @@
 -- @return Mesh#Mesh self (return value: cc.Mesh)
         
 --------------------------------
--- @overload self, string, cc.MeshIndexData, cc.MeshSkin         
+-- @overload self, array_table, array_table, array_table, array_table, array_table         
 -- @overload self, array_table, array_table, array_table, array_table         
+-- @overload self, string, cc.MeshIndexData, cc.MeshSkin         
 -- @function [parent=#Mesh] create
 -- @param self
 -- @param #array_table positions
 -- @param #array_table normals
 -- @param #array_table texs
+-- @param #array_table texs2
 -- @param #array_table indices
 -- @return Mesh#Mesh ret (return value: cc.Mesh)
 

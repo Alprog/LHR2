@@ -39,7 +39,7 @@ function Carcase:getMesh(name)
             Vector(-0.5, -1, 0.5),
             Vector(0.5, -1, 0.5)
         },
-        texs = {
+        uv = {
             Vec(0, 0),
             Vec(0, 1),
             Vec(1, 1),
