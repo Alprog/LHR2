@@ -27,9 +27,12 @@ function LevelEditor:init()
         return true
     end
     
-        
-    self.level = Level:create()
-    self.scene3D:addChild(self.level)
+    WithoutDebug(function()
+        self.level = Level:create()
+        self.scene3D:addChild(self.level)
+    end)
+
+    saveTableToFile(self.level.sections, 'level.ini')
     
     self:listenTouches()
 end

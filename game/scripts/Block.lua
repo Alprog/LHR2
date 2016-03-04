@@ -2,6 +2,7 @@
 require 'MeshBuilder.lua'
 
 Block = Class('Block', Object)
+Block.serializeFields = { 'heights', 'textureNames' }
 
 -- 3          2  +x           
 --  +-------+             
@@ -22,8 +23,6 @@ function Block:init(section, floor)
     self.floor = floor
     
     self.heights = { [0] = 0, 0, 0, 0 }
-    self.rotation = 0
-    
     self.textureNames = { 'tiles/grass.png', 'tiles/soil.png' }
 
     section:addChild(self)
@@ -191,11 +190,6 @@ end
 
 function Block:changeHeight(index, value)
     self.heights[index] = self.heights[index] + value
-end
-
-function Block:rotate()
-    self.rotation = (self.rotation + 90) % 360
-    self:setRotation3D(Vec(0, self.rotation, 0))
 end
 
 function Block:setHighlight(allowCorners, allowSides, affectNeighbors, camera)

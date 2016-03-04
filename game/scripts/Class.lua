@@ -62,7 +62,11 @@ function Derive(name, base, ...)
             else
                 instance = cls.__create()
             end
-            setmetatableindex(instance, cls)
+            
+            local peer = {}
+            tolua.setpeer(instance, peer)
+            setmetatable(peer, cls)
+            
             if instance.init then
                 instance:init(...)
             end

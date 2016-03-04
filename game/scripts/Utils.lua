@@ -55,55 +55,6 @@ function multVecQuat(vec, quat)
     return vec + uv * (2 * quat.w) + uuv * 2
 end
 
-function TableToString(object, tab)
-	local i = 1
-	local str = ''
-	str = str .. '{'
-	tab = tab or ''
-	
-	local keys, values = {}, {}
-	for k, v in pairs(object) do
-		table.insert(keys, k)
-		table.insert(values, v)
-	end
-	
-	local first = true
-	for j = 1, #keys do
-		local key = keys[j]
-		local value = values[j]
-	
-		if first then
-			first = false
-		else
-			str = str .. ','
-		end
-	    if #keys > 1 then
-			str = str .. '\n' .. tab .. '    '
-		end
-		if key == i then
-			i = i + 1
-		else
-			str = str .. key .. ' = '
-		end
-		if type(value) == 'table' then
-			str = str .. TableToString( value, #keys > 1 and tab .. '    ' or tab )
-		elseif type(value) == 'string' then
-			str = str .. '\'' .. value .. '\''
-        elseif type(value) == 'boolean' then
-            str = str .. (value and 'true' or 'false')
-		else
-			str = str .. value
-		end
-	end
-
-	if not first and #keys > 1 then
-		str = str .. '\n' .. tab
-	end
-	str = str .. '}'
-
-	return str
-end
-
 function lerp(v1, v2, t)
     return v1 + (v2 - v1) * t
 end
@@ -357,12 +308,12 @@ function createMaterial(vsName, psName)
     return cc.Material:createWithGLStateProgram(state)
 end
 
-function saveTableToFile(table, path, name)
+function saveTableToFile(t, path, name)
     path = '../data/'..path
     name = name or 'data'
     
     local file = io.open(path, 'w+')
-    local str = TableToString(table)
+    local str = table.serialize(t)
     file:write(name .. ' = ' .. str)
     io.close(file)
 end
