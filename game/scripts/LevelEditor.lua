@@ -32,8 +32,6 @@ function LevelEditor:init()
         self.scene3D:addChild(self.level)
     end)
 
-    saveTableToFile(self.level.sections, 'level.ini')
-    
     self:listenTouches()
 end
 
@@ -62,6 +60,10 @@ end
 function LevelEditor:onKeyPress(keyCode)
     if keyCode == cc.KeyCode.KEY_F2 then
         self.projector:nextSource()
+    elseif keyCode == cc.KeyCode.KEY_F6 then
+        self:saveLevel()
+    elseif keyCode == cc.KeyCode.KEY_F8 then
+        self:loadLevel()
     else
         Scene.onKeyPress(self, keyCode)
     end
@@ -70,6 +72,17 @@ function LevelEditor:onKeyPress(keyCode)
     if block then
         self:onBlockKeyPress(block, keyCode)
     end
+end
+
+function LevelEditor:saveLevel()
+    serializeToFile(self.level, 'level.ini')
+end
+
+function LevelEditor:loadLevel()
+    self.scene3D:clearHovered()
+    self.level:removeFromParent()
+    self.level = deserializeFromFile('level.ini')
+    self.scene3D:addChild(self.level)
 end
 
 function LevelEditor:onBlockKeyPress(block, keyCode)

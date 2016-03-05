@@ -1,62 +1,121 @@
 
-function table.serialize(t, format, tab, keys)
-	local i = 1
-	local str = ''
-	str = str .. '{'
-	tab = tab or ''
-	
-    if not keys then
+function serializeTable(t, replacements, keys)
+    if keys == nil then
         keys = {}
-        for k in pairs(t) do
-            table.insert(keys, k)
+        for key in pairs(t) do
+            table.insert(keys, key)
         end
     end
-	
-    local multiline = format and #keys > 1
+  
+    local str = ''
     
-	local first = true
-	for key in iter(keys) do
-		local value = t[key]
-	
-		if first then
-			first = false
-		else
-			str = str .. ','
-		end
-	    if multiline then
-			str = str .. '\n' .. tab .. '    '
-		end
-		if key == i then
-			i = i + 1
-		else
-            if type(key) == 'string' then
-                str = str .. key
+    local index = 1
+    for i = 1, #keys do
+        local key = keys[i]
+        local value = t[key]
+        if value ~= nil then
+            if key == index then
+                index = index + 1
             else
-                str = str.. '[' .. key .. ']'
+                str = str .. serializeKey(key) .. '='
             end
-            str = str .. (format and ' = ' or '=')
-		end
-        if type(value) == 'table' then
-			str = str .. table.serialize(value, format, multiline and tab .. '    ' or tab)
-		elseif type(value) == 'string' then
-			str = str .. '\'' .. value .. '\''
-        elseif type(value) == 'boolean' then
-            str = str .. (value and 'true' or 'false')
-		elseif type(value) == 'userdata' then
-            if value.serializeFields then
-                str = str .. table.serialize(value, format, tab, value.serializeFields)
-            else
-                str = str .. '"userdata"'
+            str = str .. serializeValue(value, replacements)
+            
+            if i < #keys then
+                str = str .. ','
             end
+        end
+    end
+   
+    return '{' .. str .. '}'
+end
+
+function serializeObject(object, replacements)
+    local replacement = replacements and replacements[object]
+    if replacement then
+        return replacement
+    end
+    
+    local objectType = type(object)
+    if objectType == 'table' then
+        return serializeTable(object, replacements)
+    elseif objectType == 'userdata' then
+        local peer = tolua.getpeer(object)
+        if peer then
+            local content = serializeTable(peer, replacements, object.serializableFields)
+            return object.className .. ':x(' .. content .. ')'
         else
-			str = str .. value
+            return '{}'
+        end
+    end
+    
+end
+
+function serializeValue(value, replacements)
+    local valueType = type(value)
+    if valueType == 'number' then
+        return value
+    elseif valueType == 'string' then
+        return "'"..value .."'"
+    elseif valueType == 'boolean' then
+        return value and 'true' or 'false'
+    else
+        return serializeObject(value, replacements)
+    end
+end
+
+function serializeKey(key)
+    local keyType = type(key)
+    if keyType == 'string' then
+        return key
+    else
+        return '['..key..']'
+    end
+end
+
+-- object should be userdata or table
+function refCounting(object, refsTable, orderTable)
+	refsTable[object] = (refsTable[object] or 0) + 1
+	if refsTable[object] == 1 then
+		table.insert(orderTable, object)
+    else
+        return
+	end
+    
+    if type(object) == 'userdata' then
+        object = tolua.getpeer(object)
+        if object == nil then
+            return
+        end
+    end
+    
+	for key, value in pairs(object) do
+        local valueType = type(value)
+		if valueType == 'table' or valueType == 'userdata' then
+			refCounting(value, refsTable, orderTable)
 		end
 	end
+end
 
-	if multiline and not first then
-		str = str .. '\n' .. tab
+-- object should be userdata or table
+function serialize(object)
+	local refsTable = {}
+	local orderTable = {}
+	refCounting(object, refsTable, orderTable)
+    
+    local str = ''
+	local index = 0
+	local replacements = {}
+       
+	for i = #orderTable, 1, -1 do
+		local object = orderTable[i]
+		if i == 1 or refsTable[object] > 1 then
+			index = index + 1
+			local name = 'object' .. index
+			str = str .. 'local ' .. name .. '='..serializeValue(object, replacements) .. '\n'
+			replacements[object] = name 
+		end
 	end
-	str = str .. '}'
-
+	
 	return str
 end

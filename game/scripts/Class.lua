@@ -1,26 +1,26 @@
 
 function NewClass(name)
-    local cls = {}
-    cls.className = name
-    cls.__index = cls
-    cls.__setindex = cls
-    cls.__call = cls
-    cls.isLuaClass = true
+    local class = {}
+    class.className = name
+    class.__index = class
+    class.__setindex = class
+    class.__call = class
+    class.isLuaClass = true
     
-    function cls:create(...)
+    function class:create(...)
         local instance = {}
-        setmetatable(instance, cls)
+        setmetatable(instance, class)
         if instance.init then           
             instance:init(...)
         end
         return instance
     end
     
-    setmetatable(cls, { __call = function(...)
-        return cls.create(...)
+    setmetatable(class, { __call = function(...)
+        return class.create(...)
     end})
     
-    return cls
+    return class
 end
 
 function multiBaseIndex(table, key)
@@ -41,31 +41,42 @@ function multiBaseIndex(table, key)
     end
 end
 
+function deserialize(class, peer)
+    local instance = class.__create()
+    tolua.setpeer(instance, peer)
+    setmetatable(peer, class)
+    if instance.onDeserialize then
+        instance:onDeserialize()
+    end
+    return instance
+end
+
 function Derive(name, base, ...)
-    local cls = nil
+    local class = nil
     
     if base.isLuaClass then
-        cls = NewClass(name)
+        class = NewClass(name)
     else
-        cls = {}
+        class = {}
         
         if base[".isclass"] then
-            cls.__create = function(...) 
+            class.__create = function(...) 
                 return base:create(...)
             end
+            class.x = deserialize
         end
 
-        function cls:create(...)
+        function class:create(...)
             local instance = nil
-            if cls.instantinate then
-                instance = cls:instantinate(...)
+            if class.instantinate then
+                instance = class:instantinate(...)
             else
-                instance = cls.__create()
+                instance = class.__create()
             end
             
             local peer = {}
             tolua.setpeer(instance, peer)
-            setmetatable(peer, cls)
+            setmetatable(peer, class)
             
             if instance.init then
                 instance:init(...)
@@ -74,18 +85,18 @@ function Derive(name, base, ...)
         end
     end
 
-    setmetatable(cls, base)
-    cls.base = base
-    cls.className = name
+    setmetatable(class, base)
+    class.base = base
+    class.className = name
  
     if #{...} > 0 then
-        cls.__index = multiBaseIndex
-        cls.bases = { base, ... }
+        class.__index = multiBaseIndex
+        class.bases = { base, ... }
     else
-        cls.__index = cls
+        class.__index = class
     end
     
-    return cls
+    return class
 end
 
 function Class(name, base)

@@ -44,11 +44,11 @@ function MDI:saveLayout(path)
         table.insert(layout, wndData)
     end
     
-    saveTableToFile(layout, path)
+    serializeToFile(layout, path)
 end
 
 function MDI:loadLayout(path)
-    local layout = loadTableFromFile(path) or {}
+    local layout = deserializeFromFile(path) or {}
     for i = 1, #layout do
         local wndData = layout[i]
         layout[wndData.name] = wndData

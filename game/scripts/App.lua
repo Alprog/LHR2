@@ -12,7 +12,7 @@ function App:init(name)
 end
 
 function App:loadSettings()
-    self.settings = loadTableFromFile(settingsPath, 'settings') or {}
+    self.settings = deserializeFromFile(settingsPath, 'settings') or {}
     
     setDefaults(self.settings, {
         fullscreen = true,
@@ -26,7 +26,7 @@ function App:loadSettings()
 end
 
 function App:saveSettings()
-    saveTableToFile(self.settings, settingsPath, 'settings')
+    serializeToFile(self.settings, settingsPath, 'settings')
 end
 
 function App:initView(name)

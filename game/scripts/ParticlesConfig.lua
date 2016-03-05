@@ -24,12 +24,12 @@ function ParticlesConfig:initDefault()
 end
 
 function ParticlesConfig:save()
-    saveTableToFile(self.data, self.filePath)
+    serializeToFile(self.data, self.filePath)
     self.modified = false
 end
 
 function ParticlesConfig:reload()
-    self.data = loadTableFromFile(self.filePath) or {}
+    self.data = deserializeFromFile(self.filePath) or {}
     self:initDefault()
     self:onChanged()
     self.modified = false

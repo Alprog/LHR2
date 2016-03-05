@@ -7,6 +7,19 @@ function Level:init()
     self:refreshGfx()
 end
 
+function Level:onDeserialize()
+    for x, line in ipairs(self.sections) do
+        for z, section in ipairs(line) do
+            section.x = x
+            section.z = z
+            section.level = self
+            section:setPosition3D(Vec(x, 0, z))
+            self:addChild(section)
+        end
+    end
+    self:refreshGfx()
+end
+
 function Level:extend(size)
     while #self.sections < size.width do
         table.insert(self.sections, {})

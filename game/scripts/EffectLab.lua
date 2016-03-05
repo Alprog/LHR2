@@ -214,5 +214,5 @@ function EffectLab:openFile()
 end
 
 function EffectLab:saveFile()   
-   saveTableToFile(self.model.actionScheme, self.model.actionSchemePath)
+   serializeToFile(self.model.actionScheme, self.model.actionSchemePath)
 end

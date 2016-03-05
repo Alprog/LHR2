@@ -1,6 +1,6 @@
 
 local function loadActionScheme(filePath)
-    local scheme = loadTableFromFile(filePath) or {}
+    local scheme = deserializeFromFile(filePath) or {}
         
     for name, events in pairs(scheme) do
         for event in iter(events) do

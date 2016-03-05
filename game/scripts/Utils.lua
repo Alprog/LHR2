@@ -308,17 +308,17 @@ function createMaterial(vsName, psName)
     return cc.Material:createWithGLStateProgram(state)
 end
 
-function saveTableToFile(t, path, name)
+function serializeToFile(t, path, name)
     path = '../data/'..path
     name = name or 'data'
     
     local file = io.open(path, 'w+')
-    local str = table.serialize(t)
-    file:write(name .. ' = ' .. str)
+    local str = serializeObject(t)
+    file:write(name .. '=' .. str)
     io.close(file)
 end
 
-function loadTableFromFile(path, name)
+function deserializeFromFile(path, name)
     path = '../data/'..path
     name = name or 'data'
     
@@ -344,3 +344,8 @@ function changeExtension(filePath, extension)
     return removeExtension(filePath) .. '.' .. extension
 end
 
+function cloneFields(dst, src)
+    for k, v in pairs(src) do
+        dst[k] = v
+    end
+end

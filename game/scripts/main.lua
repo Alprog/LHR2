@@ -54,7 +54,7 @@ local function main()
     collectgarbage("setpause", 100)
     collectgarbage("setstepmul", 5000)
     math.randomseed(os.time())
-    
+       
     theApp = App:create("Little Humble RPG 2")
     theSceneManager = theApp.sceneManager
     thePostProcessor = theApp.postProcessor

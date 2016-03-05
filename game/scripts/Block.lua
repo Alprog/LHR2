@@ -2,7 +2,7 @@
 require 'MeshBuilder.lua'
 
 Block = Class('Block', Object)
-Block.serializeFields = { 'heights', 'textureNames' }
+Block.serializableFields = { 'heights', 'textureNames' }
 
 -- 3          2  +x           
 --  +-------+             
@@ -21,11 +21,18 @@ function Block:init(section, floor)
     
     self.section = section
     self.floor = floor
+    section:addChild(self)
     
     self.heights = { [0] = 0, 0, 0, 0 }
     self.textureNames = { 'tiles/grass.png', 'tiles/soil.png' }
+end
 
-    section:addChild(self)
+function Block:onDeserialize()
+    Object.init(self)
+end
+
+function Block:getSection()
+   return self:getParent() 
 end
 
 function Block:recreateGfx()
@@ -185,7 +192,7 @@ function Block:extrude(value)
         end
     end
     
-    self.section.level:onReliefChange(self)
+    self:getSection():getLevel():onReliefChange(self)
 end
 
 function Block:changeHeight(index, value)
@@ -268,6 +275,6 @@ function Block:getSection()
 end
 
 function Block:getNeighbors()
-    local section = self.section
-    return section.level:getNeighbors(section.x, section.z, self.floor)
+    local section = self:getSection()
+    return section:getLevel():getNeighbors(section.x, section.z, self.floor)
 end

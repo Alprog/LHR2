@@ -57,3 +57,7 @@ function Scene3D:checkHover()
         end
     end   
 end
+
+function Scene3D:clearHovered()
+    self.hoveredObject = nil
+end
