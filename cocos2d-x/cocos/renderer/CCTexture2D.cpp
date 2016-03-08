@@ -696,14 +696,23 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
         unsigned char *data = mipmaps[i].address;
         GLsizei datalen = mipmaps[i].len;
 
+		auto stride = datalen / height;
+		auto tmpData = static_cast<unsigned char*>(malloc(datalen));
+		for (auto i = 0; i < height; i++)
+		{
+			memcpy(tmpData + i * stride, data + (height - 1 - i) * stride, stride);
+		}
+		
         if (info.compressed)
         {
-            glCompressedTexImage2D(_target, i, info.internalFormat, (GLsizei)width, (GLsizei)height, 0, datalen, data);
+            glCompressedTexImage2D(_target, i, info.internalFormat, (GLsizei)width, (GLsizei)height, 0, datalen, tmpData);
         }
         else
         {
-            glTexImage2D(_target, i, info.internalFormat, (GLsizei)width, (GLsizei)height, 0, info.format, info.type, data);
+            glTexImage2D(_target, i, info.internalFormat, (GLsizei)width, (GLsizei)height, 0, info.format, info.type, tmpData);
         }
+
+		free(tmpData);
 
         if (i > 0 && (width != height || ccNextPOT(width) != width ))
         {
@@ -742,7 +751,16 @@ bool Texture2D::updateWithData(const void *data,int offsetX,int offsetY,int widt
     {
         GL::bindTexture2D(_name);
         const PixelFormatInfo& info = _pixelFormatInfoTables.at(_pixelFormat);
-        glTexSubImage2D(_target,0,offsetX,offsetY,width,height,info.format, info.type,data);
+
+		auto size = width * height * this->getBitsPerPixelForFormat() / 8 / sizeof(char);
+		auto stride = size / height;
+		auto tmpData = static_cast<char*>(malloc(size));
+		for (auto i = 0; i < height; i++)
+		{
+			memcpy(tmpData + i * stride, (char*)data + (height - 1 - i) * stride, stride);
+		}
+		glTexSubImage2D(_target,0,offsetX, _pixelsHigh - 1 - offsetY - height,width,height,info.format, info.type, tmpData);
+		free(tmpData);
 
         return true;
     }

@@ -19,7 +19,7 @@ function PostProcessor:setup(gBuffer, shadowMapBuffer, outBuffer, sceneCamera, l
     
     self.frameBuffer = outBuffer
     
-    local shader = getShader('flippedSprite', 'halflambert')
+    local shader = getShader('sprite', 'halflambert')
     local state = cc.GLProgramState:create(shader)
     
     --[[local texelSize = Vec(1 / self.frameBuffer.width, 1 / self.frameBuffer.height)    
@@ -27,7 +27,7 @@ function PostProcessor:setup(gBuffer, shadowMapBuffer, outBuffer, sceneCamera, l
     local scale = math.min(0.33 / theApp:getDeltaTime(), 1)
     state:setUniformFloat('velocityScale', scale)]]
     
-    local position = Vec(-20, 50, 70)    
+    local position = lightCamera:getPosition3D()  
     state:setUniformVec3('lightPosition', position)
     
     state:setUniformTexture('albedoTexture', gBuffer:getAlbedoTexture())

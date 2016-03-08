@@ -38,6 +38,7 @@ THE SOFTWARE.
 #include "platform/CCFileUtils.h"
 
 #include "deprecated/CCString.h"
+#include "2d/CCCamera.h"
 
 // helper functions
 
@@ -101,6 +102,7 @@ const char* GLProgram::UNIFORM_NAME_VP_MATRIX = "CC_VPMatrix";
 const char* GLProgram::UNIFORM_NAME_MV_MATRIX = "CC_MVMatrix";
 const char* GLProgram::UNIFORM_NAME_MVP_MATRIX  = "CC_MVPMatrix";
 const char* GLProgram::UNIFORM_NAME_NORMAL_MATRIX = "CC_NormalMatrix";
+const char* GLProgram::UNIFORM_NAME_EYE_POSITION = "CC_EyePosition";
 const char* GLProgram::UNIFORM_NAME_TIME = "CC_Time";
 const char* GLProgram::UNIFORM_NAME_SIN_TIME = "CC_SinTime";
 const char* GLProgram::UNIFORM_NAME_COS_TIME = "CC_CosTime";
@@ -119,6 +121,7 @@ const char* GLProgram::ATTRIBUTE_NAME_TEX_COORD1 = "a_texCoord1";
 const char* GLProgram::ATTRIBUTE_NAME_TEX_COORD2 = "a_texCoord2";
 const char* GLProgram::ATTRIBUTE_NAME_TEX_COORD3 = "a_texCoord3";
 const char* GLProgram::ATTRIBUTE_NAME_NORMAL = "a_normal";
+const char* GLProgram::ATTRIBUTE_NAME_TANGENT = "a_tangent";
 const char* GLProgram::ATTRIBUTE_NAME_BLEND_WEIGHT = "a_blendWeight";
 const char* GLProgram::ATTRIBUTE_NAME_BLEND_INDEX = "a_blendIndex";
 
@@ -131,6 +134,7 @@ static const char * COCOS2D_SHADER_UNIFORMS =
 		"uniform mat4 CC_VPMatrix;\n"
         "uniform mat4 CC_MVPMatrix;\n"
         "uniform mat3 CC_NormalMatrix;\n"
+		"uniform vec3 CC_EyePosition;\n"
         "uniform vec4 CC_Time;\n"
         "uniform vec4 CC_SinTime;\n"
         "uniform vec4 CC_CosTime;\n"
@@ -304,6 +308,7 @@ void GLProgram::bindPredefinedVertexAttribs()
         {GLProgram::ATTRIBUTE_NAME_TEX_COORD2, GLProgram::VERTEX_ATTRIB_TEX_COORD2},
         {GLProgram::ATTRIBUTE_NAME_TEX_COORD3, GLProgram::VERTEX_ATTRIB_TEX_COORD3},
         {GLProgram::ATTRIBUTE_NAME_NORMAL, GLProgram::VERTEX_ATTRIB_NORMAL},
+		{GLProgram::ATTRIBUTE_NAME_TANGENT, GLProgram::VERTEX_ATTRIB_TANGENT },
     };
 
     const int size = sizeof(attribute_locations) / sizeof(attribute_locations[0]);
@@ -527,6 +532,8 @@ void GLProgram::updateUniforms()
     _builtInUniforms[UNIFORM_SAMPLER2] = glGetUniformLocation(_program, UNIFORM_NAME_SAMPLER2);
     _builtInUniforms[UNIFORM_SAMPLER3] = glGetUniformLocation(_program, UNIFORM_NAME_SAMPLER3);
 
+	_builtInUniforms[UNIFORM_EYE_POSITION] = glGetUniformLocation(_program, UNIFORM_NAME_EYE_POSITION);
+
 	_flags.usesM = _builtInUniforms[UNIFORM_M_MATRIX] != -1;
 	_flags.usesV = _builtInUniforms[UNIFORM_V_MATRIX] != -1;
 	_flags.usesP = _builtInUniforms[UNIFORM_P_MATRIX] != -1;
@@ -540,6 +547,7 @@ void GLProgram::updateUniforms()
                        _builtInUniforms[UNIFORM_COS_TIME] != -1
                        );
     _flags.usesRandom = _builtInUniforms[UNIFORM_RANDOM01] != -1;
+	_flags.usesEyePosition = _builtInUniforms[UNIFORM_EYE_POSITION] != -1;
 
     this->use();
 
@@ -907,6 +915,12 @@ void GLProgram::setUniformsForBuiltins(const Mat4 &matrixM)
 	if (_flags.usesMV) {
 		Mat4 matrixMV = vp.view * matrixM;
 		setUniformLocationWithMatrix4fv(_builtInUniforms[UNIFORM_MV_MATRIX], matrixMV.m, 1);
+	}
+
+	if (_flags.usesEyePosition)
+	{
+		auto pos = Camera::getVisitingCamera()->getPosition3D();
+		setUniformLocationWith3f(_builtInUniforms[UNIFORM_EYE_POSITION], pos.x, pos.y, pos.z);
 	}
 
     if (_flags.usesMVP) {

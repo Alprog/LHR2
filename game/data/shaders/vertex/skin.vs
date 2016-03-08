@@ -9,7 +9,7 @@ void main()
     v_prevScreenPos = prevPos.xy / prevPos.w;
     gl_Position = pos;
     
-    v_texCoord = vec2(a_texCoord.x, 1 - a_texCoord.y);
+    v_texCoord = a_texCoord;
 	
     v_normal = (CC_MMatrix * skin(vec4(a_normal, 0), u_matrixPalette)).xyz;
 }

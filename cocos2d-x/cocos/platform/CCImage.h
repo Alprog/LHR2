@@ -115,7 +115,7 @@ public:
     * @js NA
     * @lua NA
     */
-    bool initWithImageData(const unsigned char * data, ssize_t dataLen);
+    bool initWithImageData(const unsigned char * data, ssize_t dataLen, bool flip = false);
 
     // @warning kFmtRawData only support RGBA8888
     bool initWithRawData(const unsigned char * data, ssize_t dataLen, int width, int height, int bitsPerComponent, bool preMulti = false);
@@ -136,6 +136,7 @@ public:
     bool                     hasAlpha();
     bool                     isCompressed();
 
+	void flip();
 
     /**
      @brief    Save Image data to the specified file, with specified format.

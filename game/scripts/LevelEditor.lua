@@ -50,6 +50,8 @@ function LevelEditor:update(dt)
         local affectNeighbors = Input.keys[cc.KeyCode.KEY_ALT]
         object:setHighlight(corners, sides, affectNeighbors, self.scene3D.camera)
     end
+    
+    
 end
 
 function LevelEditor:render()
@@ -86,14 +88,12 @@ function LevelEditor:loadLevel()
 end
 
 function LevelEditor:onBlockKeyPress(block, keyCode)
-   if keyCode == cc.KeyCode.KEY_Z then
-        block:skew(-1)
-    elseif keyCode == cc.KeyCode.KEY_X then
-        block:skew(1)
-    elseif keyCode == cc.KeyCode.KEY_C then
-        block:rotate()
-    elseif keyCode == cc.KeyCode.KEY_V then
-        block:setScaleZ(0.5)
+    if keyCode == cc.KeyCode.KEY_SPACE then
+        block:changeTexture()
+    elseif keyCode == cc.KeyCode.KEY_LEFT_BRACKET then
+        block:addScale(-0.01)
+    elseif keyCode == cc.KeyCode.KEY_RIGHT_BRACKET then
+        block:addScale(0.01)
     end
 end
 

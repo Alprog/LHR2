@@ -17,6 +17,7 @@ end
 function MeshBuilder:clear()
     self.positions = {}
     self.normals = {}
+    self.tangents = {}
     self.uv0 = {}
     self.uv1 = {}
     self.uv = self.uv0
@@ -38,12 +39,13 @@ function MeshBuilder:addPolygon(p0, p1, p2, p3, bitangent)
     table.insertRange(self.positions, positions)    
    
     local normal = Vector.getNormalized((p2 - p1) ^ (p0 - p1)) 
-    for i = 1, #positions do
-        table.insert(self.normals, normal)
-    end
-
     bitangent = bitangent or Vector.getNormalized(p2 - p1)
     local tangent = bitangent ^ normal
+    
+    for i = 1, #positions do
+        table.insert(self.normals, normal)
+        table.insert(self.tangents, tangent)
+    end
     
     for p in iter(positions) do
         local u = Vector.dot(p - p0, tangent)

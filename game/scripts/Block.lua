@@ -24,7 +24,7 @@ function Block:init(section, floor)
     section:addChild(self)
     
     self.heights = { [0] = 0, 0, 0, 0 }
-    self.textureNames = { 'tiles/grass.png', 'tiles/soil.png' }
+    self.textureNames = { 'tiles/grass', 'tiles/rock' }
 end
 
 function Block:onDeserialize()
@@ -43,6 +43,11 @@ function Block:recreateGfx()
     self:initGfx()
 end
 
+function Block:changeTexture()
+    self.textureNames[1] = 'tiles/brickwall'
+    self:recreateGfx()
+end
+
 function Block:initGfx()
     if self.gfx ~= nil then
         return
@@ -57,7 +62,15 @@ function Block:initGfx()
     for i = 1, #meshes do
         local mesh = meshes[i]
         local state = createState('default3d', 'blockMRT')
-        state:setUniformTexture('mainTexture', getTexture(self.textureNames[i]))
+        local mainTexture = getTexture(self.textureNames[i] .. '.png')
+        local normalTexure = getTexture(self.textureNames[i] .. '_n.png')
+        
+        print(normalTexure:hasPremultipliedAlpha())
+        
+        state:setUniformTexture('mainTexture', mainTexture)
+        if normalTexure then
+            state:setUniformTexture('normalTexture', normalTexure)
+        end
         state:setUniformVec2('u_id', self:getUniformId())
         
         local material = cc.Material:createWithGLStateProgram(state)
@@ -268,6 +281,19 @@ function Block:setPartHighlight(type)
     local texture = type and getTexture('editor/highlight/'..type..'.png') or 0
     state:setUniformTexture('highlightTexture', texture)
     self.cornerType = type
+end
+
+function Block:addScale(value)
+    self.scale = (self.scale or 0) + value
+    for child in iter(self:getChildren()) do
+        local count = child:getMeshCount()
+        for i = 0, count - 1 do
+            local mesh = child:getMeshByIndex(i)
+            local state = mesh:getGLProgramState()
+            state:setUniformFloat('scale', self.scale)
+        end
+    end
+    print(self.scale)
 end
 
 function Block:getSection()

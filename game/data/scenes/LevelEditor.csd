@@ -12,10 +12,10 @@
           </PointFrame>
         </Timeline>
         <Timeline ActionTag="-1453609064" Property="Scale">
-          <ScaleFrame FrameIndex="0" X="1366.0000" Y="-768.0000">
+          <ScaleFrame FrameIndex="0" X="1366.0000" Y="768.0000">
             <EasingData Type="0" />
           </ScaleFrame>
-          <ScaleFrame FrameIndex="24" X="1024.0000" Y="-768.0000">
+          <ScaleFrame FrameIndex="24" X="1024.0000" Y="768.0000">
             <EasingData Type="0" />
           </ScaleFrame>
         </Timeline>
@@ -137,17 +137,17 @@
             <Size X="1.0000" Y="1.0000" />
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position />
-            <Scale ScaleX="1366.0000" ScaleY="-768.0000" />
+            <Scale ScaleX="1024.0000" ScaleY="768.0000" />
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition />
             <PreSize X="0.0000" Y="0.0000" />
             <FileData Type="Normal" Path="empty.png" Plist="" />
             <BlendFunc Src="770" Dst="771" />
           </AbstractNodeData>
-          <AbstractNodeData Name="MenuButton" ActionTag="-358569704" UserData="ESCAPE" Tag="34" IconVisible="False" LeftMargin="548.7197" RightMargin="-668.7197" TopMargin="-370.3953" BottomMargin="250.3953" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="90" Scale9Height="98" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
+          <AbstractNodeData Name="MenuButton" ActionTag="-358569704" UserData="ESCAPE" Tag="34" IconVisible="False" LeftMargin="376.0204" RightMargin="-496.0204" TopMargin="-370.3999" BottomMargin="250.3999" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="90" Scale9Height="98" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
             <Size X="120.0000" Y="120.0000" />
             <AnchorPoint ScaleX="1.0000" ScaleY="1.0000" />
-            <Position X="668.7197" Y="370.3953" />
+            <Position X="496.0204" Y="370.3999" />
             <Scale ScaleX="0.4000" ScaleY="0.4000" />
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition />
@@ -162,11 +162,11 @@
           <AbstractNodeData Name="Borders" CanEdit="False" ActionTag="-1593474683" Tag="29" IconVisible="True" ctype="SingleNodeObjectData">
             <Size X="0.0000" Y="0.0000" />
             <Children>
-              <AbstractNodeData Name="Left" CanEdit="False" ActionTag="-706441476" Tag="25" IconVisible="False" LeftMargin="-733.0000" RightMargin="683.0000" TopMargin="-384.0000" BottomMargin="-384.0000" TouchEnable="True" ComboBoxIndex="1" ColorAngle="90.0000" ctype="PanelObjectData">
+              <AbstractNodeData Name="Left" CanEdit="False" ActionTag="-706441476" Tag="25" IconVisible="False" LeftMargin="-562.0000" RightMargin="512.0000" TopMargin="-384.0000" BottomMargin="-384.0000" TouchEnable="True" ComboBoxIndex="1" ColorAngle="90.0000" ctype="PanelObjectData">
                 <Size X="50.0000" Y="768.0000" />
                 <AnchorPoint ScaleX="1.0000" ScaleY="0.5000" />
-                <Position X="-683.0000" />
-                <Scale ScaleX="1.0000" ScaleY="1.0000" />
+                <Position X="-512.0000" />
+                <Scale ScaleX="4.4200" ScaleY="1.0000" />
                 <CColor A="255" R="0" G="0" B="0" />
                 <PrePosition />
                 <PreSize X="0.0000" Y="0.0000" />
@@ -175,11 +175,11 @@
                 <EndColor A="255" R="255" G="255" B="255" />
                 <ColorVector ScaleY="1.0000" />
               </AbstractNodeData>
-              <AbstractNodeData Name="Right" CanEdit="False" ActionTag="-464570189" Tag="26" IconVisible="False" LeftMargin="683.0000" RightMargin="-733.0000" TopMargin="-384.0000" BottomMargin="-384.0000" TouchEnable="True" ComboBoxIndex="1" ColorAngle="90.0000" ctype="PanelObjectData">
+              <AbstractNodeData Name="Right" CanEdit="False" ActionTag="-464570189" Tag="26" IconVisible="False" LeftMargin="512.0000" RightMargin="-562.0000" TopMargin="-384.0000" BottomMargin="-384.0000" TouchEnable="True" ComboBoxIndex="1" ColorAngle="90.0000" ctype="PanelObjectData">
                 <Size X="50.0000" Y="768.0000" />
                 <AnchorPoint ScaleY="0.5000" />
-                <Position X="683.0000" />
-                <Scale ScaleX="1.0000" ScaleY="1.0000" />
+                <Position X="512.0000" />
+                <Scale ScaleX="4.4200" ScaleY="1.0000" />
                 <CColor A="255" R="0" G="0" B="0" />
                 <PrePosition />
                 <PreSize X="0.0000" Y="0.0000" />

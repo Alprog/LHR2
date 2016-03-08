@@ -110,6 +110,9 @@ public:
         VERTEX_ATTRIB_BLEND_WEIGHT,
         /**Index 8 will be used as Blend index.*/
         VERTEX_ATTRIB_BLEND_INDEX,
+		/**Index 9 will be used as Tangent index.*/
+		VERTEX_ATTRIB_TANGENT,
+		
         VERTEX_ATTRIB_MAX,
 
         // backward compatibility
@@ -151,6 +154,7 @@ public:
         UNIFORM_SAMPLER2,
         UNIFORM_SAMPLER3,
         /**@}*/
+		UNIFORM_EYE_POSITION,
         UNIFORM_MAX,
     };
 
@@ -264,6 +268,7 @@ public:
     static const char* UNIFORM_NAME_MVP_MATRIX;
     /**Normal matrix uniform.*/
     static const char* UNIFORM_NAME_NORMAL_MATRIX;
+	static const char* UNIFORM_NAME_EYE_POSITION;
     /**Time uniform.*/
     static const char* UNIFORM_NAME_TIME;
     /**Sin time uniform.*/
@@ -305,6 +310,7 @@ public:
     /**@}*/
     /**Attribute normal.*/
     static const char* ATTRIBUTE_NAME_NORMAL;
+	static const char* ATTRIBUTE_NAME_TANGENT;
     /**Attribute blend weight.*/
     static const char* ATTRIBUTE_NAME_BLEND_WEIGHT;
     /**Attribute blend index.*/
@@ -517,7 +523,7 @@ protected:
     struct flag_struct {
         unsigned int usesTime:1;
         unsigned int usesNormal:1;
-        
+		unsigned int usesEyePosition:1;
 		unsigned int usesM:1;
 		unsigned int usesV:1;
 		unsigned int usesP:1;

@@ -47,7 +47,8 @@ end
 
 function createMesh(meshData)
     local normals = meshData.normals or {}
+    local tangents = meshData.tangents or {}
     local uv0 = meshData.uv0 or meshData.uv or {}
     local uv1 = meshData.uv1 or {}
-    return cc.Mesh:create(meshData.positions, normals, uv0, uv1, meshData.indices)
+    return cc.Mesh:create(meshData.positions, normals, tangents, uv0, uv1, meshData.indices)
 end

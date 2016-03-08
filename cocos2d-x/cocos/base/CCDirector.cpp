@@ -1206,6 +1206,7 @@ void Director::createStatsLabel()
         return;
     }
 
+	image->flip();
     texture = _textureCache->addImage(image, "/cc_fps_images");
     CC_SAFE_RELEASE(image);
 

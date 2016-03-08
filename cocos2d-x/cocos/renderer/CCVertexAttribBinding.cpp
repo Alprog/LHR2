@@ -37,7 +37,8 @@ std::string s_attributeNames[] = {
     GLProgram::ATTRIBUTE_NAME_TEX_COORD3,
     GLProgram::ATTRIBUTE_NAME_NORMAL,
     GLProgram::ATTRIBUTE_NAME_BLEND_WEIGHT,
-    GLProgram::ATTRIBUTE_NAME_BLEND_INDEX
+    GLProgram::ATTRIBUTE_NAME_BLEND_INDEX,
+	GLProgram::ATTRIBUTE_NAME_TANGENT,
 };
 
 static GLuint __maxVertexAttribs = 0;

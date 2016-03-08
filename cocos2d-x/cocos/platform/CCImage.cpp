@@ -490,7 +490,7 @@ bool Image::initWithImageFile(const std::string& path)
 
     if (!data.isNull())
     {
-        ret = initWithImageData(data.getBytes(), data.getSize());
+        ret = initWithImageData(data.getBytes(), data.getSize(), true);
     }
 
     return ret;
@@ -511,7 +511,7 @@ bool Image::initWithImageFileThreadSafe(const std::string& fullpath)
     return ret;
 }
 
-bool Image::initWithImageData(const unsigned char * data, ssize_t dataLen)
+bool Image::initWithImageData(const unsigned char * data, ssize_t dataLen, bool flip)
 {
     bool ret = false;
     
@@ -591,6 +591,22 @@ bool Image::initWithImageData(const unsigned char * data, ssize_t dataLen)
     } while (0);
     
     return ret;
+}
+
+void Image::flip()
+{
+	auto size = _dataLen * sizeof(unsigned char);
+	auto stride = size / _height;
+
+	auto tmp = static_cast<unsigned char*>(malloc(size));
+
+	for (auto i = 0; i < _height; i++)
+	{
+		memcpy(tmp + i * stride, _data + (_height - 1 - i) * stride, stride);
+	}
+	memcpy(_data, tmp, size);
+
+	free(tmp);
 }
 
 bool Image::isPng(const unsigned char * data, ssize_t dataLen)
@@ -1125,11 +1141,11 @@ bool Image::initWithPngData(const unsigned char * data, ssize_t dataLen)
         png_read_end(png_ptr, nullptr);
 
         // premultiplied alpha for RGBA8888
-        if (color_type == PNG_COLOR_TYPE_RGB_ALPHA)
+        /*if (color_type == PNG_COLOR_TYPE_RGB_ALPHA)
         {
             premultipliedAlpha();
         }
-        else
+        else*/
         {
             _hasPremultipliedAlpha = false;
         }

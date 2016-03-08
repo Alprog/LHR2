@@ -42,7 +42,12 @@ end
 
 function Scene3D:update(deltaTime)
     self.tasks:update(deltaTime)
-    self.camera:update(deltaTime)  
+    self.camera:update(deltaTime) 
+    
+    --[[local p = self.lightCamera.position
+    p.x = p.x + deltaTime * 40
+    self.lightCamera:setPosition(p)
+    self.lightCamera:lookAt(Vector(5, 0, 5), Vector(0, 1, 0))]]
 end
 
 function Scene3D:checkHover()

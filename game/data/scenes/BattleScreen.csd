@@ -12,10 +12,10 @@
           </PointFrame>
         </Timeline>
         <Timeline ActionTag="-1453609064" Property="Scale">
-          <ScaleFrame FrameIndex="0" X="1366.0000" Y="-768.0000">
+          <ScaleFrame FrameIndex="0" X="1366.0000" Y="768.0000">
             <EasingData Type="0" />
           </ScaleFrame>
-          <ScaleFrame FrameIndex="24" X="1024.0000" Y="-768.0000">
+          <ScaleFrame FrameIndex="24" X="1024.0000" Y="768.0000">
             <EasingData Type="0" />
           </ScaleFrame>
         </Timeline>
@@ -218,7 +218,7 @@
             <Size X="1.0000" Y="1.0000" />
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position />
-            <Scale ScaleX="1366.0000" ScaleY="-768.0000" />
+            <Scale ScaleX="1366.0000" ScaleY="768.0000" />
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition />
             <PreSize X="0.0000" Y="0.0000" />

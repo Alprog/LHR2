@@ -2787,7 +2787,7 @@ int lua_cocos2dx_3d_Mesh_create(lua_State* tolua_S)
 
     do 
     {
-        if (argc == 5)
+        if (argc == 6)
         {
             std::vector<cocos2d::Vec3, std::allocator<cocos2d::Vec3> > arg0;
             ok &= luaval_to_std_vector_vec3(tolua_S, 2, &arg0, "cc.Mesh:create");
@@ -2795,16 +2795,19 @@ int lua_cocos2dx_3d_Mesh_create(lua_State* tolua_S)
             std::vector<cocos2d::Vec3, std::allocator<cocos2d::Vec3> > arg1;
             ok &= luaval_to_std_vector_vec3(tolua_S, 3, &arg1, "cc.Mesh:create");
             if (!ok) { break; }
-            std::vector<cocos2d::Vec2, std::allocator<cocos2d::Vec2> > arg2;
-            ok &= luaval_to_std_vector_vec2(tolua_S, 4, &arg2, "cc.Mesh:create");
+            std::vector<cocos2d::Vec3, std::allocator<cocos2d::Vec3> > arg2;
+            ok &= luaval_to_std_vector_vec3(tolua_S, 4, &arg2, "cc.Mesh:create");
             if (!ok) { break; }
             std::vector<cocos2d::Vec2, std::allocator<cocos2d::Vec2> > arg3;
             ok &= luaval_to_std_vector_vec2(tolua_S, 5, &arg3, "cc.Mesh:create");
             if (!ok) { break; }
-            std::vector<unsigned short, std::allocator<unsigned short> > arg4;
-            ok &= luaval_to_std_vector_ushort(tolua_S, 6, &arg4, "cc.Mesh:create");
+            std::vector<cocos2d::Vec2, std::allocator<cocos2d::Vec2> > arg4;
+            ok &= luaval_to_std_vector_vec2(tolua_S, 6, &arg4, "cc.Mesh:create");
             if (!ok) { break; }
-            cocos2d::Mesh* ret = cocos2d::Mesh::create(arg0, arg1, arg2, arg3, arg4);
+            std::vector<unsigned short, std::allocator<unsigned short> > arg5;
+            ok &= luaval_to_std_vector_ushort(tolua_S, 7, &arg5, "cc.Mesh:create");
+            if (!ok) { break; }
+            cocos2d::Mesh* ret = cocos2d::Mesh::create(arg0, arg1, arg2, arg3, arg4, arg5);
             object_to_luaval<cocos2d::Mesh>(tolua_S, "cc.Mesh",(cocos2d::Mesh*)ret);
             return 1;
         }

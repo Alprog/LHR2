@@ -2,23 +2,41 @@
 varying vec2 v_texCoord;
 varying vec2 v_texCoord1;
 varying vec3 v_normal;
+varying vec3 v_tangent;
+varying vec3 v_eyeDir;
 varying vec2 v_screenPos;
 varying vec2 v_prevScreenPos;
+
 uniform vec2 u_id;
 uniform sampler2D mainTexture;
 uniform sampler2D highlightTexture;
+uniform sampler2D normalTexture;
 uniform vec3 u_addColor;
+uniform float scale;
 
 #include "utils.inc"
 
 void main()
 {	
-    vec4 mainColor = texture2D(mainTexture, v_texCoord);
-    float mask = texture2D(highlightTexture, v_texCoord1).r / 2;
+    vec4 normalSample = texture2D(normalTexture, v_texCoord);
+    vec3 texNormal = normalSample.rgb * 2 - 1;
+
+    vec3 bitangent = cross(v_normal, v_tangent);
+    vec3 normal = texNormal.x * v_tangent + texNormal.y * bitangent + texNormal.z * v_normal;
+    
+    vec3 eyeDir = v_eyeDir.x * v_tangent + v_eyeDir.y * bitangent + v_eyeDir.z * v_normal;
+    float depth = 1 - normalSample.a;
+    vec2 offset = eyeDir.xy * depth * scale;
+    
+    vec4 mainColor = texture2D(mainTexture, v_texCoord - offset);
     
     vec3 albedo = mainColor.rgb + u_addColor;
-    albedo = mix(albedo, vec3(1, 0, 0), mask);
-    
+    float mask = texture2D(highlightTexture, v_texCoord1).r / 2;
+    albedo = mix(albedo, vec3(1, 0, 0), mask);    
+
+    //albedo = vec3(offset.x, offset.y, 1);
+    //albedo = vec3(v_texCoord, 0);
+
     vec2 velocity = v_screenPos - v_prevScreenPos;
-    outputGBuffer(albedo, v_normal, u_id, velocity);
+    outputGBuffer(albedo, normal, u_id, velocity);
 }

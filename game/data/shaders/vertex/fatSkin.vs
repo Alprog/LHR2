@@ -14,6 +14,6 @@ void main()
     v_prevScreenPos = v_screenPos;
     gl_Position = pos;
 	
-	v_texCoord = vec2(a_texCoord.x, 1 - a_texCoord.y);
+	v_texCoord = a_texCoord;
     v_normal = a_normal;
 }

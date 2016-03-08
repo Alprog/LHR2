@@ -184,6 +184,7 @@ struct CombineMeshVertex
 {
 	Vec3 position;
 	Vec3 normal;
+	Vec3 tangent;
 	Vec2 texCoord;
 	Vec4 color;
 };
@@ -213,6 +214,7 @@ Mesh* Mesh::combine(Vector<Mesh*>& meshes, std::vector<float>& data)
 	{
 		{ 3, GL_FLOAT, GLProgram::VERTEX_ATTRIB_POSITION, 3 * sizeof(float) },
 		{ 3, GL_FLOAT, GLProgram::VERTEX_ATTRIB_NORMAL, 3 * sizeof(float) },
+		{ 3, GL_FLOAT, GLProgram::VERTEX_ATTRIB_TANGENT, 3 * sizeof(float) },
 		{ 2, GL_FLOAT, GLProgram::VERTEX_ATTRIB_TEX_COORD, 2 * sizeof(float) },
 		{ 4, GL_FLOAT, GLProgram::VERTEX_ATTRIB_COLOR, 4 * sizeof(float) }
 	};
@@ -246,6 +248,7 @@ Mesh* Mesh::combine(Vector<Mesh*>& meshes, std::vector<float>& data)
 		auto vertexSizeInFloat = d->getVertexSize() / sizeof(float);
 		auto pShift = d->getAttribOffset(GLProgram::VERTEX_ATTRIB_POSITION) / sizeof(float);
 		auto nShift = d->getAttribOffset(GLProgram::VERTEX_ATTRIB_NORMAL) / sizeof(float);
+		auto tnShift = d->getAttribOffset(GLProgram::VERTEX_ATTRIB_TANGENT) / sizeof(float);
 		auto tShift = d->getAttribOffset(GLProgram::VERTEX_ATTRIB_TEX_COORD) / sizeof(float);
 		auto vCount = d->vertex.size();
 		for (size_t i = 0; i < vCount; i += vertexSizeInFloat)
@@ -258,6 +261,10 @@ Mesh* Mesh::combine(Vector<Mesh*>& meshes, std::vector<float>& data)
 			pVertex->texCoord.y = texCoord.y * pMeshInfo->texScale.y + pMeshInfo->texTranslate.y;
 			
 			pVertex->normal = *(Vec3*)(&d->vertex[i + nShift]);
+			if (tnShift >= 0)
+			{
+				pVertex->tangent = *(Vec3*)(&d->vertex[i + tnShift]);
+			}
 
 			pVertex->color = pMeshInfo->color;
 			
@@ -276,13 +283,14 @@ inline MeshVertexAttrib Attribute(int size, int vertexAttribute)
 	return MeshVertexAttrib { size, GL_FLOAT, vertexAttribute, (int)(size * sizeof(float)) };
 }
 
-Mesh* Mesh::create(const std::vector<Vec3>& positions, const std::vector<Vec3>& normals, const std::vector<Vec2>& texs, const std::vector<Vec2>& texs2, const IndexArray& indices)
+Mesh* Mesh::create(const std::vector<Vec3>& positions, const std::vector<Vec3>& normals, const std::vector<Vec3>& tangents, const std::vector<Vec2>& texs, const std::vector<Vec2>& texs2, const IndexArray& indices)
 {
 	int perVertexSizeInFloat = 0;
 	std::vector<float> vertices;
 	std::vector<MeshVertexAttrib> attribs;
 
 	bool hasNormal = (normals.size() != 0);
+	bool hasTangents = (tangents.size() != 0);
 	bool hasTexCoord0 = (texs.size() != 0);
 	bool hasTexCoord1 = (texs2.size() != 0);
 
@@ -295,6 +303,11 @@ Mesh* Mesh::create(const std::vector<Vec3>& positions, const std::vector<Vec3>& 
 	{
 		perVertexSizeInFloat += 3;
 		attribs.push_back(Attribute(3, GLProgram::VERTEX_ATTRIB_NORMAL));
+	}
+	if (hasTangents)
+	{
+		perVertexSizeInFloat += 3;
+		attribs.push_back(Attribute(3, GLProgram::VERTEX_ATTRIB_TANGENT));
 	}
 	if (hasTexCoord0)
 	{
@@ -318,6 +331,12 @@ Mesh* Mesh::create(const std::vector<Vec3>& positions, const std::vector<Vec3>& 
 		if (hasNormal)
 		{
 			p = (float*)&normals[i];
+			vertices.insert(std::end(vertices), p, p + 3);
+		}
+
+		if (hasTangents)
+		{
+			p = (float*)&tangents[i];
 			vertices.insert(std::end(vertices), p, p + 3);
 		}
 
