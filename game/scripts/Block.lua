@@ -24,7 +24,7 @@ function Block:init(section, floor)
     section:addChild(self)
     
     self.heights = { [0] = 0, 0, 0, 0 }
-    self.textureNames = { 'tiles/grass', 'tiles/rock' }
+    self.textureNames = { 'tiles/soil3', 'tiles/rock' }
 end
 
 function Block:onDeserialize()

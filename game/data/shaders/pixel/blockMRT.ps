@@ -34,9 +34,8 @@ void main()
     float mask = texture2D(highlightTexture, v_texCoord1).r / 2;
     albedo = mix(albedo, vec3(1, 0, 0), mask);    
 
-    //albedo = vec3(offset.x, offset.y, 1);
-    //albedo = vec3(v_texCoord, 0);
-
+    albedo = vec3(offset * 100, 1);
+    
     vec2 velocity = v_screenPos - v_prevScreenPos;
     outputGBuffer(albedo, normal, u_id, velocity);
 }
