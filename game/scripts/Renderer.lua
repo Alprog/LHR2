@@ -41,12 +41,12 @@ function Renderer:onResize(size)
 end
 
 function Renderer:render(scene)
-    self:swapTextures()
+    --self:swapTextures()
     
     self.scene = scene
     self:renderGeometry()
     self:bakeShadows()
-    self:lighting()
+    --self:lighting()
     self:renderTranparent()
     self:temporalAA()
 end
@@ -69,10 +69,15 @@ end
 function Renderer:renderScreenShadow()
     local state = createState('sprite', 'shadow')
     state:setUniformTexture('depthTexture', self.depthTexture)
+    state:setUniformTexture('normalTexture', self.normalTexture)
     state:setUniformTexture('shadowMapTexture', self.shadowMapTexture)
     local screenToWorld = cc.mat4.getInversed(self.scene.camera:getViewProjectionMatrix())
     state:setUniformMat4('screenToWorld', screenToWorld)
     state:setUniformMat4('worldToShadowMap', self.scene.lightCamera:getViewProjectionMatrix())
+    
+    local position = self.scene.lightCamera:getPosition3D()  
+    state:setUniformVec3('lightPosition', position)
+    
     thePostProcessor:perform(state, self.primaryTexture)
 end
 

@@ -2,11 +2,12 @@
 varying vec2 v_texCoord;
 
 uniform sampler2D depthTexture;
+uniform sampler2D normalTexture;
 uniform mat4 screenToWorld;
 uniform mat4 worldToShadowMap;
 uniform sampler2D shadowMapTexture;
-
-float bias = 0.00001;
+uniform vec3 lightPosition;
+//float bias = 0.00001;
 
 vec3 restoreWorldPosition()
 {
@@ -18,18 +19,46 @@ vec3 restoreWorldPosition()
     return pos.rgb / pos.w;
 }
 
+float sampleShadow(vec2 uv, float depth, float bias)
+{
+    float lightDepth = texture2D(shadowMapTexture, uv).x;
+    return depth - bias > lightDepth ? 0 : 1;
+}
+
+float getShadow(vec4 sMapPos, float bias)
+{
+    float shadow = 0;
+    for (int x = -1; x <= 1; x++)
+    {
+        for (int y = -1; y <= 1; y++)
+        {
+            vec2 offset = vec2(float(x) / 1024, float(y) / 1024);
+            shadow += sampleShadow(sMapPos.xy + offset, sMapPos.z, bias);
+        }
+    }
+    return shadow / 9;
+}
+
 void main()
 {	
     vec3 position = restoreWorldPosition();
     
+    vec3 l = normalize(lightPosition - position);
+    vec3 n = texture2D(normalTexture, v_texCoord).rgb * 2 - 1;
+    float p = dot(l, n);
+    p = clamp(p, 0, 1);
+
+    float bias = 0.0005 * tan(acos(p));
+
     vec4 sMapPos = worldToShadowMap * vec4(position, 1);
     sMapPos = (sMapPos / sMapPos.w) / 2 + 0.5; // 0..1
+    float shadow = getShadow(sMapPos, bias);
+    shadow = mix(0.5, 1, shadow);
     
-    float z = texture2D(shadowMapTexture, sMapPos.xy).x;
+    float diffuse = p / 2 + 0.5;
+    float c = min(shadow, diffuse);
     
-    
-    float shadow = sMapPos.z - z > bias ? 0.6 : 1;
-    gl_FragColor = vec4(shadow, shadow, shadow, 1);
+    gl_FragColor = vec4(c, c, c, 1);
 }
 
 

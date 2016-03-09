@@ -41,7 +41,7 @@ function Scene3D:update(deltaTime)
     self.target:update(deltaTime)
     
     
-    self.lightCamera.angle = (self.lightCamera.angle or 0) + deltaTime / 10
+    self.lightCamera.angle = (self.lightCamera.angle or 0) + deltaTime / 2
     local a = self.lightCamera.angle
     local dist = 70
     self.lightCamera:setPosition3D(Vec(math.cos(a) * dist, 50, math.sin(a) * dist))
