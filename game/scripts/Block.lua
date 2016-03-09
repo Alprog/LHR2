@@ -24,11 +24,14 @@ function Block:init(section, floor)
     section:addChild(self)
     
     self.heights = { [0] = 0, 0, 0, 0 }
-    self.textureNames = { 'tiles/soil3', 'tiles/rock' }
+    self.textureNames = { 'tiles/grass', 'tiles/rock' }
+    
+    self.scale = 0.05
 end
 
 function Block:onDeserialize()
     Object.init(self)
+    self.scale = 0.05
 end
 
 function Block:getSection()
@@ -80,8 +83,9 @@ function Block:initGfx()
     end
 
     self.gfx:setCullFaceEnabled(false)
-    
+
     self:addChild(self.gfx)
+    self:addScale(0)
 end
 
 function Block:getCorners()

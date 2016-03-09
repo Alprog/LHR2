@@ -41,7 +41,7 @@ function PostProcessor:setup(gBuffer, shadowMapBuffer, outBuffer, sceneCamera, l
     
     
     state:setUniformTexture('normalTexture', gBuffer:getRenderTarget(1))
-    state:setUniformTexture('wrapTexture', getTexture('wrap.png'))
+    state:setUniformTexture('wrapTexture', getTexture('wrap2.png'))
     
     
     local screenToWorld = cc.mat4.getInversed(sceneCamera:getViewProjectionMatrix())

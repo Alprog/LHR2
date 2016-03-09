@@ -41,4 +41,15 @@ local function Init()
     dispatcher:addEventListenerWithFixedPriority(listener, 1)
 end
 
+function getAxisValue(positive, negative)
+    local value = 0
+    if Input.keys[positive] then
+        value = value + 1
+    end
+    if Input.keys[negative] then
+       value = value - 1 
+    end
+    return value
+end
+
 Init()

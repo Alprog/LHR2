@@ -919,7 +919,10 @@ void GLProgram::setUniformsForBuiltins(const Mat4 &matrixM)
 
 	if (_flags.usesEyePosition)
 	{
-		auto pos = Camera::getVisitingCamera()->getPosition3D();
+		auto camera = Camera::getVisitingCamera();
+		
+		auto pos = Vec3(0, 0, 0);
+		camera->getNodeToWorldTransform().transformPoint(&pos);
 		setUniformLocationWith3f(_builtInUniforms[UNIFORM_EYE_POSITION], pos.x, pos.y, pos.z);
 	}
 

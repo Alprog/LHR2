@@ -6,45 +6,32 @@ function Camera:instantinate()
 end
 
 function Camera:init(space)
-    self.position = Vector(0, 0, 0)
-    self.rotation = cc.quaternion(0, 0, 0, 1)
-    self.perspective = 0
-    self.aspect = 1
     space:addChild(self)
-    
+    self.aspect = 1
+    self.perspective = 10
     self.dirty = true
 end
    
 function Camera:update(deltaTime)
-    self:moveUpdate(deltaTime)
-    self:rotationUpdate(deltaTime)
+    if self.free then
+        self:freeMoveUpdate(deltaTime)
+        self:freeRotationUpdate(deltaTime)
+    else
+        self:followUpdate(deltaTime)
+    end
 end
 
-function Camera:moveUpdate(deltaTime)
+function Camera:freeMoveUpdate(deltaTime)
     local speed = 10
-    if Input.keys[cc.KeyCode.KEY_SHIFT] then
+    if Input.keys[KEY_SHIFT] then
         speed = speed * 2
     end
         
-    local delta = Vector(0, 0, 0)
-    if Input.keys[cc.KeyCode.KEY_A] then
-        delta = delta + Vector(-1, 0, 0)
-    end
-    if Input.keys[cc.KeyCode.KEY_D] then
-        delta = delta + Vector(1, 0, 0)
-    end
-    if Input.keys[cc.KeyCode.KEY_R] then
-        delta = delta + Vector(0, 1, 0)
-    end
-    if Input.keys[cc.KeyCode.KEY_F] then
-        delta = delta + Vector(0, -1, 0)
-    end
-    if Input.keys[cc.KeyCode.KEY_W] then
-        delta = delta + Vector(0, 0, -1)
-    end
-    if Input.keys[cc.KeyCode.KEY_S] then
-        delta = delta + Vector(0, 0, 1)
-    end
+    local delta = Vector(
+        getAxisValue(KEY_D, KEY_A),
+        getAxisValue(KEY_R, KEY_F),
+        getAxisValue(KEY_S, KEY_W)
+    )
     
     if delta.x ~= 0 or delta.y ~= 0 or delta.z ~= 0 then
         local vector = delta * speed * deltaTime
@@ -52,7 +39,7 @@ function Camera:moveUpdate(deltaTime)
     end
 end
 
-function Camera:rotationUpdate(deltaTime)
+function Camera:freeRotationUpdate(deltaTime)
     local yaw = 0
     local pitch = 0
     local roll = 0
@@ -62,57 +49,44 @@ function Camera:rotationUpdate(deltaTime)
         k = k * 4
     end
     
-    if Input.keys[cc.KeyCode.KEY_LEFT_ARROW] then
-        yaw = yaw + k
-    end
-    if Input.keys[cc.KeyCode.KEY_RIGHT_ARROW] then
-        yaw = yaw - k
-    end
-    if Input.keys[cc.KeyCode.KEY_UP_ARROW] then
-        pitch = pitch + k
-    end
-    if Input.keys[cc.KeyCode.KEY_DOWN_ARROW] then
-        pitch = pitch - k
-    end
-    if Input.keys[cc.KeyCode.KEY_Q] then
-        roll = roll + k
-    end
-    if Input.keys[cc.KeyCode.KEY_E] then
-        roll = roll - k
-    end
-    
+    yaw = yaw + k * getAxisValue(KEY_LEFT_ARROW, KEY_RIGHT_ARROW)
+    pitch = pitch + k * getAxisValue(KEY_UP_ARROW, KEY_DOWN_ARROW)
+    roll = roll + k * getAxisValue(KEY_Q, KEY_E)
+        
     if yaw ~= 0 or pitch ~= 0 or roll ~= 0 then
+        local rotation = self:getRotationQuat()
         local quat = yawPitchRoll(yaw, pitch, roll)
-        self.rotation = multQuat(self.rotation, quat)
-        self.dirty = true
+        rotation = multQuat(rotation, quat)
+        self:setRotationQuat(rotation)
     end
 end
 
 function Camera:localMove(vector)
-    vector = multVecQuat(vector, self.rotation)
-    self.position = self.position + vector
-    self.dirty = true
-end
-
-function Camera:setPosition(position)
-    self.position = position
-    self.dirty = true
+    local position = self:getPosition3D()
+    local rotation = self:getRotationQuat()
+    position = position + multVecQuat(vector, rotation)
+    self:setPosition3D(position)
 end
 
 function Camera:lookAt(lookAtPos, up)
+    lookAtPos = Vector(lookAtPos.x, lookAtPos.y, lookAtPos.z)
+    
+    local pos = self:getPosition3D() 
+    
     local upv = up
     upv:normalize()
-    local zaxis = self.position - lookAtPos
+    local zaxis = Vector(pos.x, pos.y, pos.z) - lookAtPos
     zaxis:normalize()
     local xaxis = Vector.cross(upv, zaxis)
     xaxis:normalize()
     local yaxis = Vector.cross(zaxis, xaxis)
     yaxis:normalize()
     
+    local rotation = nil
     local trace = xaxis.x + yaxis.y + zaxis.z + 1.0
     if trace > 0.000001 then
         local s = 0.5 / math.sqrt(trace)
-        self.rotation = cc.quaternion(
+        rotation = cc.quaternion(
             (yaxis.z - zaxis.y) * s,
             (zaxis.x - xaxis.z) * s,
             (xaxis.y - yaxis.x) * s,
@@ -121,7 +95,7 @@ function Camera:lookAt(lookAtPos, up)
     else
         if xaxis.x > yaxis.y and xaxis.x > zaxis.z then
             local s = 0.5 / math.sqrt(1.0 + xaxis.x - yaxis.y - zaxis.z)
-            self.rotation = cc.quaternion(
+            rotation = cc.quaternion(
                 0.25 / s,
                 (yaxis.x + xaxis.y) * s,
                 (zaxis.x + xaxis.z) * s,
@@ -129,7 +103,7 @@ function Camera:lookAt(lookAtPos, up)
             )
         elseif yaxis.y > zaxis.z then
             local s = 0.5 / math.sqrt(1.0 + yaxis.y - xaxis.x - zaxis.z)
-            self.rotation = cc.quaternion(
+            rotation = cc.quaternion(
                 (yaxis.x + xaxis.y) * s,
                 0.25 / s,
                 (zaxis.y + yaxis.z) * s,
@@ -137,7 +111,7 @@ function Camera:lookAt(lookAtPos, up)
             )
         else
             local s = 0.5 / math.sqrt(1.0 + zaxis.z - xaxis.x - yaxis.y)
-            self.rotation = cc.quaternion(
+            rotation = cc.quaternion(
                 (zaxis.x + xaxis.z ) * s,
                 (zaxis.y + yaxis.z ) * s,
                 0.25 / s,
@@ -146,7 +120,27 @@ function Camera:lookAt(lookAtPos, up)
         end
     end
         
-    self.dirty = true
+    self:setRotationQuat(rotation)
+end
+
+function Camera:followUpdate(deltaTime)
+    local options = self.followOptions
+    local speed = Input.keys[KEY_SHIFT] and 4 or 1
+    
+    local axis = getAxisValue(KEY_UP_ARROW, KEY_DOWN_ARROW)
+    if axis ~= 0 then
+        local delta = axis * math.pi / 4 * deltaTime * speed
+        options.angle = clamp(options.angle + delta, 0, math.pi / 2)
+        self:refreshFollowPosition()
+    end
+    
+    axis = getAxisValue(KEY_KP_MINUS, KEY_KP_PLUS)
+    if axis ~= 0 then
+        local delta = axis * 25 * deltaTime * speed
+        options.far = clamp(options.far + delta, 10, 100)
+        self:refreshFollowPosition()
+    end
+    
 end
 
 function Camera:setWindowAspect()
@@ -161,19 +155,30 @@ function Camera:setAspect(aspect)
 end
 
 function Camera:refreshView()
-    --local viewHeight = 9
-    --local viewWidth = viewHeight * aspect   
-    --pass:setOrthographic(-viewWidth / 2, viewWidth / 2, -viewHeight / 2, viewHeight / 2, 0.1, 1000)
-      
-    local nativePosition = self.position + multVecQuat(Vector(0, 0, 0), self.rotation)
-    cc.Camera.setPerspective(self, 10, self.aspect, 10, 1000)
-    cc.Node.setPosition3D(self, nativePosition)
-    cc.Node.setRotationQuat(self, self.rotation)
+    cc.Camera.setPerspective(self, self.perspective, self.aspect, 10, 1000)
 end
 
-function Camera:setScissors(rect)
-    rect = rect or cc.rect(0, 0, 0, 0)
-    cc.Camera.setScissors(self, rect)
+function Camera:follow(target, far, angle)
+    self:removeFromParent()
+    target:addChild(self)
+    
+    self.followOptions =
+    {
+        target = target,
+        far = far,
+        angle = angle
+    }
+    
+    self:refreshFollowPosition()
+end
+
+function Camera:refreshFollowPosition()
+    local far, angle = self.followOptions.far, self.followOptions.angle
+    local s = math.sin(angle)
+    local dz = math.cos(angle) * far
+    local dy = math.sin(angle) * far
+    self:setPosition3D(Vec(0, dy, dz))
+    self:lookAt(Vector(0, 0, 0), Vector(0, 1, 0))
 end
 
 function Camera:render(scene, flag, frameBuffer)

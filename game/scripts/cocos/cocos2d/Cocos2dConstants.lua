@@ -496,6 +496,7 @@ cc.KeyCode =
 
 for k,v in ipairs(cc.KeyCodeKey) do
     cc.KeyCode[v] = k - 1
+    _G[v] = k - 1
 end
 
 cc.KeyCode.KEY_BACK = cc.KeyCode.KEY_ESCAPE

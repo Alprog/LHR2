@@ -20,6 +20,9 @@ FileType = {
     Both = 2
 }
 
+deg2rad = math.pi / 180
+rad2deg = 180 / math.pi
+
 function emptyFunction()
 end
 
@@ -349,3 +352,5 @@ function cloneFields(dst, src)
         dst[k] = v
     end
 end
+
+

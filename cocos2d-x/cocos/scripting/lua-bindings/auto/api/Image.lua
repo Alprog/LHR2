@@ -39,6 +39,12 @@
 -- @return int#int ret (return value: int)
         
 --------------------------------
+-- 
+-- @function [parent=#Image] flip 
+-- @param self
+-- @return Image#Image self (return value: cc.Image)
+        
+--------------------------------
 -- brief Load the image from the specified path.<br>
 -- param path   the absolute file path.<br>
 -- return true if loaded correctly.

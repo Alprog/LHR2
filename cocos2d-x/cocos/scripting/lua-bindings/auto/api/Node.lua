@@ -636,6 +636,15 @@
 -- @return vec2_table#vec2_table ret (return value: vec2_table)
         
 --------------------------------
+-- Return the rotation by quaternion, Note that when _rotationZ_X == _rotationZ_Y, the returned quaternion equals to RotationZ_X * RotationY * RotationX,<br>
+-- it equals to RotationY * RotationX otherwise.<br>
+-- return The rotation in quaternion.<br>
+-- js NA
+-- @function [parent=#Node] getRotationQuat 
+-- @param self
+-- @return Quaternion#Quaternion ret (return value: cc.Quaternion)
+        
+--------------------------------
 -- Removes a child from the container by tag value. It will also cleanup all running actions depending on the cleanup parameter.<br>
 -- param name       A string that identifies a child node.<br>
 -- param cleanup   True if all running actions and callbacks on the child node will be cleanup, false otherwise.
@@ -1154,6 +1163,15 @@
 -- @function [parent=#Node] isCascadeColorEnabled 
 -- @param self
 -- @return bool#bool ret (return value: bool)
+        
+--------------------------------
+-- Set rotation by quaternion. You should make sure the quaternion is normalized.<br>
+-- param quat The rotation in quaternion, note that the quat must be normalized.<br>
+-- js NA
+-- @function [parent=#Node] setRotationQuat 
+-- @param self
+-- @param #cc.Quaternion quat
+-- @return Node#Node self (return value: cc.Node)
         
 --------------------------------
 -- Stops and removes an action from the running action list.<br>

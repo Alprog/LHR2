@@ -7,6 +7,7 @@ require 'SortedList.lua'
 require 'Camera.lua'
 require 'Terrain.lua'
 require 'World3D.lua'
+require 'CameraTarget.lua'
 
 Scene3D = Derive("Scene3D", World3D)
 
@@ -25,15 +26,12 @@ function Scene3D:initCamera()
     self.camera = Camera:create(self)   
     self.camera:setWindowAspect()
     
-    local far = 50
-    local angle = 30 * math.pi / 180
-    local s = math.sin(angle)
-    local height = math.sin(angle) * far
-    local distance = math.cos(angle) * far
-    local delta = math.sqrt(distance * distance / 2)
-    self.camera:setPosition(Vec(-delta + 5, height, delta + 5))
-        
-    self.camera:lookAt(Vector(5, 0, 5), Vector(0, 1, 0))
+    self.target = CameraTarget:create()
+    self.target:setPosition3D(Vec(5, 1, 5))
+    self.target:setRotation3D(Vec(0, -45, 0))
+    self:addChild(self.target)
+    
+    self.camera:follow(self.target, 50, 30 * deg2rad)
     
     self.lightCamera = Camera:create(self)
     self.lightCamera:setPosition(Vec(-20, 50, 70))
@@ -42,7 +40,8 @@ end
 
 function Scene3D:update(deltaTime)
     self.tasks:update(deltaTime)
-    self.camera:update(deltaTime) 
+    self.camera:update(deltaTime)
+    self.target:update(deltaTime)
     
     --[[local p = self.lightCamera.position
     p.x = p.x + deltaTime * 40

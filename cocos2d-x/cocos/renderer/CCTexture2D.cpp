@@ -662,8 +662,8 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     }
     
     glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, _antialiasEnabled ? GL_LINEAR : GL_NEAREST );
-    glTexParameteri(_target, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(_target, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+    glTexParameteri(_target, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(_target, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 
 
