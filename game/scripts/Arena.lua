@@ -6,13 +6,10 @@ require 'TaskManager.lua'
 require 'SortedList.lua'
 require 'Camera.lua'
 require 'Terrain.lua'
-require 'World3D.lua'
 
-Arena = Derive("Arena", World3D)
+Arena = Derive("Arena", cc.Node)
 
-function Arena:init()
-    World3D.init(self)
-    
+function Arena:init()  
     self.unitLayer = self:createChild()
     
     self:listenTouches()

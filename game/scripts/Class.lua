@@ -107,14 +107,13 @@ function Class(name, base)
 end
 
 function setUnion(class, name)
-    local __index = class.__index
-
+    
     function class:__index(key) 
         local config = rawget(self, name)
         if config and config[key] then 
             return config[key]
         else
-            return __index[key]
+            return getmetatable(self)[key]
         end
     end
 

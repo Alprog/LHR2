@@ -3,41 +3,15 @@ varying vec2 v_texCoord;
 
 uniform sampler2D albedoTexture;
 uniform sampler2D normalTexture;
-uniform sampler2D depthTexture;
-uniform sampler2D shadowMapTexture;
+uniform sampler2D shadowTexture;
 uniform sampler2D wrapTexture;
 uniform vec3 lightPosition;
 
-uniform mat4 screenToWorld;
-uniform mat4 worldToShadowMap;
-
-float bias = 0.0001;
-
-vec3 restoreWorldPosition()
-{
-    float x = v_texCoord.x * 2 - 1;
-    float y = v_texCoord.y * 2 - 1;
-    float z = texture2D(depthTexture, v_texCoord).x * 2 - 1;
-    vec4 projectedPos = vec4(x, y, z, 1);
-    vec4 pos = screenToWorld * projectedPos;
-    return pos.rgb / pos.w;
-}
-
 void main()
 {	
-    vec3 position = restoreWorldPosition();
-    
-    vec4 sMapPos = worldToShadowMap * vec4(position, 1);
-    sMapPos = (sMapPos / sMapPos.w) / 2 + 0.5; // 0..1
-    
-    float z = texture2D(shadowMapTexture, sMapPos.xy).x;
-    
-    float shadow = z + bias <= sMapPos.z ? 0.6 : 1;
-    
     vec4 albedo = texture2D(albedoTexture, v_texCoord);
     vec3 normal = texture2D(normalTexture, v_texCoord).rgb * 2 - 1;
-    
-    //normalize(lightPosition)
+    float shadow = texture2D(shadowTexture, v_texCoord).r;
     
     vec3 lightDir = normalize(lightPosition);
     

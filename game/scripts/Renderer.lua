@@ -1,10 +1,11 @@
 
-Renderer = Class("Renderer")
+require 'KeepRefFields.lua'
 
-function Renderer:init()
-    self.gBuffer = ccexp.FrameBuffer:create(1)
-    self.gBuffer:retain()
-        
+Renderer = Class("Renderer")
+keepRefFields(Renderer)
+
+function Renderer:init()    
+    self.gBuffer = ccexp.FrameBuffer:create(1)       
     self:initShadowMap()
 end
 
@@ -14,7 +15,6 @@ function Renderer:initShadowMap()
     self.shadowMapBuffer:setSize(size.width, size.height)
     self.shadowMapTexture = self:createTexture(size, cc.DEPTH24_STENCIL8)
     self.shadowMapBuffer:attachDepthStencil(self.shadowMapTexture)
-    self.shadowMapBuffer:retain()
 end
 
 function Renderer:createTexture(size, format)
@@ -41,6 +41,8 @@ function Renderer:onResize(size)
 end
 
 function Renderer:render(scene)
+    self:swapTextures()
+    
     self.scene = scene
     self:renderGeometry()
     self:bakeShadows()
@@ -74,12 +76,20 @@ function Renderer:renderScreenShadow()
     thePostProcessor:perform(state, self.primaryTexture)
 end
 
-function Renderer:swapTextures()
-   self.primaryTexture, self.secondaryTexture = self.secondaryTexture, self.primaryTexture
+function Renderer:swapFields(a, b)
+    local map = rawget(self, 'map')
+    map[a], map[b] = map[b], map[a]
 end
 
-function Renderer:lighting()   
+function Renderer:swapTextures()
+    self:swapFields('primaryTexture', 'secondaryTexture')
+end
+
+function Renderer:lighting() 
+    self:swapTextures()
+    
     local state = createState('sprite', 'halflambert')
+    state:setUniformTexture('shadowTexture', self.secondaryTexture)
     
     local position = self.scene.lightCamera:getPosition3D()  
     state:setUniformVec3('lightPosition', position)
@@ -87,15 +97,14 @@ function Renderer:lighting()
     state:setUniformTexture('normalTexture', self.normalTexture)
     state:setUniformTexture('depthTexture', self.depthTexture)
     state:setUniformTexture('shadowMapTexture', self.shadowMapTexture)
+    
     state:setUniformTexture('wrapTexture', getTexture('wrap2.png'))
     
     local screenToWorld = cc.mat4.getInversed(self.scene.camera:getViewProjectionMatrix())
     state:setUniformMat4('screenToWorld', screenToWorld)
     
-    if self.lightCamera then
-        local worldToShadowMap = self.scene.lightCamera:getViewProjectionMatrix()
-        state:setUniformMat4('worldToShadowMap', worldToShadowMap)
-    end
+    local worldToShadowMap = self.scene.lightCamera:getViewProjectionMatrix()
+    state:setUniformMat4('worldToShadowMap', worldToShadowMap)
     
     thePostProcessor:perform(state, self.primaryTexture)
     

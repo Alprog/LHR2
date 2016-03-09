@@ -11,13 +11,13 @@ function LevelEditor:init()
     self:enableNodeEvents()
     
     self.projector = Projector:create(self:getChildByName('3DScreen'))
-    self.projector:addSource(self.scene3D.renderer, 'primaryTexture')
-    self.projector:addSource(self.scene3D.renderer, 'albedoTexture')
-    self.projector:addSource(self.scene3D.renderer, 'normalTexture')
-    self.projector:addSource(self.scene3D.renderer, 'idsTexture')
-    self.projector:addSource(self.scene3D.renderer, 'velocityTexture')
-    self.projector:addSource(self.scene3D.renderer, 'depthTexture', 'depth')
-    self.projector:addSource(self.scene3D.renderer, 'shadowMapTexture', 'depth')
+    self.projector:addSource(theRenderer, 'primaryTexture')
+    self.projector:addSource(theRenderer, 'albedoTexture')
+    self.projector:addSource(theRenderer, 'normalTexture')
+    self.projector:addSource(theRenderer, 'idsTexture')
+    self.projector:addSource(theRenderer, 'velocityTexture')
+    self.projector:addSource(theRenderer, 'depthTexture', 'depth')
+    self.projector:addSource(theRenderer, 'shadowMapTexture', 'depth')
      
     local touchBeginPoint = nil
     

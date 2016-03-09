@@ -6,7 +6,7 @@ uniform mat4 screenToWorld;
 uniform mat4 worldToShadowMap;
 uniform sampler2D shadowMapTexture;
 
-float bias = 0.0001;
+float bias = 0.00001;
 
 vec3 restoreWorldPosition()
 {
@@ -27,7 +27,8 @@ void main()
     
     float z = texture2D(shadowMapTexture, sMapPos.xy).x;
     
-    float shadow = z + bias <= sMapPos.z ? 0.6 : 1;
+    
+    float shadow = sMapPos.z - z > bias ? 0.6 : 1;
     gl_FragColor = vec4(shadow, shadow, shadow, 1);
 }
 

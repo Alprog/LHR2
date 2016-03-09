@@ -59,6 +59,7 @@ function App:run(sceneManager)
     self.director:setAnimationInterval(1.0 / 30)
     
     self.sceneManager = SceneManager:create(self)
+    self.renderer = Renderer:create(self)
     self.postProcessor = PostProcessor:create(self)
     self.scene = cc.Scene:create()
     self.scene:addChild(self.sceneManager.root)

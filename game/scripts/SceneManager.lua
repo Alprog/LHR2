@@ -68,7 +68,7 @@ function SceneManager:onResize(size)
         scene:onResize(size)
         scene:setTransformUpdated()
     end
-    
+
     self.defaultCamera:initDefault()
 end
 

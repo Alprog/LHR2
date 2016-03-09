@@ -6,14 +6,11 @@ require 'TaskManager.lua'
 require 'SortedList.lua'
 require 'Camera.lua'
 require 'Terrain.lua'
-require 'World3D.lua'
 require 'CameraTarget.lua'
 
-Scene3D = Derive("Scene3D", World3D)
+Scene3D = Derive("Scene3D", cc.Node)
 
 function Scene3D:init()
-    World3D.init(self)
-    
     self.unitLayer = self:createChild()
     
     self:scheduleUpdate()
@@ -43,14 +40,26 @@ function Scene3D:update(deltaTime)
     self.camera:update(deltaTime)
     self.target:update(deltaTime)
     
-    --[[local p = self.lightCamera.position
-    p.x = p.x + deltaTime * 40
-    self.lightCamera:setPosition(p)
-    self.lightCamera:lookAt(Vector(5, 0, 5), Vector(0, 1, 0))]]
+    
+    self.lightCamera.angle = (self.lightCamera.angle or 0) + deltaTime / 10
+    local a = self.lightCamera.angle
+    local dist = 70
+    self.lightCamera:setPosition3D(Vec(math.cos(a) * dist, 50, math.sin(a) * dist))
+    self.lightCamera:lookAt(Vector(5, 0, 5), Vector(0, 1, 0))
+end
+
+function Scene3D:onResize(size)
+    theRenderer:onResize(size)
+    self:setTransformUpdated()
+    self.camera:setWindowAspect() 
+end
+
+function Scene3D:render()
+    theRenderer:render(self)
 end
 
 function Scene3D:checkHover()
-    local object = self.renderer:getObjectFromScreenPos(Input.mousePos)
+    local object = theRenderer:getObjectFromScreenPos(Input.mousePos)
     if self.hoveredObject ~= object then
         if self.hoveredObject then
             self.hoveredObject:onHover(false) 

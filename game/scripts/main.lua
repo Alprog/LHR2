@@ -38,6 +38,7 @@ require 'Material.lua'
 
 require 'Level.lua'
 require 'Section.lua'
+require 'Renderer.lua'
 
 require 'ContentPipeline.lua'
 contentPipeline()
@@ -57,6 +58,7 @@ local function main()
        
     theApp = App:create("Little Humble RPG 2")
     theSceneManager = theApp.sceneManager
+    theRenderer = theApp.renderer
     thePostProcessor = theApp.postProcessor
     
     local screen = nil
