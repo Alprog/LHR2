@@ -3,7 +3,6 @@ function NewClass(name)
     local class = {}
     class.className = name
     class.__index = class
-    class.__setindex = class
     class.__call = class
     class.isLuaClass = true
     

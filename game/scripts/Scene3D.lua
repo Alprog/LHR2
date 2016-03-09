@@ -50,7 +50,7 @@ function Scene3D:update(deltaTime)
 end
 
 function Scene3D:checkHover()
-    local object = self:getObjectFromScreenPos(Input.mousePos)
+    local object = self.renderer:getObjectFromScreenPos(Input.mousePos)
     if self.hoveredObject ~= object then
         if self.hoveredObject then
             self.hoveredObject:onHover(false) 
