@@ -45,18 +45,26 @@ void main()
     
     vec3 l = normalize(lightPosition - position);
     vec3 n = texture2D(normalTexture, v_texCoord).rgb * 2 - 1;
-    float p = dot(l, n);
-    p = clamp(p, 0, 1);
-
-    float bias = 0.0005 * tan(acos(p));
-
-    vec4 sMapPos = worldToShadowMap * vec4(position, 1);
-    sMapPos = (sMapPos / sMapPos.w) / 2 + 0.5; // 0..1
-    float shadow = getShadow(sMapPos, bias);
+    float p = dot(l, n);   
+    
+    float shadow = 0;
+    
+    if (p > 0)
+    {
+        float k = (1 - p);
+        //position = position + n * 0.001 + 0.1 * k * k;
+        position = position + n * mix(0.01, 0.1, k * k * k);
+    
+        vec4 sMapPos = worldToShadowMap * vec4(position, 1);
+        sMapPos = (sMapPos / sMapPos.w) / 2 + 0.5; // 0..1
+        shadow = getShadow(sMapPos, 0);   
+    }
+    
     shadow = mix(0.5, 1, shadow);
     
     float diffuse = p / 2 + 0.5;
-    float c = min(shadow, diffuse);
+    float c = min(diffuse, shadow + (diffuse - shadow) * 0.3);
+    c = shadow;
     
     gl_FragColor = vec4(c, c, c, 1);
 }

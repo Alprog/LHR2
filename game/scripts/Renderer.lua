@@ -41,12 +41,12 @@ function Renderer:onResize(size)
 end
 
 function Renderer:render(scene)
-    --self:swapTextures()
+    self:swapTextures()
     
     self.scene = scene
     self:renderGeometry()
     self:bakeShadows()
-    --self:lighting()
+    self:lighting()
     self:renderTranparent()
     self:temporalAA()
 end
