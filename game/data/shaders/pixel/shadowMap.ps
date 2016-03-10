@@ -1,0 +1,16 @@
+
+varying float v_depth;
+
+void main()
+{	
+    vec2 moments;
+    moments.x = v_depth;
+    moments.y = v_depth * v_depth;
+
+    float dx = dFdx(v_depth);
+	float dy = dFdy(v_depth);
+	moments.y += 0.25 * (dx * dx + dy * dy);
+
+    gl_FragColor.xy = moments;
+    gl_FragDepth = v_depth;
+}

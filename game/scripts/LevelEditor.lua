@@ -12,6 +12,7 @@ function LevelEditor:init()
     
     self.projector = Projector:create(self:getChildByName('3DScreen'))
     self.projector:addSource(theRenderer, 'primaryTexture')
+    self.projector:addSource(theRenderer, 'auxTexture')
     self.projector:addSource(theRenderer, 'albedoTexture')
     self.projector:addSource(theRenderer, 'normalTexture')
     self.projector:addSource(theRenderer, 'idsTexture')

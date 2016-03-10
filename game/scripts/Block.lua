@@ -64,21 +64,29 @@ function Block:initGfx()
     
     for i = 1, #meshes do
         local mesh = meshes[i]
+        local material = cc.Material:create()
+        
         local state = createState('default3d', 'blockMRT')
         local mainTexture = getTexture(self.textureNames[i] .. '.png')
         local normalTexure = getTexture(self.textureNames[i] .. '_n.png')
-        
-        print(normalTexure:hasPremultipliedAlpha())
-        
         state:setUniformTexture('mainTexture', mainTexture)
         if normalTexure then
             state:setUniformTexture('normalTexture', normalTexure)
         end
         state:setUniformVec2('u_id', self:getUniformId())
+        local technique = cc.Technique:createWithGLProgramState(state)
+        technique:getStateBlock():setCullFaceSide(GL_BACK)
+        technique:getStateBlock():setCullFace(true)
+        material:setTechnique(RenderMode.Default, technique)
         
-        local material = cc.Material:createWithGLStateProgram(state)
+        state = createState('shadowMap', 'shadowMap')
+        technique = cc.Technique:createWithGLProgramState(state)
+        technique:getStateBlock():setCullFaceSide(GL_BACK)
+        technique:getStateBlock():setCullFace(true)
+        material:setTechnique(RenderMode.ShadowMap, technique)
+        
+        
         mesh:setMaterial(material)
-    
         self.gfx:addMesh(mesh)
     end
 

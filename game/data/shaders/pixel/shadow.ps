@@ -25,7 +25,7 @@ float sampleShadow(vec2 uv, float depth, float bias)
     return depth - bias > lightDepth ? 0 : 1;
 }
 
-float getShadow(vec4 sMapPos, float bias)
+float getShadow2(vec4 sMapPos, float bias)
 {
     float shadow = 0;
     for (int x = -1; x <= 1; x++)
@@ -39,6 +39,42 @@ float getShadow(vec4 sMapPos, float bias)
     return shadow / 9;
 }
 
+vec2 getMoments(vec2 uv)
+{
+    vec2 moments = vec2(0, 0);
+    for (int x = -1; x <= 1; x++)
+    {
+        for (int y = -1; y <= 1; y++)
+        {
+            vec2 offset = vec2(float(x) / 1024, float(y) / 1024);
+            moments += texture2D(shadowMapTexture, uv + offset).xy;
+        }
+    }
+    return moments / 9;
+}
+
+float ShadowContribution(vec2 uv, float depth)  
+{  
+    vec2 M = getMoments(uv);//texture2D(shadowMapTexture, uv).xy;
+
+    float p = depth <= M[0] ? 1 : 0;  
+  
+    float variance = M[1] - M[0] * M[0];
+    variance = max(variance, 0.000002);
+    
+    float d = depth - M[0];
+    float p_max = variance / (variance + d * d);  
+    return max(p, p_max);
+    
+    return p;
+}  
+
+
+float getShadow(vec4 sMapPos, float bias)
+{
+    return ShadowContribution(sMapPos.xy, sMapPos.z);
+}
+
 void main()
 {	
     vec3 position = restoreWorldPosition();
@@ -47,24 +83,19 @@ void main()
     vec3 n = texture2D(normalTexture, v_texCoord).rgb * 2 - 1;
     float p = dot(l, n);   
     
-    float shadow = 0;
-    
+    float shadow = 1;
     if (p > 0)
     {
-        float k = (1 - p);
-        //position = position + n * 0.001 + 0.1 * k * k;
-        position = position + n * mix(0.01, 0.1, k * k * k);
-    
         vec4 sMapPos = worldToShadowMap * vec4(position, 1);
         sMapPos = (sMapPos / sMapPos.w) / 2 + 0.5; // 0..1
-        shadow = getShadow(sMapPos, 0);   
+        shadow = getShadow(sMapPos, 0.0008);   
     }
-    
-    shadow = mix(0.5, 1, shadow);
-    
+
+    shadow = mix(0.5, 1, shadow); 
+
     float diffuse = p / 2 + 0.5;
-    float c = min(diffuse, shadow + (diffuse - shadow) * 0.3);
-    c = shadow;
+    float c = shadow;
+    c = shadow * diffuse;
     
     gl_FragColor = vec4(c, c, c, 1);
 }

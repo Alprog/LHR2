@@ -14,7 +14,11 @@ function Renderer:initShadowMap()
     self.shadowMapBuffer = ccexp.FrameBuffer:create(1)
     self.shadowMapBuffer:setSize(size.width, size.height)
     self.shadowMapTexture = self:createTexture(size, cc.DEPTH24_STENCIL8)
+    self.auxTexture = self:createTexture(size, cc.RG16F)
+    self.shadowMapBuffer:attachRenderTarget(0, self.auxTexture)
     self.shadowMapBuffer:attachDepthStencil(self.shadowMapTexture)
+    
+    --self.auxTexture:generateMipmap()
 end
 
 function Renderer:createTexture(size, format)
@@ -41,18 +45,19 @@ function Renderer:onResize(size)
 end
 
 function Renderer:render(scene)
-    self:swapTextures()
+    --self:swapTextures()
     
     self.scene = scene
     self:renderGeometry()
     self:bakeShadows()
-    self:lighting()
+    --self:lighting()
     self:renderTranparent()
     self:temporalAA()
 end
 
 function Renderer:renderGeometry()
     self.gBuffer:clearFBO()
+    self.scene:setRenderMode(RenderMode.Default)
     self.scene.camera:render(self.scene, cc.CameraFlag.DEFAULT, self.gBuffer)
 end
 
@@ -63,6 +68,7 @@ end
 
 function Renderer:renderShadowMap()
     self.shadowMapBuffer:clearFBO()
+    self.scene:setRenderMode(RenderMode.ShadowMap)
     self.scene.lightCamera:render(self.scene, cc.CameraFlag.DEFAULT, self.shadowMapBuffer)
 end
 
@@ -70,7 +76,7 @@ function Renderer:renderScreenShadow()
     local state = createState('sprite', 'shadow')
     state:setUniformTexture('depthTexture', self.depthTexture)
     state:setUniformTexture('normalTexture', self.normalTexture)
-    state:setUniformTexture('shadowMapTexture', self.shadowMapTexture)
+    state:setUniformTexture('shadowMapTexture', self.auxTexture)
     local screenToWorld = cc.mat4.getInversed(self.scene.camera:getViewProjectionMatrix())
     state:setUniformMat4('screenToWorld', screenToWorld)
     state:setUniformMat4('worldToShadowMap', self.scene.lightCamera:getViewProjectionMatrix())
