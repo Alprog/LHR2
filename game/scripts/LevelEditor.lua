@@ -66,6 +66,8 @@ function LevelEditor:update(dt)
         self.scene3D.camera:update(dt)
         self.scene3D.target:update(dt)
     end
+    
+    self.projector:refreshScreen()
 end
 
 function LevelEditor:render()

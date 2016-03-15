@@ -10,13 +10,13 @@ function Renderer:init()
 end
 
 function Renderer:initShadowMap()
-    local size = cc.size(1024, 1024)
+    local size = cc.size(512, 512)
     self.shadowMapBuffer = ccexp.FrameBuffer:create(1)
     self.shadowMapBuffer:setClearColor(cc.WHITE)
     self.shadowMapBuffer:setSize(size.width, size.height)
     self.shadowMapTexture = self:createTexture(size, cc.DEPTH24_STENCIL8)
-    self.auxTexture = self:createTexture(size, cc.RG32F)
-    self.auxTexture2 = self:createTexture(size, cc.RG32F)
+    self.auxTexture = self:createTexture(size, cc.RG16F)
+    self.auxTexture2 = self:createTexture(size, cc.RG16F)
     self.shadowMapBuffer:attachRenderTarget(0, self.auxTexture)
     self.shadowMapBuffer:attachDepthStencil(self.shadowMapTexture)
 end
@@ -48,17 +48,18 @@ function Renderer:onResize(size)
     self.vbState = nil
     self.hbState = nil
     self.lState = nil
+    self.aaState = nil
 end
 
 function Renderer:render(scene)
-    self:swapTextures()
-    
     self.scene = scene
     self:renderGeometry()
     self:bakeShadows()
     self:lighting()
     self:renderTranparent()
     self:temporalAA()
+    
+    self:swapFields('primaryTexture', 'historyTexture')
 end
 
 function Renderer:renderGeometry()
@@ -151,7 +152,18 @@ function Renderer:renderTranparent()
 end
 
 function Renderer:temporalAA()
+    self:swapTextures()
     
+    local state = self.aaState
+    if not state then
+        state = createState('sprite', 'temporalAA')
+        self.aaState = state
+    end
+    state:setUniformTexture('mainTexture', self.secondaryTexture)
+    state:setUniformTexture('historyTexture', self.historyTexture)
+    state:setUniformTexture('velocityTexture', self.velocityTexture)
+    
+    thePostProcessor:perform(state, self.primaryTexture)
 end
 
 function Renderer:getObjectFromScreenPos(pos)

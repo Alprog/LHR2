@@ -1,0 +1,13 @@
+
+varying vec2 v_texCoord;
+varying vec3 v_normal;
+uniform sampler2D mainTexture;
+uniform sampler2D historyTexture;
+
+void main()
+{	
+	vec4 mainColor = texture2D(mainTexture, v_texCoord);
+    vec4 historyColor = texture2D(historyTexture, v_texCoord);
+     
+    gl_FragColor = (mainColor + historyColor) / 2;
+}
