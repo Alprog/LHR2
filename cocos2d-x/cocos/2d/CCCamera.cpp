@@ -64,22 +64,22 @@ Camera* Camera::create()
     return camera;
 }
 
-void Camera::setPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane)
+void Camera::setPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane, Vec2 offset)
 {
-	initPerspective(fieldOfView, aspectRatio, nearPlane, farPlane);
+	initPerspective(fieldOfView, aspectRatio, nearPlane, farPlane, offset);
 }
 
-void Camera::setOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane)
+void Camera::setOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane, Vec2 offset)
 {
-	initOrthographic(left, right, bottom, top, nearPlane, farPlane);
+	initOrthographic(left, right, bottom, top, nearPlane, farPlane, offset);
 }
 
-Camera* Camera::createPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane)
+Camera* Camera::createPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane, Vec2 offset)
 {
     auto ret = new (std::nothrow) Camera();
     if (ret)
     {
-        ret->initPerspective(fieldOfView, aspectRatio, nearPlane, farPlane);
+        ret->initPerspective(fieldOfView, aspectRatio, nearPlane, farPlane, offset);
         ret->autorelease();
         return ret;
     }
@@ -87,12 +87,12 @@ Camera* Camera::createPerspective(float fieldOfView, float aspectRatio, float ne
     return nullptr;
 }
 
-Camera* Camera::createOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane)
+Camera* Camera::createOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane, Vec2 offset)
 {
     auto ret = new (std::nothrow) Camera();
     if (ret)
     {
-        ret->initOrthographic(left, right, bottom, top, nearPlane, farPlane);
+        ret->initOrthographic(left, right, bottom, top, nearPlane, farPlane, offset);
         ret->autorelease();
 		return ret;
     }
@@ -215,29 +215,37 @@ bool Camera::initDefault()
     return true;
 }
 
-bool Camera::initPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane)
+bool Camera::initPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane, Vec2 offset)
 {
     _fieldOfView = fieldOfView;
     _aspectRatio = aspectRatio;
     _nearPlane = nearPlane;
     _farPlane = farPlane;
-    Mat4::createPerspective(_fieldOfView, _aspectRatio, _nearPlane, _farPlane, &_projection);
+	_offset = offset;
+    Mat4::createPerspective(10, _aspectRatio, _nearPlane, _farPlane, &_projection);
+	_projection.m[8] += _offset.x;
+	_projection.m[9] += _offset.y;
+	
+	_viewProjectionDirty = true;
+    _frustumDirty = true;
+    
+    return true;
+}
+
+bool Camera::initOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane, Vec2 offset)
+{
+    _nearPlane = nearPlane;
+    _farPlane = farPlane;
+	_offset = offset;
+    Mat4::createOrthographicOffCenter(left, right, bottom, top, _nearPlane, _farPlane, &_projection);
+	_projection.m[8] += _offset.x;
+	_projection.m[9] += _offset.y;
     _viewProjectionDirty = true;
     _frustumDirty = true;
     
     return true;
 }
 
-bool Camera::initOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane)
-{
-    _nearPlane = nearPlane;
-    _farPlane = farPlane;
-    Mat4::createOrthographicOffCenter(left, right, bottom, top, _nearPlane, _farPlane, &_projection);
-    _viewProjectionDirty = true;
-    _frustumDirty = true;
-    
-    return true;
-}
 
 Vec2 Camera::project(const Vec3& src) const
 {

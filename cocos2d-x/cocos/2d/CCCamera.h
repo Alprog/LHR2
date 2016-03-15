@@ -85,7 +85,7 @@ public:
     * @param nearPlane The near plane distance.
     * @param farPlane The far plane distance.
     */
-    static Camera* createPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane);
+    static Camera* createPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane, Vec2 offset = Vec2::ZERO);
     /**
     * Creates an orthographic camera.
     *
@@ -94,12 +94,12 @@ public:
     * @param nearPlane The near plane distance.
     * @param farPlane The far plane distance.
     */
-    static Camera* createOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane);
+    static Camera* createOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane, Vec2 offset = Vec2::ZERO);
 
     static Camera* create();
     
-	void setPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane);
-	void setOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane);
+	void setPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane, Vec2 offset = Vec2::ZERO);
+	void setOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane, Vec2 offset = Vec2::ZERO);
 
     /**
     * Gets the type of camera.
@@ -266,8 +266,8 @@ CC_CONSTRUCTOR_ACCESS:
     
     /** init camera */
     bool initDefault();
-    bool initPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane);
-    bool initOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane);
+    bool initPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane, Vec2 offset = Vec2::ZERO);
+    bool initOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane, Vec2 offset = Vec2::ZERO);
     void applyViewport(experimental::FrameBuffer* frameBuffer);
 	void applyScissors();
 
@@ -287,6 +287,7 @@ protected:
     float _aspectRatio;
     float _nearPlane;
     float _farPlane;
+	Vec2 _offset;
     mutable bool  _viewProjectionDirty;
     bool _viewProjectionUpdated; //Whether or not the viewprojection matrix was updated since the last frame.
     mutable Frustum _frustum;   // camera frustum

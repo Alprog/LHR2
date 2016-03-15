@@ -1,5 +1,6 @@
 
 require 'KeepRefFields.lua'
+require 'Halton.lua'
 
 Renderer = Class("Renderer")
 keepRefFields(Renderer)
@@ -26,6 +27,7 @@ function Renderer:createTexture(size, format)
 end
 
 function Renderer:onResize(size)
+    self.size = size
     self.primaryTexture = self:createTexture(size)
     self.secondaryTexture = self:createTexture(size)
     self.texture3 = self:createTexture(size)
@@ -53,13 +55,31 @@ end
 
 function Renderer:render(scene)
     self.scene = scene
+    
+    self:reprojectCamera()
+    
     self:renderGeometry()
     self:bakeShadows()
     self:lighting()
     self:renderTranparent()
-    self:temporalAA()
     
+    self:temporalAA()
     self:swapFields('primaryTexture', 'historyTexture')
+end
+
+function Renderer:reprojectCamera()
+    self.frame = (self.frame or 0) + 1
+    if self.frame > #Halton then
+        self.frame = 1
+    end
+    self.prevOffset = self.offset and self.offset:copy() or Vector(0, 0)
+    
+    local sample = Halton[self.frame]
+    local x = (sample.x - 0.5) / self.size.width * 2
+    local y = (sample.y - 0.5) / self.size.height * 2
+    self.offset = Vector(x, y)
+    
+    self.scene.camera:setOffset(self.offset)
 end
 
 function Renderer:renderGeometry()
@@ -162,7 +182,8 @@ function Renderer:temporalAA()
     state:setUniformTexture('mainTexture', self.secondaryTexture)
     state:setUniformTexture('historyTexture', self.historyTexture)
     state:setUniformTexture('velocityTexture', self.velocityTexture)
-    
+    state:setUniformVec2('veloOffset', self.offset - self.prevOffset)
+        
     thePostProcessor:perform(state, self.primaryTexture)
 end
 

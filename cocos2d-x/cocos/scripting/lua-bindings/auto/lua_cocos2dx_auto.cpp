@@ -75061,6 +75061,32 @@ int lua_cocos2dx_Camera_setPerspective(lua_State* tolua_S)
         lua_settop(tolua_S, 1);
         return 1;
     }
+    if (argc == 5) 
+    {
+        double arg0;
+        double arg1;
+        double arg2;
+        double arg3;
+        cocos2d::Vec2 arg4;
+
+        ok &= luaval_to_number(tolua_S, 2,&arg0, "cc.Camera:setPerspective");
+
+        ok &= luaval_to_number(tolua_S, 3,&arg1, "cc.Camera:setPerspective");
+
+        ok &= luaval_to_number(tolua_S, 4,&arg2, "cc.Camera:setPerspective");
+
+        ok &= luaval_to_number(tolua_S, 5,&arg3, "cc.Camera:setPerspective");
+
+        ok &= luaval_to_vec2(tolua_S, 6, &arg4, "cc.Camera:setPerspective");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_Camera_setPerspective'", nullptr);
+            return 0;
+        }
+        cobj->setPerspective(arg0, arg1, arg2, arg3, arg4);
+        lua_settop(tolua_S, 1);
+        return 1;
+    }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "cc.Camera:setPerspective",argc, 4);
     return 0;
 
@@ -75479,6 +75505,38 @@ int lua_cocos2dx_Camera_initOrthographic(lua_State* tolua_S)
         tolua_pushboolean(tolua_S,(bool)ret);
         return 1;
     }
+    if (argc == 7) 
+    {
+        double arg0;
+        double arg1;
+        double arg2;
+        double arg3;
+        double arg4;
+        double arg5;
+        cocos2d::Vec2 arg6;
+
+        ok &= luaval_to_number(tolua_S, 2,&arg0, "cc.Camera:initOrthographic");
+
+        ok &= luaval_to_number(tolua_S, 3,&arg1, "cc.Camera:initOrthographic");
+
+        ok &= luaval_to_number(tolua_S, 4,&arg2, "cc.Camera:initOrthographic");
+
+        ok &= luaval_to_number(tolua_S, 5,&arg3, "cc.Camera:initOrthographic");
+
+        ok &= luaval_to_number(tolua_S, 6,&arg4, "cc.Camera:initOrthographic");
+
+        ok &= luaval_to_number(tolua_S, 7,&arg5, "cc.Camera:initOrthographic");
+
+        ok &= luaval_to_vec2(tolua_S, 8, &arg6, "cc.Camera:initOrthographic");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_Camera_initOrthographic'", nullptr);
+            return 0;
+        }
+        bool ret = cobj->initOrthographic(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+        tolua_pushboolean(tolua_S,(bool)ret);
+        return 1;
+    }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "cc.Camera:initOrthographic",argc, 6);
     return 0;
 
@@ -75885,6 +75943,38 @@ int lua_cocos2dx_Camera_setOrthographic(lua_State* tolua_S)
         lua_settop(tolua_S, 1);
         return 1;
     }
+    if (argc == 7) 
+    {
+        double arg0;
+        double arg1;
+        double arg2;
+        double arg3;
+        double arg4;
+        double arg5;
+        cocos2d::Vec2 arg6;
+
+        ok &= luaval_to_number(tolua_S, 2,&arg0, "cc.Camera:setOrthographic");
+
+        ok &= luaval_to_number(tolua_S, 3,&arg1, "cc.Camera:setOrthographic");
+
+        ok &= luaval_to_number(tolua_S, 4,&arg2, "cc.Camera:setOrthographic");
+
+        ok &= luaval_to_number(tolua_S, 5,&arg3, "cc.Camera:setOrthographic");
+
+        ok &= luaval_to_number(tolua_S, 6,&arg4, "cc.Camera:setOrthographic");
+
+        ok &= luaval_to_number(tolua_S, 7,&arg5, "cc.Camera:setOrthographic");
+
+        ok &= luaval_to_vec2(tolua_S, 8, &arg6, "cc.Camera:setOrthographic");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_Camera_setOrthographic'", nullptr);
+            return 0;
+        }
+        cobj->setOrthographic(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+        lua_settop(tolua_S, 1);
+        return 1;
+    }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "cc.Camera:setOrthographic",argc, 6);
     return 0;
 
@@ -76088,6 +76178,32 @@ int lua_cocos2dx_Camera_initPerspective(lua_State* tolua_S)
         tolua_pushboolean(tolua_S,(bool)ret);
         return 1;
     }
+    if (argc == 5) 
+    {
+        double arg0;
+        double arg1;
+        double arg2;
+        double arg3;
+        cocos2d::Vec2 arg4;
+
+        ok &= luaval_to_number(tolua_S, 2,&arg0, "cc.Camera:initPerspective");
+
+        ok &= luaval_to_number(tolua_S, 3,&arg1, "cc.Camera:initPerspective");
+
+        ok &= luaval_to_number(tolua_S, 4,&arg2, "cc.Camera:initPerspective");
+
+        ok &= luaval_to_number(tolua_S, 5,&arg3, "cc.Camera:initPerspective");
+
+        ok &= luaval_to_vec2(tolua_S, 6, &arg4, "cc.Camera:initPerspective");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_Camera_initPerspective'", nullptr);
+            return 0;
+        }
+        bool ret = cobj->initPerspective(arg0, arg1, arg2, arg3, arg4);
+        tolua_pushboolean(tolua_S,(bool)ret);
+        return 1;
+    }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "cc.Camera:initPerspective",argc, 4);
     return 0;
 
@@ -76133,6 +76249,31 @@ int lua_cocos2dx_Camera_createOrthographic(lua_State* tolua_S)
             return 0;
         }
         cocos2d::Camera* ret = cocos2d::Camera::createOrthographic(arg0, arg1, arg2, arg3, arg4, arg5);
+        object_to_luaval<cocos2d::Camera>(tolua_S, "cc.Camera",(cocos2d::Camera*)ret);
+        return 1;
+    }
+    if (argc == 7)
+    {
+        double arg0;
+        double arg1;
+        double arg2;
+        double arg3;
+        double arg4;
+        double arg5;
+        cocos2d::Vec2 arg6;
+        ok &= luaval_to_number(tolua_S, 2,&arg0, "cc.Camera:createOrthographic");
+        ok &= luaval_to_number(tolua_S, 3,&arg1, "cc.Camera:createOrthographic");
+        ok &= luaval_to_number(tolua_S, 4,&arg2, "cc.Camera:createOrthographic");
+        ok &= luaval_to_number(tolua_S, 5,&arg3, "cc.Camera:createOrthographic");
+        ok &= luaval_to_number(tolua_S, 6,&arg4, "cc.Camera:createOrthographic");
+        ok &= luaval_to_number(tolua_S, 7,&arg5, "cc.Camera:createOrthographic");
+        ok &= luaval_to_vec2(tolua_S, 8, &arg6, "cc.Camera:createOrthographic");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_Camera_createOrthographic'", nullptr);
+            return 0;
+        }
+        cocos2d::Camera* ret = cocos2d::Camera::createOrthographic(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         object_to_luaval<cocos2d::Camera>(tolua_S, "cc.Camera",(cocos2d::Camera*)ret);
         return 1;
     }
@@ -76243,6 +76384,27 @@ int lua_cocos2dx_Camera_createPerspective(lua_State* tolua_S)
             return 0;
         }
         cocos2d::Camera* ret = cocos2d::Camera::createPerspective(arg0, arg1, arg2, arg3);
+        object_to_luaval<cocos2d::Camera>(tolua_S, "cc.Camera",(cocos2d::Camera*)ret);
+        return 1;
+    }
+    if (argc == 5)
+    {
+        double arg0;
+        double arg1;
+        double arg2;
+        double arg3;
+        cocos2d::Vec2 arg4;
+        ok &= luaval_to_number(tolua_S, 2,&arg0, "cc.Camera:createPerspective");
+        ok &= luaval_to_number(tolua_S, 3,&arg1, "cc.Camera:createPerspective");
+        ok &= luaval_to_number(tolua_S, 4,&arg2, "cc.Camera:createPerspective");
+        ok &= luaval_to_number(tolua_S, 5,&arg3, "cc.Camera:createPerspective");
+        ok &= luaval_to_vec2(tolua_S, 6, &arg4, "cc.Camera:createPerspective");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_Camera_createPerspective'", nullptr);
+            return 0;
+        }
+        cocos2d::Camera* ret = cocos2d::Camera::createPerspective(arg0, arg1, arg2, arg3, arg4);
         object_to_luaval<cocos2d::Camera>(tolua_S, "cc.Camera",(cocos2d::Camera*)ret);
         return 1;
     }

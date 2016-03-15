@@ -16,7 +16,7 @@
 -- @param self
 -- @param #cc.Node scene
 -- @param #int flag
--- @param #int techniqueIndex
+-- @param #int renderMode
 -- @param #cc.experimental::FrameBuffer frameBuffer
 -- @return Camera#Camera self (return value: cc.Camera)
         
@@ -59,6 +59,7 @@
 -- @param #float aspectRatio
 -- @param #float nearPlane
 -- @param #float farPlane
+-- @param #vec2_table offset
 -- @return Camera#Camera self (return value: cc.Camera)
         
 --------------------------------
@@ -121,6 +122,7 @@
 -- @param #float top
 -- @param #float nearPlane
 -- @param #float farPlane
+-- @param #vec2_table offset
 -- @return bool#bool ret (return value: bool)
         
 --------------------------------
@@ -180,6 +182,7 @@
 -- @param #float top
 -- @param #float nearPlane
 -- @param #float farPlane
+-- @param #vec2_table offset
 -- @return Camera#Camera self (return value: cc.Camera)
         
 --------------------------------
@@ -210,6 +213,7 @@
 -- @param #float aspectRatio
 -- @param #float nearPlane
 -- @param #float farPlane
+-- @param #vec2_table offset
 -- @return bool#bool ret (return value: bool)
         
 --------------------------------
@@ -226,6 +230,7 @@
 -- @param #float top
 -- @param #float nearPlane
 -- @param #float farPlane
+-- @param #vec2_table offset
 -- @return Camera#Camera ret (return value: cc.Camera)
         
 --------------------------------
@@ -252,6 +257,7 @@
 -- @param #float aspectRatio
 -- @param #float nearPlane
 -- @param #float farPlane
+-- @param #vec2_table offset
 -- @return Camera#Camera ret (return value: cc.Camera)
         
 --------------------------------

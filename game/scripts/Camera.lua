@@ -9,6 +9,7 @@ function Camera:init(space)
     space:addChild(self)
     self.aspect = 1
     self.perspective = 10
+    self.offset = Vec(0, 0)
     self.dirty = true
 end
    
@@ -154,8 +155,13 @@ function Camera:setAspect(aspect)
     self.dirty = true
 end
 
+function Camera:setOffset(offset)
+    self.offset = offset
+    self.dirty = true
+end
+
 function Camera:refreshView()
-    cc.Camera.setPerspective(self, self.perspective, self.aspect, 10, 1000)
+    cc.Camera.setPerspective(self, self.perspective, self.aspect, 10, 1000, self.offset)
 end
 
 function Camera:follow(target, far, angle)
