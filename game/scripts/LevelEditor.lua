@@ -18,7 +18,6 @@ function LevelEditor:init()
     self.projector:addSource(theRenderer, 'velocityTexture')
     self.projector:addSource(theRenderer, 'depthTexture', 'depth')
     self.projector:addSource(theRenderer, 'shadowMapTexture', 'depth')
-     
     
     self.mapProjector = Projector:create(self:getChildByName('MapScreen'))
     self.mapProjector:addSource(theRenderer, 'auxTexture')

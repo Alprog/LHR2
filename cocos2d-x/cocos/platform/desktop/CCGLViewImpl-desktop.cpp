@@ -366,7 +366,7 @@ bool GLViewImpl::initWithRect(const std::string& viewName, Rect rect, float fram
 	
     _mainWindow = glfwCreateWindow(needWidth, neeHeight, _viewName.c_str(), _monitor, nullptr);
 
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 
 
     /*

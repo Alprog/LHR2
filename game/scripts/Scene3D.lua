@@ -42,7 +42,7 @@ function Scene3D:update(deltaTime)
     self.tasks:update(deltaTime)  
     
     if not a then
-    --a = true
+    a = true
     self.lightCamera.angle = (self.lightCamera.angle or 0) + deltaTime / 2
     local a = self.lightCamera.angle
     local dist = 7

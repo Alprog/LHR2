@@ -303,15 +303,15 @@ void Director::drawScene()
 
     _totalFrames++;
 
+	if (_displayStats)
+	{
+		calculateMPF();
+	}
+
     // swap buffers
     if (_openGLView)
     {
         _openGLView->swapBuffers();
-    }
-
-    if (_displayStats)
-    {
-        calculateMPF();
     }
 }
 

@@ -15,8 +15,8 @@ function Renderer:initShadowMap()
     self.shadowMapBuffer:setClearColor(cc.WHITE)
     self.shadowMapBuffer:setSize(size.width, size.height)
     self.shadowMapTexture = self:createTexture(size, cc.DEPTH24_STENCIL8)
-    self.auxTexture = self:createTexture(size, cc.RG16F)
-    self.auxTexture2 = self:createTexture(size, cc.RG16F)
+    self.auxTexture = self:createTexture(size, cc.RG32F)
+    self.auxTexture2 = self:createTexture(size, cc.RG32F)
     self.shadowMapBuffer:attachRenderTarget(0, self.auxTexture)
     self.shadowMapBuffer:attachDepthStencil(self.shadowMapTexture)
 end
@@ -43,6 +43,11 @@ function Renderer:onResize(size)
     self.gBuffer:attachRenderTarget(2, self.idsTexture)
     self.gBuffer:attachRenderTarget(3, self.velocityTexture)
     self.gBuffer:attachDepthStencil(self.depthTexture)
+    
+    self.rsState = nil
+    self.vbState = nil
+    self.hbState = nil
+    self.lState = nil
 end
 
 function Renderer:render(scene)
@@ -76,24 +81,33 @@ function Renderer:blur(texture, tmpTexture)
     texture = texture or self.primaryTexture
     tmpTexture = tmpTexture or self.secondaryTexture
     
-    local state = createState('vblur', 'blur')
-    state:setUniformTexture('mainTexture', texture)
-    thePostProcessor:perform(state, tmpTexture)
+    if not self.vbState then
+        self.vbState = createState('vblur', 'blur')
+    end
+    self.vbState:setUniformTexture('mainTexture', texture)
+    thePostProcessor:perform(self.vbState, tmpTexture)
     
-    state = createState('hblur', 'blur')
-    state:setUniformTexture('mainTexture', tmpTexture)
-    thePostProcessor:perform(state, texture)
+    if not self.hbState then
+        self.hbState = createState('hblur', 'blur')
+    end
+    self.hbState:setUniformTexture('mainTexture', tmpTexture)
+    thePostProcessor:perform(self.hbState, texture)
 end
 
 function Renderer:renderScreenShadow()
-    local state = createState('sprite', 'shadow')
-    state:setUniformTexture('depthTexture', self.depthTexture)
-    state:setUniformTexture('normalTexture', self.normalTexture)
-    state:setUniformTexture('shadowMapTexture', self.auxTexture)
+    
+    local state = self.rsState
+    if not state then
+        state = createState('sprite', 'shadow')
+        state:setUniformTexture('depthTexture', self.depthTexture)
+        state:setUniformTexture('normalTexture', self.normalTexture)
+        state:setUniformTexture('shadowMapTexture', self.auxTexture)
+        self.rsState = state
+    end
+
     local screenToWorld = cc.mat4.getInversed(self.scene.camera:getViewProjectionMatrix())
     state:setUniformMat4('screenToWorld', screenToWorld)
     state:setUniformMat4('worldToShadowMap', self.scene.lightCamera:getViewProjectionMatrix())
-    
     local position = self.scene.lightCamera:getPosition3D()  
     state:setUniformVec3('lightPosition', position)
     
@@ -112,39 +126,24 @@ end
 function Renderer:lighting() 
     self:swapTextures()
     
-    local state = createState('sprite', 'halflambert')
+    local state = self.lState
+    if not state then
+        state = createState('sprite', 'halflambert')
+        state:setUniformTexture('albedoTexture', self.albedoTexture)
+        state:setUniformTexture('normalTexture', self.normalTexture)
+        state:setUniformTexture('normalTexture2', self.idsTexture)
+        state:setUniformTexture('depthTexture', self.depthTexture)
+        state:setUniformTexture('wrapTexture', getTexture('wrap2.png'))
+        self.lState = state
+    end
+    
     state:setUniformTexture('shadowTexture', self.secondaryTexture)
-    
-    local position = self.scene.lightCamera:getPosition3D()
-    
-    local m = self.scene.lightCamera:getViewMatrix()
-    m = cc.mat4.getInversed(m)
-    
+
+    local m = self.scene.lightCamera:getNodeToWorldTransform()
     local dir = cc.mat4.transformVector(m, Vector(0, 0, 1))
-    
     state:setUniformVec3('lightDir', dir)
 
-    state:setUniformTexture('albedoTexture', self.albedoTexture)
-    state:setUniformTexture('normalTexture', self.normalTexture)
-    state:setUniformTexture('normalTexture2', self.idsTexture)
-    state:setUniformTexture('depthTexture', self.depthTexture)
-    state:setUniformTexture('shadowMapTexture', self.shadowMapTexture)
-    
-    state:setUniformTexture('wrapTexture', getTexture('wrap2.png'))
-    
-    local screenToWorld = cc.mat4.getInversed(self.scene.camera:getViewProjectionMatrix())
-    state:setUniformMat4('screenToWorld', screenToWorld)
-    
-    local worldToShadowMap = self.scene.lightCamera:getViewProjectionMatrix()
-    state:setUniformMat4('worldToShadowMap', worldToShadowMap)
-    
     thePostProcessor:perform(state, self.primaryTexture)
-    
-        
-    --[[local texelSize = Vec(1 / self.frameBuffer.width, 1 / self.frameBuffer.height)    
-    state:setUniformVec2('texelSize', texelSize)
-    local scale = math.min(0.33 / theApp:getDeltaTime(), 1)
-    state:setUniformFloat('velocityScale', scale)]]
 end
 
 function Renderer:renderTranparent()
