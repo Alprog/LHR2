@@ -45,12 +45,8 @@ function LevelEditor:onCleanup()
 end
 
 function LevelEditor:update(dt)
-    if not self.a then
-        self.a = true
-    else
-        self.scene3D:checkHover()
-    end
-    
+    self.scene3D:checkHover()
+
     local object = self.scene3D.hoveredObject
     if object then
         local corners = Input.keys[cc.KeyCode.KEY_CTRL]
@@ -67,7 +63,7 @@ function LevelEditor:update(dt)
         self.scene3D.target:update(dt)
     end
     
-    self.projector:refreshScreen()
+   -- self.projector:refreshScreen()
 end
 
 function LevelEditor:render()

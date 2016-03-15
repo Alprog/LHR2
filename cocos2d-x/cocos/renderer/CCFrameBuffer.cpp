@@ -236,6 +236,11 @@ FrameBuffer::~FrameBuffer()
 
 Vec4 FrameBuffer::getTexel(int colorTarget, int x, int y)
 {
+	if (_fboBindingDirty)
+	{
+		return Vec4(0, 0, 0, 0);
+	}
+
 	static GLuint pboids[2] = { 0, 0 };
 	static int pboIndex = 0;
 

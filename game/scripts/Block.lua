@@ -281,8 +281,9 @@ function Block:setEntireHighlight(value)
     for child in iter(self:getChildren()) do
         local count = child:getMeshCount()
         for i = 0, count - 1 do
-            local mesh = child:getMeshByIndex(i)
-            local state = mesh:getGLProgramState()
+            local material = child:getMaterial(i)
+            local technique = material:getTechnique(RenderMode.Default)
+            local state = technique:getPassByIndex(0):getGLProgramState()
             local color = value and Vec(0.25, 0.25, 0.25) or Vec(0, 0, 0)
             state:setUniformVec3('u_addColor', color)
         end
@@ -290,7 +291,8 @@ function Block:setEntireHighlight(value)
 end
 
 function Block:setPartHighlight(type)
-    local state = self.gfx:getMeshByIndex(0):getGLProgramState()
+    local technique = self.gfx:getMaterial(0):getTechnique(RenderMode.Default)
+    local state = technique:getPassByIndex(0):getGLProgramState()
     local texture = type and getTexture('editor/highlight/'..type..'.png') or 0
     state:setUniformTexture('highlightTexture', texture)
     self.cornerType = type
