@@ -708,7 +708,7 @@ void Sprite3D::visit(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parentTra
     director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODEL);
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODEL, _modelTransform);
     
-    bool visibleByCamera = isVisitableByVisitingCamera();
+	bool visibleByCamera = isVisitable(renderer);
     
     int i = 0;
     

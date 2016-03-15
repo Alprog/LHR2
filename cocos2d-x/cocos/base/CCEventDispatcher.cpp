@@ -828,35 +828,6 @@ void EventDispatcher::dispatchTouchEventToListeners(EventListenerVector* listene
                 }
             }
 
-            // second, for all camera call all listeners
-            // get a copy of cameras, prevent it's been modified in linstener callback
-            // if camera's depth is greater, process it earler
-			/*auto cameras = scene->getCameras();
-            Camera* camera;
-            for (int j = int(cameras.size()) - 1; j >= 0; --j)
-            {
-                camera = cameras[j];
-                if (camera->isVisible() == false)
-                {
-                    continue;
-                }
-                
-                Camera::_visitingCamera = camera;
-                for (auto& l : sceneListeners)
-                {
-                    if (onEvent(l))
-                    {
-                        shouldStopPropagation = true;
-                        break;
-                    }
-                }
-                if (shouldStopPropagation)
-                {
-                    break;
-                }
-            }
-            Camera::_visitingCamera = nullptr;*/
-
 			// dispatch events only for default camera
 			Camera::_visitingCamera = Camera::getDefaultCamera();
 			for (auto& l : sceneListeners)

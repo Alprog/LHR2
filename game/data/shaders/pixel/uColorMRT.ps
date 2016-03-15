@@ -12,5 +12,5 @@ void main()
     vec3 albedo = u_color.rgb;
     vec2 velocity = v_screenPos - v_prevScreenPos;
     
-    outputGBuffer(albedo, v_normal, u_id, velocity);
+    outputGBuffer(albedo, v_normal, v_normal, u_id, velocity);
 }

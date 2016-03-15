@@ -33,6 +33,7 @@
 #include "renderer/CCRenderCommand.h"
 #include "renderer/CCGLProgram.h"
 #include "platform/CCGL.h"
+#include "2d/CCCamera.h"
 
 /**
  * @addtogroup renderer
@@ -191,6 +192,12 @@ public:
     /** returns whether or not a rectangle is visible or not */
     bool checkVisibility(const Mat4& transform, const Size& size);
 
+	inline CameraFlag getCameraFlag() { return _cameraFlag; }
+	inline void setCameraFlag(CameraFlag value) { _cameraFlag = value; }
+
+	inline int getRenderMode() { return _renderMode; };
+	inline void setRenderMode(int value) { _renderMode = value; };
+
 protected:
 
     //Setup VBO or VAO based on OpenGL extensions
@@ -225,6 +232,9 @@ protected:
     std::vector<RenderQueue> _renderGroups;
 
     uint32_t _lastMaterialID;
+
+	CameraFlag _cameraFlag;
+	int _renderMode;
 
     MeshCommand*              _lastBatchedMeshCommand;
     std::vector<TrianglesCommand*> _batchedCommands;

@@ -34,21 +34,21 @@ function Scene3D:initCamera()
     self.lightCamera:setPosition(Vec(-20, 50, 70))
     self.lightCamera:lookAt(Vector(5, 0, 5), Vector(0, 1, 0))
     
-    self.lightCamera:setOrthographic(-5, 5, -5, 5, 0, 50)
+    self.lightCamera:setOrthographic(-7, 7, -7, 7, 0, 50)
     self.lightCamera.dirty = false
 end
 
 function Scene3D:update(deltaTime)
-    self.tasks:update(deltaTime)
-    self.camera:update(deltaTime)
-    self.target:update(deltaTime)
+    self.tasks:update(deltaTime)  
     
-    
+    if not a then
+    --a = true
     self.lightCamera.angle = (self.lightCamera.angle or 0) + deltaTime / 2
     local a = self.lightCamera.angle
     local dist = 7
     self.lightCamera:setPosition3D(Vec(math.cos(a) * dist + 5, 5, math.sin(a) * dist + 5))
     self.lightCamera:lookAt(Vector(5, 0, 5), Vector(0, 1, 0))
+    end
 end
 
 function Scene3D:onResize(size)
@@ -65,7 +65,9 @@ function Scene3D:checkHover()
     local object = theRenderer:getObjectFromScreenPos(Input.mousePos)
     if self.hoveredObject ~= object then
         if self.hoveredObject then
-            self.hoveredObject:onHover(false) 
+            if self.hoveredObject.onHover then
+                self.hoveredObject:onHover(false)
+            end
         end
         self.hoveredObject = object
         if self.hoveredObject then
@@ -76,16 +78,4 @@ end
 
 function Scene3D:clearHovered()
     self.hoveredObject = nil
-end
-
-function Scene3D:setRenderMode(index)
-    for child in iter(self:getChildren()) do
-        if child.getMeshCount then
-            local count = child:getMeshCount()
-            for i = 0, count - 1 do
-                child:getMaterial(i):selectTechnique(index) 
-            end
-        end
-        Scene3D.setRenderMode(child, index)
-    end
 end

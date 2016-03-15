@@ -311,7 +311,7 @@ void ClippingNode::visit(Renderer *renderer, const Mat4 &parentTransform, uint32
     renderer->addCommand(&_afterDrawStencilCmd);
 
     int i = 0;
-    bool visibleByCamera = isVisitableByVisitingCamera();
+	bool visibleByCamera = isVisitable(renderer);
     
     if(!_children.empty())
     {

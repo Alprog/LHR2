@@ -47,6 +47,8 @@ THE SOFTWARE.
 #include "renderer/CCMaterial.h"
 #include "math/TransformUtils.h"
 
+#include "renderer/CCRenderer.h"
+
 #include "deprecated/CCString.h"
 #include "cocostudio/CCComExtensionData.h"
 
@@ -1331,10 +1333,10 @@ uint32_t Node::processParentFlags(const Mat4& parentTransform, uint32_t parentFl
         }
     }
 
-    //remove this two line given that isVisitableByVisitingCamera should not affect the calculation of transform given that we are visiting scene
+    //remove this two line given that isVisitable(renderer) should not affect the calculation of transform given that we are visiting scene
     //without involving view and projection matrix.
     
-//    if (!isVisitableByVisitingCamera())
+//    if (!isVisitable(renderer))
 //        return parentFlags;
     
     uint32_t flags = parentFlags;
@@ -1358,11 +1360,9 @@ uint32_t Node::processParentFlags(const Mat4& parentTransform, uint32_t parentFl
     return flags;
 }
 
-bool Node::isVisitableByVisitingCamera() const
+bool Node::isVisitable(Renderer* renderer) const
 {
-    auto camera = Camera::getVisitingCamera();
-    bool visibleByCamera = camera ? ((unsigned short)camera->getCameraFlag() & _cameraMask) != 0 : true;
-    return visibleByCamera;
+	return (unsigned short)renderer->getCameraFlag() & _cameraMask;
 }
 
 void Node::visit(Renderer* renderer, const Mat4 &parentTransform, uint32_t parentFlags)
@@ -1381,7 +1381,7 @@ void Node::visit(Renderer* renderer, const Mat4 &parentTransform, uint32_t paren
     _director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODEL);
     _director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODEL, _modelTransform);
     
-    bool visibleByCamera = isVisitableByVisitingCamera();
+    bool visibleByCamera = isVisitable(renderer);
 
     int i = 0;
 

@@ -27,6 +27,30 @@
             <EasingData Type="0" />
           </ScaleFrame>
         </Timeline>
+        <Timeline ActionTag="-1766891491" Property="Position">
+          <PointFrame FrameIndex="0" X="-556.0848" Y="255.5007">
+            <EasingData Type="0" />
+          </PointFrame>
+          <PointFrame FrameIndex="24" X="-388.2573" Y="260.5109">
+            <EasingData Type="0" />
+          </PointFrame>
+        </Timeline>
+        <Timeline ActionTag="-1766891491" Property="Scale">
+          <ScaleFrame FrameIndex="0" X="204.8000" Y="204.8000">
+            <EasingData Type="0" />
+          </ScaleFrame>
+          <ScaleFrame FrameIndex="24" X="204.8000" Y="204.8000">
+            <EasingData Type="0" />
+          </ScaleFrame>
+        </Timeline>
+        <Timeline ActionTag="-1766891491" Property="RotationSkew">
+          <ScaleFrame FrameIndex="0" X="0.0000" Y="0.0000">
+            <EasingData Type="0" />
+          </ScaleFrame>
+          <ScaleFrame FrameIndex="24" X="0.0000" Y="0.0000">
+            <EasingData Type="0" />
+          </ScaleFrame>
+        </Timeline>
         <Timeline ActionTag="-358569704" Property="Position">
           <PointFrame FrameIndex="0" X="668.7197" Y="370.3953">
             <EasingData Type="0" />
@@ -138,6 +162,17 @@
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position />
             <Scale ScaleX="1024.0000" ScaleY="768.0000" />
+            <CColor A="255" R="255" G="255" B="255" />
+            <PrePosition />
+            <PreSize X="0.0000" Y="0.0000" />
+            <FileData Type="Normal" Path="empty.png" Plist="" />
+            <BlendFunc Src="770" Dst="771" />
+          </AbstractNodeData>
+          <AbstractNodeData Name="MapScreen" ActionTag="-1766891491" Tag="79" IconVisible="False" LeftMargin="-388.7573" RightMargin="387.7573" TopMargin="-261.0109" BottomMargin="260.0109" ctype="SpriteObjectData">
+            <Size X="1.0000" Y="1.0000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <Position X="-388.2573" Y="260.5109" />
+            <Scale ScaleX="204.8000" ScaleY="204.8000" />
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition />
             <PreSize X="0.0000" Y="0.0000" />

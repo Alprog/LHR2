@@ -181,13 +181,14 @@ function Camera:refreshFollowPosition()
     self:lookAt(Vector(0, 0, 0), Vector(0, 1, 0))
 end
 
-function Camera:render(scene, flag, frameBuffer)
+function Camera:render(scene, flag, renderMode, frameBuffer)
     flag = flag or cc.CameraFlag.DEFAULT
+    renderMode = renderMode or 0
     
     if self.dirty then
         self:refreshView()
         self.dirty = false
     end
     
-    cc.Camera.render(self, scene, flag, frameBuffer)
+    cc.Camera.render(self, scene, flag, renderMode, frameBuffer)
 end

@@ -1,16 +1,26 @@
 
+varying vec3 v_position;
 varying float v_depth;
+varying vec2 v_texCoord;
+varying vec3 normal;
+
+uniform sampler2D normalTexture;
 
 void main()
 {	
-    vec2 moments;
-    moments.x = v_depth;
-    moments.y = v_depth * v_depth;
+    //float height = texture2D(normalTexture, v_texCoord).a;
+    //float depth = v_depth + (1 - height) * normal.z / 25;
+    
+    float depth = length(v_position) / 100;
 
-    float dx = dFdx(v_depth);
-	float dy = dFdy(v_depth);
+    vec2 moments;
+    moments.x = depth;
+    moments.y = depth * depth;
+
+    float dx = dFdx(depth);
+	float dy = dFdy(depth);
 	moments.y += 0.25 * (dx * dx + dy * dy);
 
     gl_FragColor.xy = moments;
-    gl_FragDepth = v_depth;
+    gl_FragDepth = depth;
 }

@@ -102,7 +102,7 @@ void BillBoard::visit(Renderer *renderer, const Mat4& parentTransform, uint32_t 
     {
         return;
     }
-    bool visibleByCamera = isVisitableByVisitingCamera();
+    bool visibleByCamera = isVisitable(renderer);
     
     uint32_t flags = processParentFlags(parentTransform, parentFlags);
     

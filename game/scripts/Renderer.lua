@@ -12,13 +12,13 @@ end
 function Renderer:initShadowMap()
     local size = cc.size(1024, 1024)
     self.shadowMapBuffer = ccexp.FrameBuffer:create(1)
+    self.shadowMapBuffer:setClearColor(cc.WHITE)
     self.shadowMapBuffer:setSize(size.width, size.height)
     self.shadowMapTexture = self:createTexture(size, cc.DEPTH24_STENCIL8)
     self.auxTexture = self:createTexture(size, cc.RG16F)
+    self.auxTexture2 = self:createTexture(size, cc.RG16F)
     self.shadowMapBuffer:attachRenderTarget(0, self.auxTexture)
     self.shadowMapBuffer:attachDepthStencil(self.shadowMapTexture)
-    
-    --self.auxTexture:generateMipmap()
 end
 
 function Renderer:createTexture(size, format)
@@ -28,6 +28,7 @@ end
 function Renderer:onResize(size)
     self.primaryTexture = self:createTexture(size)
     self.secondaryTexture = self:createTexture(size)
+    self.texture3 = self:createTexture(size)
     self.historyTexture = self:createTexture(size)
     
     self.albedoTexture = self:createTexture(size)
@@ -45,31 +46,43 @@ function Renderer:onResize(size)
 end
 
 function Renderer:render(scene)
-    --self:swapTextures()
+    self:swapTextures()
     
     self.scene = scene
     self:renderGeometry()
     self:bakeShadows()
-    --self:lighting()
+    self:lighting()
     self:renderTranparent()
     self:temporalAA()
 end
 
 function Renderer:renderGeometry()
     self.gBuffer:clearFBO()
-    self.scene:setRenderMode(RenderMode.Default)
-    self.scene.camera:render(self.scene, cc.CameraFlag.DEFAULT, self.gBuffer)
+    self.scene.camera:render(self.scene, cc.CameraFlag.DEFAULT, RenderMode.Default, self.gBuffer)
 end
 
 function Renderer:bakeShadows()
     self:renderShadowMap()
+    self:blur(self.auxTexture, self.auxTexture2)
     self:renderScreenShadow()
 end
 
 function Renderer:renderShadowMap()
     self.shadowMapBuffer:clearFBO()
-    self.scene:setRenderMode(RenderMode.ShadowMap)
-    self.scene.lightCamera:render(self.scene, cc.CameraFlag.DEFAULT, self.shadowMapBuffer)
+    self.scene.lightCamera:render(self.scene, cc.CameraFlag.DEFAULT, RenderMode.ShadowMap, self.shadowMapBuffer)
+end
+
+function Renderer:blur(texture, tmpTexture)
+    texture = texture or self.primaryTexture
+    tmpTexture = tmpTexture or self.secondaryTexture
+    
+    local state = createState('vblur', 'blur')
+    state:setUniformTexture('mainTexture', texture)
+    thePostProcessor:perform(state, tmpTexture)
+    
+    state = createState('hblur', 'blur')
+    state:setUniformTexture('mainTexture', tmpTexture)
+    thePostProcessor:perform(state, texture)
 end
 
 function Renderer:renderScreenShadow()
@@ -102,10 +115,18 @@ function Renderer:lighting()
     local state = createState('sprite', 'halflambert')
     state:setUniformTexture('shadowTexture', self.secondaryTexture)
     
-    local position = self.scene.lightCamera:getPosition3D()  
-    state:setUniformVec3('lightPosition', position)
+    local position = self.scene.lightCamera:getPosition3D()
+    
+    local m = self.scene.lightCamera:getViewMatrix()
+    m = cc.mat4.getInversed(m)
+    
+    local dir = cc.mat4.transformVector(m, Vector(0, 0, 1))
+    
+    state:setUniformVec3('lightDir', dir)
+
     state:setUniformTexture('albedoTexture', self.albedoTexture)
     state:setUniformTexture('normalTexture', self.normalTexture)
+    state:setUniformTexture('normalTexture2', self.idsTexture)
     state:setUniformTexture('depthTexture', self.depthTexture)
     state:setUniformTexture('shadowMapTexture', self.shadowMapTexture)
     

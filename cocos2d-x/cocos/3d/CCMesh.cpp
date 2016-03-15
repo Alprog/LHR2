@@ -522,7 +522,15 @@ Material* Mesh::getMaterial() const
 void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, uint32_t flags, unsigned int lightMask, const Vec4& color, bool forceDepthWrite)
 {
 	if (!isVisible())
+	{
 		return;
+	}
+
+	_material->selectTechnique(renderer->getRenderMode());
+	if (_material->_currentTechnique == nullptr)
+	{
+		return;
+	}
 
 	bool isTransparent = (_isTransparent || color.w < 1.f);
 	float globalZ = isTransparent ? 0 : globalZOrder;
@@ -530,7 +538,6 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
 		flags |= Node::FLAGS_RENDER_AS_3D;
 
 	_material->getStateBlock()->setDepthWrite(true);
-
 
 	_meshCommand.init(globalZ,
 		_material,

@@ -118,6 +118,7 @@ public:
 		RG16F,
 		RGB16F,
 		RGBA16F,
+		RG32F,
 		DEPTH24_STENCIL8,
 		//! Default texture format: AUTO
 		DEFAULT = AUTO,

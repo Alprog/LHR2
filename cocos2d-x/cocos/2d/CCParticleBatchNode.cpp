@@ -127,7 +127,7 @@ void ParticleBatchNode::visit(Renderer *renderer, const Mat4 &parentTransform, u
 
     uint32_t flags = processParentFlags(parentTransform, parentFlags);
 
-    if (isVisitableByVisitingCamera())
+    if (isVisitable(renderer))
     {
         // IMPORTANT:
         // To ease the migration to v3.0, we still support the Mat4 stack,

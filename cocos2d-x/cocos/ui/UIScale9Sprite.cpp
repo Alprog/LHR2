@@ -1242,8 +1242,10 @@ namespace ui {
         //
         // draw self
         //
-        if (isVisitableByVisitingCamera())
-            this->draw(renderer, _modelTransform, flags);
+		if (isVisitable(renderer))
+		{
+			this->draw(renderer, _modelTransform, flags);
+		}
 
         //
         // draw children and protectedChildren zOrder >= 0

@@ -108,10 +108,6 @@ public:
     */
     Camera::Type getType() const { return _type; }
 
-    /**get & set Camera flag*/
-    CameraFlag getCameraFlag() const { return (CameraFlag)_cameraFlag; }
-    void setCameraFlag(CameraFlag flag) { _cameraFlag = (unsigned short)flag; }
-
     /**
     * Make Camera looks at target
     *
@@ -200,7 +196,7 @@ public:
      */
     float getDepthInView(const Mat4& transform) const;
     
-	void render(Node* scene, CameraFlag flag = CameraFlag::DEFAULT, experimental::FrameBuffer* frameBuffer = nullptr);
+	void render(Node* scene, CameraFlag flag = CameraFlag::DEFAULT, int renderMode = 0, experimental::FrameBuffer* frameBuffer = nullptr);
     
     /**
      * Get the frustum's far plane.
@@ -216,7 +212,6 @@ public:
      * Get the visiting camera , the visiting camera shall be set on Scene::render
      */
     static const Camera* getVisitingCamera() { return _visitingCamera; }
-	static const Node* getVisitingScene() { return _visitingScene; }
 
     /**
      * Get the default camera of the current running scene.
@@ -275,12 +270,16 @@ CC_CONSTRUCTOR_ACCESS:
     bool initOrthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane);
     void applyViewport(experimental::FrameBuffer* frameBuffer);
 	void applyScissors();
+
+	inline Vec3 getEyePosition() const { return _eyePosition; }
+
 protected:
 
     Mat4 _projection;
     mutable Mat4 _view;
     mutable Mat4 _viewInv;
     mutable Mat4 _viewProjection;
+	Vec3 _eyePosition;
     Vec3 _up;
     Camera::Type _type;
     float _fieldOfView;
@@ -290,12 +289,10 @@ protected:
     float _farPlane;
     mutable bool  _viewProjectionDirty;
     bool _viewProjectionUpdated; //Whether or not the viewprojection matrix was updated since the last frame.
-    unsigned short _cameraFlag; // camera flag
     mutable Frustum _frustum;   // camera frustum
     mutable bool _frustumDirty;
 
     static Camera* _visitingCamera;
-	static Node* _visitingScene;
 	
     CameraBackgroundBrush* _clearBrush; //brush used to clear the back ground
     

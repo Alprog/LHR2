@@ -326,9 +326,11 @@ void ProtectedNode::visit(Renderer* renderer, const Mat4 &parentTransform, uint3
     //
     // draw self
     //
-    if (isVisitableByVisitingCamera())
-        this->draw(renderer, _modelTransform, flags);
-    
+	if (isVisitable(renderer))
+	{
+		this->draw(renderer, _modelTransform, flags);
+	}
+
     //
     // draw children and protectedChildren zOrder >= 0
     //

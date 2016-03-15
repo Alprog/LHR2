@@ -285,7 +285,6 @@ void FrameBuffer::clearFBO()
     glClearDepth(_clearDepth);
     glClearStencil(_clearStencil);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
-    applyDefaultFBO();
 }
 
 Ref* FrameBuffer::getRenderTarget(int index) const

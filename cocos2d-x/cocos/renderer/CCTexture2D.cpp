@@ -74,6 +74,7 @@ namespace {
 		PixelFormatInfoMapValue(Texture2D::PixelFormat::RG16F, Texture2D::PixelFormatInfo(GL_RG16F, GL_RG, GL_HALF_FLOAT, 32, false, false)),
 		PixelFormatInfoMapValue(Texture2D::PixelFormat::RGB16F, Texture2D::PixelFormatInfo(GL_RGB16F, GL_RGB, GL_HALF_FLOAT, 48, false, false)),
 		PixelFormatInfoMapValue(Texture2D::PixelFormat::RGBA16F, Texture2D::PixelFormatInfo(GL_RGBA16F, GL_RGBA, GL_HALF_FLOAT, 64, false, true)),
+		PixelFormatInfoMapValue(Texture2D::PixelFormat::RG32F, Texture2D::PixelFormatInfo(GL_RG32F, GL_RG, GL_HALF_FLOAT, 64, false, false)),
 		PixelFormatInfoMapValue(Texture2D::PixelFormat::DEPTH24_STENCIL8, Texture2D::PixelFormatInfo(GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, 32, false, false)),
 
 #ifdef GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
@@ -560,8 +561,10 @@ Texture2D* Texture2D::create(unsigned int width, unsigned int height, Texture2D:
 
 bool Texture2D::init(unsigned int width, unsigned int height, Texture2D::PixelFormat format, int multisamples)
 {
-	//TODO: FIX me, get the correct bit depth for pixelformat
-	auto dataLen = width * height * 4;
+	auto bpp = _pixelFormatInfoTables.at(format).bpp;
+
+	auto dataLen = width * height * bpp / 8;
+	
 	auto data = malloc(dataLen);
 	if (nullptr == data) return false;
 
@@ -1267,8 +1270,12 @@ void Texture2D::generateMipmap()
 {
     CCASSERT(_pixelsWide == ccNextPOT(_pixelsWide) && _pixelsHigh == ccNextPOT(_pixelsHigh), "Mipmap texture only works in POT textures");
     GL::bindTexture2D( _name );
+	CHECK_GL_ERROR_DEBUG();
     glGenerateMipmap(_target);
-    _hasMipmaps = true;
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+	_hasMipmaps = true;
 #if CC_ENABLE_CACHE_TEXTURE_DATA
     VolatileTextureMgr::setHasMipmaps(this, _hasMipmaps);
 #endif

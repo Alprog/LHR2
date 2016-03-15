@@ -3,24 +3,39 @@ varying vec2 v_texCoord;
 
 uniform sampler2D albedoTexture;
 uniform sampler2D normalTexture;
+uniform sampler2D normalTexture2;
 uniform sampler2D shadowTexture;
 uniform sampler2D wrapTexture;
-uniform vec3 lightPosition;
+uniform vec3 lightDir;
 
 void main()
 {	
+    vec4 sample = texture2D(normalTexture, v_texCoord);
+    vec4 sample2 = texture2D(normalTexture2, v_texCoord);
+    
+    vec3 normal = sample.rgb * 2 - 1;
+    vec3 gNormal = vec3(sample2.ba, sample.a) * 2 - 1;
+
     vec4 albedo = texture2D(albedoTexture, v_texCoord);
-    vec3 normal = texture2D(normalTexture, v_texCoord).rgb * 2 - 1;
     float shadow = texture2D(shadowTexture, v_texCoord).r;
     
-    vec3 lightDir = normalize(lightPosition);
+    vec3 l = normalize(lightDir);
+
+    shadow = shadow * 0.6 + 0.4;
     
-    float d = dot(normal, lightDir) / 2 + 0.49;
+    // prevent shadowing back-faces
+    float k = clamp(dot(gNormal, l) * 5, 0, 1);
+    shadow = mix(1, shadow, k);
+       
+    // half-lambert
+    float d = dot(normal, l) / 2 + 0.5;
+    
+    
+    d = min(d, shadow + (d - shadow) * 0.1);
+    
     
     vec4 diffuse = texture2D(wrapTexture, vec2(d, 0));
-    vec4 color = albedo * min(diffuse, shadow + (diffuse - shadow) * 0.3f);
-    
-    gl_FragColor = color;
+    gl_FragColor = albedo * diffuse;
 }
 
 

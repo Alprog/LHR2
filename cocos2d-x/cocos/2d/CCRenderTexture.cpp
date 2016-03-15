@@ -396,7 +396,7 @@ void RenderTexture::visit(Renderer *renderer, const Mat4 &parentTransform, uint3
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODEL, _modelTransform);
 
     _sprite->visit(renderer, _modelTransform, flags);
-    if (isVisitableByVisitingCamera())
+    if (isVisitable(renderer))
     {
         draw(renderer, _modelTransform, flags);
     }

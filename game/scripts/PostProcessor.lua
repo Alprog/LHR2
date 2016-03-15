@@ -21,7 +21,6 @@ function PostProcessor:perform(state, outTarget)
         self.outTarget = outTarget
     end
     
-    self.frameBuffer:clearFBO()
     self.sprite:setGLProgramState(state)
-    self.camera:render(self.sprite, cc.CameraFlag.DEFAULT, self.frameBuffer)
+    self.camera:render(self.sprite, cc.CameraFlag.DEFAULT, RenderMode.Default, self.frameBuffer)
 end

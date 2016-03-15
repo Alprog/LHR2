@@ -80,6 +80,7 @@ function Block:initGfx()
         material:setTechnique(RenderMode.Default, technique)
         
         state = createState('shadowMap', 'shadowMap')
+        state:setUniformTexture('normalTexture', normalTexure)
         technique = cc.Technique:createWithGLProgramState(state)
         technique:getStateBlock():setCullFaceSide(GL_BACK)
         technique:getStateBlock():setCullFace(true)

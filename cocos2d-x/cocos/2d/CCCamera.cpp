@@ -40,7 +40,6 @@
 NS_CC_BEGIN
 
 Camera* Camera::_visitingCamera = nullptr;
-Node* Camera::_visitingScene = nullptr;
 
 Camera* _defaultCamera = nullptr;
 
@@ -103,7 +102,6 @@ Camera* Camera::createOrthographic(float left, float right, float bottom, float 
 
 Camera::Camera()
 : _viewProjectionDirty(true)
-, _cameraFlag(1)
 , _frustumDirty(true)
 {
     _frustum.setClipZ(true);
@@ -347,7 +345,7 @@ float Camera::getDepthInView(const Mat4& transform) const
     return depth;
 }
 
-void Camera::render(Node* scene, CameraFlag flag, experimental::FrameBuffer* frameBuffer)
+void Camera::render(Node* scene, CameraFlag flag, int renderMode, experimental::FrameBuffer* frameBuffer)
 {
 	auto director = Director::getInstance();
 	auto renderer = director->getRenderer();
@@ -360,8 +358,12 @@ void Camera::render(Node* scene, CameraFlag flag, experimental::FrameBuffer* fra
 	frameBuffer->applyFBO();
 
 	applyScissors();
+	
+	_eyePosition = Vec3(0, 0, 0);
+	getNodeToWorldTransform().transformPoint(&_eyePosition);
+	renderer->setCameraFlag(flag);
+	renderer->setRenderMode(renderMode);
 
-	setCameraFlag(flag);
 	_visitingCamera = this;
 
 	director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);

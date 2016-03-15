@@ -198,7 +198,7 @@ protected:
 
     // a help function for SkeletonNode
     // for batch bone's draw to _rootSkeleton
-    virtual void batchBoneDrawToSkeleton(BoneNode* bone) const; 
+    virtual void batchBoneDrawToSkeleton(cocos2d::Renderer* renderer, BoneNode* bone) const;
 
     // a help funciton for SkeletonNode
     // @param bone, visit bone's skins

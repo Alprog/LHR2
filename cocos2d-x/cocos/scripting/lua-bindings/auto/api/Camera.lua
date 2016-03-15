@@ -16,6 +16,7 @@
 -- @param self
 -- @param #cc.Node scene
 -- @param #int flag
+-- @param #int techniqueIndex
 -- @param #cc.experimental::FrameBuffer frameBuffer
 -- @return Camera#Camera self (return value: cc.Camera)
         
@@ -104,12 +105,6 @@
 -- @return Camera#Camera self (return value: cc.Camera)
         
 --------------------------------
--- get & set Camera flag
--- @function [parent=#Camera] getCameraFlag 
--- @param self
--- @return int#int ret (return value: int)
-        
---------------------------------
 -- Gets the type of camera.<br>
 -- return The camera type.
 -- @function [parent=#Camera] getType 
@@ -171,6 +166,12 @@
         
 --------------------------------
 -- 
+-- @function [parent=#Camera] getEyePosition 
+-- @param self
+-- @return vec3_table#vec3_table ret (return value: vec3_table)
+        
+--------------------------------
+-- 
 -- @function [parent=#Camera] setOrthographic 
 -- @param self
 -- @param #float left
@@ -179,13 +180,6 @@
 -- @param #float top
 -- @param #float nearPlane
 -- @param #float farPlane
--- @return Camera#Camera self (return value: cc.Camera)
-        
---------------------------------
--- 
--- @function [parent=#Camera] setCameraFlag 
--- @param self
--- @param #int flag
 -- @return Camera#Camera self (return value: cc.Camera)
         
 --------------------------------
@@ -272,12 +266,6 @@
 -- @param self
 -- @param #cc.experimental::Viewport vp
 -- @return Camera#Camera self (return value: cc.Camera)
-        
---------------------------------
--- 
--- @function [parent=#Camera] getVisitingScene 
--- @param self
--- @return Node#Node ret (return value: cc.Node)
         
 --------------------------------
 -- Get the default camera of the current running scene.

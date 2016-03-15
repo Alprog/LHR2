@@ -12,13 +12,16 @@ function LevelEditor:init()
     
     self.projector = Projector:create(self:getChildByName('3DScreen'))
     self.projector:addSource(theRenderer, 'primaryTexture')
-    self.projector:addSource(theRenderer, 'auxTexture')
     self.projector:addSource(theRenderer, 'albedoTexture')
     self.projector:addSource(theRenderer, 'normalTexture')
     self.projector:addSource(theRenderer, 'idsTexture')
     self.projector:addSource(theRenderer, 'velocityTexture')
     self.projector:addSource(theRenderer, 'depthTexture', 'depth')
     self.projector:addSource(theRenderer, 'shadowMapTexture', 'depth')
+     
+    
+    self.mapProjector = Projector:create(self:getChildByName('MapScreen'))
+    self.mapProjector:addSource(theRenderer, 'auxTexture')
      
     local touchBeginPoint = nil
     
@@ -43,7 +46,12 @@ function LevelEditor:onCleanup()
 end
 
 function LevelEditor:update(dt)
-    self.scene3D:checkHover()
+    if not self.a then
+        self.a = true
+    else
+        self.scene3D:checkHover()
+    end
+    
     local object = self.scene3D.hoveredObject
     if object then
         local corners = Input.keys[cc.KeyCode.KEY_CTRL]
@@ -51,8 +59,14 @@ function LevelEditor:update(dt)
         local affectNeighbors = Input.keys[cc.KeyCode.KEY_ALT]
         object:setHighlight(corners, sides, affectNeighbors, self.scene3D.camera)
     end
-    
-    
+
+    if self.lightControl then
+        self.scene3D.lightCamera.free = true
+        self.scene3D.lightCamera:update(dt)
+    else
+        self.scene3D.camera:update(dt)
+        self.scene3D.target:update(dt)
+    end
 end
 
 function LevelEditor:render()
@@ -61,14 +75,18 @@ function LevelEditor:render()
 end
 
 function LevelEditor:onKeyPress(keyCode)
-    if keyCode == cc.KeyCode.KEY_F2 then
+    if keyCode == KEY_F2 then
         self.projector:nextSource()
-    elseif keyCode == cc.KeyCode.KEY_F6 then
+    elseif keyCode == KEY_F6 then
         self:saveLevel()
-    elseif keyCode == cc.KeyCode.KEY_F8 then
+    elseif keyCode == KEY_F8 then
         self:loadLevel()
     else
         Scene.onKeyPress(self, keyCode)
+    end
+    
+    if keyCode == KEY_TAB then
+        self.lightControl = not self.lightControl
     end
     
     local block = self.scene3D.hoveredObject
@@ -109,6 +127,7 @@ function LevelEditor:onResize(size)
     Scene.onResize(self, size)
     self.scene3D:onResize(size)
     self.projector:refreshScreen()
+    self.mapProjector:refreshScreen()
 end
 
 function LevelEditor:onTouchEnded(touch, event)

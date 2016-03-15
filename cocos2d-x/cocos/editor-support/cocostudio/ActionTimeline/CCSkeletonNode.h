@@ -110,7 +110,7 @@ private:
     int                            _batchedVeticesCount;
     cocos2d::CustomCommand         _batchBoneCommand;
 
-    void batchDrawAllSubBones(const cocos2d::Mat4 &transform);
+    void batchDrawAllSubBones(cocos2d::Renderer* renderer, const cocos2d::Mat4 &transform);
     void batchSubBone(BoneNode* bone);
 };
 

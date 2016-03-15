@@ -1307,7 +1307,7 @@ void Label::visit(Renderer *renderer, const Mat4 &parentTransform, uint32_t pare
         _shadowDirty = false;
     }
 
-    bool visibleByCamera = isVisitableByVisitingCamera();
+	bool visibleByCamera = isVisitable(renderer);
     if (_children.empty() && !_textSprite && !visibleByCamera)
     {
         return;

@@ -134,8 +134,8 @@ def main():
         output_dir = '%s/cocos/scripting/lua-bindings/auto' % project_root
 
         cmd_args = {
-					'cocos2dx.ini' : ('cocos2d-x', 'lua_cocos2dx_auto'), \
-					#'cocos2dx_3d.ini' : ('cocos2dx_3d', 'lua_cocos2dx_3d_auto'), \
+					#'cocos2dx.ini' : ('cocos2d-x', 'lua_cocos2dx_auto'), \
+					'cocos2dx_3d.ini' : ('cocos2dx_3d', 'lua_cocos2dx_3d_auto'), \
 		            #'cocos2dx_particles.ini' : ('cocos2dx_particles', 'lua_cocos2dx_particles_auto'), \
 					#'cocos2dx_experimental.ini' : ('cocos2dx_experimental', 'lua_cocos2dx_experimental_auto'), \
 					}

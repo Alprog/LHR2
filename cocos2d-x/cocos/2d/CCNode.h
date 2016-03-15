@@ -1777,7 +1777,7 @@ protected:
     bool doEnumerateRecursive(const Node* node, const std::string &name, std::function<bool (Node *)> callback) const;
     
     //check whether this camera mask is visible by the current visiting camera
-    bool isVisitableByVisitingCamera() const;
+    bool isVisitable(Renderer* renderer) const;
     
     // update quaternion from Rotation3D
     void updateRotationQuat();

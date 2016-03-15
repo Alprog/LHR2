@@ -19,26 +19,6 @@ vec3 restoreWorldPosition()
     return pos.rgb / pos.w;
 }
 
-float sampleShadow(vec2 uv, float depth, float bias)
-{
-    float lightDepth = texture2D(shadowMapTexture, uv).x;
-    return depth - bias > lightDepth ? 0 : 1;
-}
-
-float getShadow2(vec4 sMapPos, float bias)
-{
-    float shadow = 0;
-    for (int x = -1; x <= 1; x++)
-    {
-        for (int y = -1; y <= 1; y++)
-        {
-            vec2 offset = vec2(float(x) / 1024, float(y) / 1024);
-            shadow += sampleShadow(sMapPos.xy + offset, sMapPos.z, bias);
-        }
-    }
-    return shadow / 9;
-}
-
 vec2 getMoments(vec2 uv)
 {
     vec2 moments = vec2(0, 0);
@@ -53,49 +33,44 @@ vec2 getMoments(vec2 uv)
     return moments / 9;
 }
 
-float ShadowContribution(vec2 uv, float depth)  
+float reduceLightBleeding(float value, float min)  
 {  
-    vec2 M = getMoments(uv);//texture2D(shadowMapTexture, uv).xy;
+    return clamp((value - min) / (1 - min), 0, 1);  
+}  
 
-    float p = depth <= M[0] ? 1 : 0;  
-  
+
+float getShadow(vec2 uv, float depth)  
+{  
+    vec2 M = textureLod(shadowMapTexture, uv, 0).xy;
+
+    float p = depth <= M[0] ? 1 : 0;
+    
     float variance = M[1] - M[0] * M[0];
     variance = max(variance, 0.000002);
     
     float d = depth - M[0];
-    float p_max = variance / (variance + d * d);  
+    float p_max = variance / (variance + d * d);
+    
+    p_max = reduceLightBleeding(p_max, 0.5);
+    
     return max(p, p_max);
     
-    return p;
 }  
-
-
-float getShadow(vec4 sMapPos, float bias)
-{
-    return ShadowContribution(sMapPos.xy, sMapPos.z);
-}
 
 void main()
 {	
     vec3 position = restoreWorldPosition();
+    float depth = length(lightPosition - position) / 100;
     
     vec3 l = normalize(lightPosition - position);
     vec3 n = texture2D(normalTexture, v_texCoord).rgb * 2 - 1;
     float p = dot(l, n);   
     
-    float shadow = 1;
-    if (p > 0)
-    {
-        vec4 sMapPos = worldToShadowMap * vec4(position, 1);
-        sMapPos = (sMapPos / sMapPos.w) / 2 + 0.5; // 0..1
-        shadow = getShadow(sMapPos, 0.0008);   
-    }
+    vec4 sMapPos = worldToShadowMap * vec4(position, 1);
+    sMapPos = (sMapPos / sMapPos.w) / 2 + 0.5; // 0..1
+    float shadow = getShadow(sMapPos.xy, depth);
 
-    shadow = mix(0.5, 1, shadow); 
-
-    float diffuse = p / 2 + 0.5;
     float c = shadow;
-    c = shadow * diffuse;
     
     gl_FragColor = vec4(c, c, c, 1);
 }

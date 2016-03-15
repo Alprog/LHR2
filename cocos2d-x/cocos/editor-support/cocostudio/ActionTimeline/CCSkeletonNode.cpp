@@ -195,7 +195,7 @@ void SkeletonNode::visit(cocos2d::Renderer *renderer, const cocos2d::Mat4& paren
         this->draw(renderer, _modelTransform, flags);
         // batch draw all sub bones
         _batchBoneCommand.init(_globalZOrder, _modelTransform, parentFlags);
-        _batchBoneCommand.func = CC_CALLBACK_0(SkeletonNode::batchDrawAllSubBones, this, _modelTransform);
+        _batchBoneCommand.func = CC_CALLBACK_0(SkeletonNode::batchDrawAllSubBones, this, renderer, _modelTransform);
         renderer->addCommand(&_batchBoneCommand);
     }
     _director->popMatrix(cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_MODEL);
@@ -220,14 +220,14 @@ void SkeletonNode::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transf
     }
 }
 
-void SkeletonNode::batchDrawAllSubBones(const cocos2d::Mat4 &transform)
+void SkeletonNode::batchDrawAllSubBones(cocos2d::Renderer* renderer, const cocos2d::Mat4 &transform)
 {
     checkSubBonesDirty();
 
     _batchedVeticesCount = 0;
     for (const auto& bone : _subOrderedAllBones)
     {
-        batchBoneDrawToSkeleton(bone);
+        batchBoneDrawToSkeleton(renderer, bone);
     }
 
     cocos2d::Vec3* vetices = _batchedBoneVetices.data();

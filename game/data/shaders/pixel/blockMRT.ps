@@ -22,13 +22,13 @@ void main()
     vec3 texNormal = normalSample.rgb * 2 - 1;
 
     vec3 bitangent = cross(v_normal, v_tangent);
-    vec3 normal = v_normal;//texNormal.x * v_tangent + texNormal.y * bitangent + texNormal.z * v_normal;
+    vec3 normal = texNormal.x * v_tangent + texNormal.y * bitangent + texNormal.z * v_normal;
     
     vec3 eyeDir = vec3(dot(v_eyeDir, v_tangent), dot(v_eyeDir, bitangent), dot(v_eyeDir, v_normal));
     
     float depth = 1 - normalSample.a;
     vec2 offset = eyeDir.xy * depth * scale;
-    
+        
     vec4 mainColor = texture2D(mainTexture, v_texCoord - offset);
     
     vec3 albedo = mainColor.rgb + u_addColor;
@@ -38,5 +38,5 @@ void main()
     //albedo = vec3(0.5, 0.5, 0.5);
 
     vec2 velocity = v_screenPos - v_prevScreenPos;
-    outputGBuffer(albedo, normal, u_id, velocity);
+    outputGBuffer(albedo, normal, v_normal, u_id, velocity);
 }

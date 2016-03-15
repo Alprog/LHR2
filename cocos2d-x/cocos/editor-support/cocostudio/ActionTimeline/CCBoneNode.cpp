@@ -341,7 +341,7 @@ void BoneNode::visit(cocos2d::Renderer *renderer, const cocos2d::Mat4& parentTra
     _director->pushMatrix(cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_MODEL);
     _director->loadMatrix(cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_MODEL, _modelTransform);
 
-    bool visibleByCamera = isVisitableByVisitingCamera();
+    bool visibleByCamera = isVisitable(renderer);
     bool isdebugdraw = visibleByCamera && _isRackShow && nullptr == _rootSkeleton;
     int i = 0;
 
@@ -586,10 +586,9 @@ bool BoneNode::isPointOnRack(const cocos2d::Vec2& bonePoint)
 }
 #endif //CC_STUDIO_ENABLED_VIEW
 
-void BoneNode::batchBoneDrawToSkeleton(BoneNode* bone) const
+void BoneNode::batchBoneDrawToSkeleton(cocos2d::Renderer* renderer, BoneNode* bone) const
 {
-    bool visibleByCamera = bone->isVisitableByVisitingCamera();
-    if (!visibleByCamera)
+    if (!bone->isVisitable(renderer))
     {
         return;
     }

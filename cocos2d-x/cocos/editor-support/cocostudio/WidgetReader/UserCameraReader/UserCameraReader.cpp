@@ -424,7 +424,6 @@ namespace cocostudio
         
         Camera* camera = static_cast<Camera*>(node);
         int cameraFlag = options->cameraFlag();
-        camera->setCameraFlag((CameraFlag)cameraFlag);
 
         auto node3DReader = Node3DReader::getInstance();
         node3DReader->setPropsWithFlatBuffers(node, (Table*)(options->node3DOption()));
