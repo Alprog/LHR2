@@ -50,8 +50,6 @@ extern "C" {
 #include "lua_cocos2dx_manual.hpp"
 #include "LuaBasicConversions.h"
 #include "lua_cocos2dx_deprecated.h"
-#include "lua_cocos2dx_physics_auto.hpp"
-#include "lua_cocos2dx_physics_manual.hpp"
 #include "lua_cocos2dx_experimental_auto.hpp"
 #include "lua_cocos2dx_experimental_manual.hpp"
 

@@ -42,8 +42,6 @@
     <ClCompile Include="..\auto\lua_cocos2dx_experimental_webview_auto.cpp" />
     <ClCompile Include="..\auto\lua_cocos2dx_navmesh_auto.cpp" />
     <ClCompile Include="..\auto\lua_cocos2dx_particles_auto.cpp" />
-    <ClCompile Include="..\auto\lua_cocos2dx_physics3d_auto.cpp" />
-    <ClCompile Include="..\auto\lua_cocos2dx_physics_auto.cpp" />
     <ClCompile Include="..\auto\lua_cocos2dx_spine_auto.cpp" />
     <ClCompile Include="..\auto\lua_cocos2dx_studio_auto.cpp" />
     <ClCompile Include="..\auto\lua_cocos2dx_ui_auto.cpp" />
@@ -59,7 +57,6 @@
     <ClCompile Include="..\manual\cocos2d\lua_cocos2dx_deprecated.cpp" />
     <ClCompile Include="..\manual\cocos2d\lua_cocos2dx_experimental_manual.cpp" />
     <ClCompile Include="..\manual\cocos2d\lua_cocos2dx_manual.cpp" />
-    <ClCompile Include="..\manual\cocos2d\lua_cocos2dx_physics_manual.cpp" />
     <ClCompile Include="..\manual\cocosbuilder\CCBProxy.cpp" />
     <ClCompile Include="..\manual\cocosbuilder\lua_cocos2dx_cocosbuilder_manual.cpp" />
     <ClCompile Include="..\manual\cocosdenshion\lua_cocos2dx_cocosdenshion_manual.cpp" />
@@ -74,7 +71,6 @@
     <ClCompile Include="..\manual\network\lua_extensions.c" />
     <ClCompile Include="..\manual\network\Lua_web_socket.cpp" />
     <ClCompile Include="..\manual\network\lua_xml_http_request.cpp" />
-    <ClCompile Include="..\manual\physics3d\lua_cocos2dx_physics3d_manual.cpp" />
     <ClCompile Include="..\manual\spine\LuaSkeletonAnimation.cpp" />
     <ClCompile Include="..\manual\spine\lua_cocos2dx_spine_manual.cpp" />
     <ClCompile Include="..\manual\tolua_fix.cpp" />
@@ -116,8 +112,6 @@
     <ClInclude Include="..\auto\lua_cocos2dx_experimental_webview_auto.hpp" />
     <ClInclude Include="..\auto\lua_cocos2dx_navmesh_auto.hpp" />
     <ClInclude Include="..\auto\lua_cocos2dx_particles_auto.hpp" />
-    <ClInclude Include="..\auto\lua_cocos2dx_physics3d_auto.hpp" />
-    <ClInclude Include="..\auto\lua_cocos2dx_physics_auto.hpp" />
     <ClInclude Include="..\auto\lua_cocos2dx_spine_auto.hpp" />
     <ClInclude Include="..\auto\lua_cocos2dx_studio_auto.hpp" />
     <ClInclude Include="..\auto\lua_cocos2dx_ui_auto.hpp" />
@@ -133,7 +127,6 @@
     <ClInclude Include="..\manual\cocos2d\lua_cocos2dx_deprecated.h" />
     <ClInclude Include="..\manual\cocos2d\lua_cocos2dx_experimental_manual.hpp" />
     <ClInclude Include="..\manual\cocos2d\lua_cocos2dx_manual.hpp" />
-    <ClInclude Include="..\manual\cocos2d\lua_cocos2dx_physics_manual.hpp" />
     <ClInclude Include="..\manual\cocosbuilder\CCBProxy.h" />
     <ClInclude Include="..\manual\cocosbuilder\lua_cocos2dx_cocosbuilder_manual.h" />
     <ClInclude Include="..\manual\cocosdenshion\lua_cocos2dx_cocosdenshion_manual.h" />
@@ -148,7 +141,6 @@
     <ClInclude Include="..\manual\network\lua_extensions.h" />
     <ClInclude Include="..\manual\network\Lua_web_socket.h" />
     <ClInclude Include="..\manual\network\lua_xml_http_request.h" />
-    <ClInclude Include="..\manual\physics3d\lua_cocos2dx_physics3d_manual.h" />
     <ClInclude Include="..\manual\spine\LuaSkeletonAnimation.h" />
     <ClInclude Include="..\manual\spine\lua_cocos2dx_spine_manual.hpp" />
     <ClInclude Include="..\manual\tolua_fix.h" />
