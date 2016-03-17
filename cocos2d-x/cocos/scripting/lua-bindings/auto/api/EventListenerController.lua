@@ -5,13 +5,6 @@
 -- @parent_module cc
 
 --------------------------------
---  Create a controller event listener.<br>
--- return An autoreleased EventListenerController object.
--- @function [parent=#EventListenerController] create 
--- @param self
--- @return EventListenerController#EventListenerController ret (return value: cc.EventListenerController)
-        
---------------------------------
 -- 
 -- @function [parent=#EventListenerController] clone 
 -- @param self

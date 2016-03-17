@@ -3,6 +3,7 @@
 #include "CCProtectedNode.h"
 #include "CCAsyncTaskPool.h"
 #include "CCRefContainer.h"
+#include "CCGamePad.h"
 #include "tolua_fix.h"
 #include "LuaBasicConversions.h"
 
@@ -31000,6 +31001,25 @@ int lua_register_cocos2dx_EventListenerKeyboard(lua_State* tolua_S)
     std::string typeName = typeid(cocos2d::EventListenerKeyboard).name();
     g_luaType[typeName] = "cc.EventListenerKeyboard";
     g_typeCast["EventListenerKeyboard"] = "cc.EventListenerKeyboard";
+    return 1;
+}
+
+static int lua_cocos2dx_EventListenerController_finalize(lua_State* tolua_S)
+{
+    printf("luabindings: finalizing LUA object (EventListenerController)");
+    return 0;
+}
+
+int lua_register_cocos2dx_EventListenerController(lua_State* tolua_S)
+{
+    tolua_usertype(tolua_S,"cc.EventListenerController");
+    tolua_cclass(tolua_S,"EventListenerController","cc.EventListenerController","cc.EventListener",nullptr);
+
+    tolua_beginmodule(tolua_S,"EventListenerController");
+    tolua_endmodule(tolua_S);
+    std::string typeName = typeid(cocos2d::EventListenerController).name();
+    g_luaType[typeName] = "cc.EventListenerController";
+    g_typeCast["EventListenerController"] = "cc.EventListenerController";
     return 1;
 }
 
@@ -94085,6 +94105,206 @@ int lua_register_cocos2dx_RefContainer(lua_State* tolua_S)
     g_typeCast["RefContainer"] = "cc.RefContainer";
     return 1;
 }
+
+int lua_cocos2dx_GamePad_isPresent(lua_State* tolua_S)
+{
+    int argc = 0;
+    cocos2d::GamePad* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"cc.GamePad",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (cocos2d::GamePad*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_cocos2dx_GamePad_isPresent'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_GamePad_isPresent'", nullptr);
+            return 0;
+        }
+        bool ret = cobj->isPresent();
+        tolua_pushboolean(tolua_S,(bool)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "cc.GamePad:isPresent",argc, 0);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_GamePad_isPresent'.",&tolua_err);
+#endif
+
+    return 0;
+}
+int lua_cocos2dx_GamePad_getButtons(lua_State* tolua_S)
+{
+    int argc = 0;
+    cocos2d::GamePad* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"cc.GamePad",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (cocos2d::GamePad*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_cocos2dx_GamePad_getButtons'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_GamePad_getButtons'", nullptr);
+            return 0;
+        }
+        std::vector<unsigned char, std::allocator<unsigned char> > ret = cobj->getButtons();
+        ccvector_uchar_to_luaval(tolua_S, ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "cc.GamePad:getButtons",argc, 0);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_GamePad_getButtons'.",&tolua_err);
+#endif
+
+    return 0;
+}
+int lua_cocos2dx_GamePad_getAxis(lua_State* tolua_S)
+{
+    int argc = 0;
+    cocos2d::GamePad* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"cc.GamePad",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (cocos2d::GamePad*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_cocos2dx_GamePad_getAxis'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_GamePad_getAxis'", nullptr);
+            return 0;
+        }
+        std::vector<float, std::allocator<float> > ret = cobj->getAxis();
+        ccvector_float_to_luaval(tolua_S, ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "cc.GamePad:getAxis",argc, 0);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_GamePad_getAxis'.",&tolua_err);
+#endif
+
+    return 0;
+}
+int lua_cocos2dx_GamePad_create(lua_State* tolua_S)
+{
+    int argc = 0;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertable(tolua_S,1,"cc.GamePad",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    argc = lua_gettop(tolua_S) - 1;
+
+    if (argc == 1)
+    {
+        int arg0;
+        ok &= luaval_to_int32(tolua_S, 2,(int *)&arg0, "cc.GamePad:create");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_GamePad_create'", nullptr);
+            return 0;
+        }
+        cocos2d::GamePad* ret = cocos2d::GamePad::create(arg0);
+        object_to_luaval<cocos2d::GamePad>(tolua_S, "cc.GamePad",(cocos2d::GamePad*)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "cc.GamePad:create",argc, 1);
+    return 0;
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_cocos2dx_GamePad_create'.",&tolua_err);
+#endif
+    return 0;
+}
+static int lua_cocos2dx_GamePad_finalize(lua_State* tolua_S)
+{
+    printf("luabindings: finalizing LUA object (GamePad)");
+    return 0;
+}
+
+int lua_register_cocos2dx_GamePad(lua_State* tolua_S)
+{
+    tolua_usertype(tolua_S,"cc.GamePad");
+    tolua_cclass(tolua_S,"GamePad","cc.GamePad","cc.Ref",nullptr);
+
+    tolua_beginmodule(tolua_S,"GamePad");
+        tolua_function(tolua_S,"isPresent",lua_cocos2dx_GamePad_isPresent);
+        tolua_function(tolua_S,"getButtons",lua_cocos2dx_GamePad_getButtons);
+        tolua_function(tolua_S,"getAxis",lua_cocos2dx_GamePad_getAxis);
+        tolua_function(tolua_S,"create", lua_cocos2dx_GamePad_create);
+    tolua_endmodule(tolua_S);
+    std::string typeName = typeid(cocos2d::GamePad).name();
+    g_luaType[typeName] = "cc.GamePad";
+    g_typeCast["GamePad"] = "cc.GamePad";
+    return 1;
+}
 TOLUA_API int register_all_cocos2dx(lua_State* tolua_S)
 {
 	tolua_open(tolua_S);
@@ -94189,6 +94409,7 @@ TOLUA_API int register_all_cocos2dx(lua_State* tolua_S)
 	lua_register_cocos2dx_Application(tolua_S);
 	lua_register_cocos2dx_DelayTime(tolua_S);
 	lua_register_cocos2dx_LabelAtlas(tolua_S);
+	lua_register_cocos2dx_EaseCircleActionOut(tolua_S);
 	lua_register_cocos2dx_AsyncTaskPool(tolua_S);
 	lua_register_cocos2dx_EaseElasticIn(tolua_S);
 	lua_register_cocos2dx_EaseCircleActionInOut(tolua_S);
@@ -94270,6 +94491,7 @@ TOLUA_API int register_all_cocos2dx(lua_State* tolua_S)
 	lua_register_cocos2dx_TransitionFade(tolua_S);
 	lua_register_cocos2dx_EaseQuinticActionInOut(tolua_S);
 	lua_register_cocos2dx_SpriteFrameCache(tolua_S);
+	lua_register_cocos2dx_GamePad(tolua_S);
 	lua_register_cocos2dx_PointLight(tolua_S);
 	lua_register_cocos2dx_TransitionCrossFade(tolua_S);
 	lua_register_cocos2dx_Ripple3D(tolua_S);
@@ -94281,7 +94503,7 @@ TOLUA_API int register_all_cocos2dx(lua_State* tolua_S)
 	lua_register_cocos2dx_PageTurn3D(tolua_S);
 	lua_register_cocos2dx_PolygonInfo(tolua_S);
 	lua_register_cocos2dx_Grid3D(tolua_S);
-	lua_register_cocos2dx_EaseCircleActionOut(tolua_S);
+	lua_register_cocos2dx_EventListenerController(tolua_S);
 	lua_register_cocos2dx_TransitionProgressInOut(tolua_S);
 	lua_register_cocos2dx_EaseCubicActionInOut(tolua_S);
 	lua_register_cocos2dx_EaseBackIn(tolua_S);

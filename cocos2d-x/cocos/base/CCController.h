@@ -180,7 +180,7 @@ public:
      */
     int getTag() const { return _controllerTag;}
 
-private:
+public:
     static std::vector<Controller*> s_allController;
 
     Controller();

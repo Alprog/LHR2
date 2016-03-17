@@ -38,6 +38,8 @@ THE SOFTWARE.
 #include "base/CCEventTouch.h"
 #include "base/CCEventKeyboard.h"
 #include "base/CCEventListenerKeyboard.h"
+#include "base/CCEventController.h"
+#include "base/CCEventListenerController.h"
 #include "base/CCEventAcceleration.h"
 #include "base/CCEventListenerAcceleration.h"
 

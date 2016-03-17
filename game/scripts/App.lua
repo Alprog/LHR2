@@ -79,8 +79,9 @@ function App:run(sceneManager)
     
     self.tasks = TaskManager:create()
     self.scene:scheduleUpdateWithPriorityLua(function(dt)
+        Input:update()
         self.tasks:update(dt)
-    end, 0)
+    end, -1)
 end
 
 function App:toggleStatistics()

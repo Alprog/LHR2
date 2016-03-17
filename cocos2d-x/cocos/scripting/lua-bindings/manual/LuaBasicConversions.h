@@ -97,6 +97,8 @@ extern bool luaval_to_ulong(lua_State* L,int lo, unsigned long* outValue, const 
  */
 extern bool luaval_to_ushort(lua_State* L, int lo, unsigned short* outValue, const char* funcName = "");
 
+extern bool luaval_to_uchar(lua_State* L, int lo, unsigned char* outValue, const char* funcName = "");
+
 /**
  * Get a int value from the given accpetable index of stack.
  * If the value at the given accpetable index of stack is a number or a string convertible to a number it returns true, otherwise returns false .
@@ -747,6 +749,8 @@ extern bool luaval_to_std_vector_float(lua_State* L, int lo, std::vector<float>*
  */
 extern bool luaval_to_std_vector_ushort(lua_State* L, int lo, std::vector<unsigned short>* ret, const char* funcName = "");
 
+extern bool luaval_to_std_vector_uchar(lua_State* L, int lo, std::vector<unsigned char>* ret, const char* funcName = "");
+
 /**
  * Get a cocos2d::Quaternion object value from the given accpetable index of stack.
  * If the value at the given accpetable index of stack is a table it returns true, otherwise returns false.
@@ -1259,6 +1263,8 @@ void ccvector_float_to_luaval(lua_State* L, const std::vector<float>& inValue);
  * @param inValue a std::vector<float> vaule.
  */
 void ccvector_ushort_to_luaval(lua_State* L, const std::vector<unsigned short>& inValue);
+
+void ccvector_uchar_to_luaval(lua_State* L, const std::vector<unsigned char>& inValue);
 
 /**
  * Push a table converted from a cocos2d::Quaternion object into the Lua stack.

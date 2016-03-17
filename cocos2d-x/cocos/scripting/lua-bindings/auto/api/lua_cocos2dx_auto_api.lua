@@ -302,6 +302,11 @@
 
 
 --------------------------------------------------------
+-- the cc EventListenerController
+-- @field [parent=#cc] EventListenerController#EventListenerController EventListenerController preloaded module
+
+
+--------------------------------------------------------
 -- the cc EventMouse
 -- @field [parent=#cc] EventMouse#EventMouse EventMouse preloaded module
 
@@ -1264,6 +1269,11 @@
 --------------------------------------------------------
 -- the cc RefContainer
 -- @field [parent=#cc] RefContainer#RefContainer RefContainer preloaded module
+
+
+--------------------------------------------------------
+-- the cc GamePad
+-- @field [parent=#cc] GamePad#GamePad GamePad preloaded module
 
 
 return nil

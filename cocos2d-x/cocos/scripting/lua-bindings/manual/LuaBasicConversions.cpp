@@ -102,6 +102,30 @@ bool luaval_to_ushort(lua_State* L, int lo, unsigned short* outValue, const char
     return ok;
 }
 
+bool luaval_to_uchar(lua_State* L, int lo, unsigned char* outValue, const char* funcName)
+{
+	if (nullptr == L || nullptr == outValue)
+		return false;
+
+	bool ok = true;
+
+	tolua_Error tolua_err;
+	if (!tolua_isnumber(L, lo, 0, &tolua_err))
+	{
+#if COCOS2D_DEBUG >=1
+		luaval_to_native_err(L, "#ferror:", &tolua_err, funcName);
+#endif
+		ok = false;
+	}
+
+	if (ok)
+	{
+		*outValue = (unsigned char)tolua_tonumber(L, lo, 0);
+	}
+
+	return ok;
+}
+
 
 bool luaval_to_int32(lua_State* L,int lo,int* outValue, const char* funcName)
 {
@@ -2014,6 +2038,45 @@ bool luaval_to_std_vector_ushort(lua_State* L, int lo, std::vector<unsigned shor
     return ok;
 }
 
+bool luaval_to_std_vector_uchar(lua_State* L, int lo, std::vector<unsigned char>* ret, const char* funcName)
+{
+	if (nullptr == L || nullptr == ret || lua_gettop(L) < lo)
+		return false;
+
+	tolua_Error tolua_err;
+	bool ok = true;
+
+	if (!tolua_istable(L, lo, 0, &tolua_err))
+	{
+#if COCOS2D_DEBUG >=1
+		luaval_to_native_err(L, "#ferror:", &tolua_err, funcName);
+#endif
+		ok = false;
+	}
+
+	if (ok)
+	{
+		size_t len = lua_objlen(L, lo);
+		for (size_t i = 0; i < len; i++)
+		{
+			lua_pushnumber(L, i + 1);
+			lua_gettable(L, lo);
+			if (lua_isnumber(L, -1))
+			{
+				ret->push_back((unsigned char)tolua_tonumber(L, -1, 0));
+			}
+			else
+			{
+				CCASSERT(false, "unsigned short type is needed");
+			}
+
+			lua_pop(L, 1);
+		}
+	}
+
+	return ok;
+}
+
 bool luaval_to_quaternion(lua_State* L,int lo,cocos2d::Quaternion* outValue, const char* funcName)
 {
     if (nullptr == L || nullptr == outValue)
@@ -3314,6 +3377,23 @@ void ccvector_ushort_to_luaval(lua_State* L, const std::vector<unsigned short>& 
         lua_rawset(L, -3);
         ++index;
     }
+}
+
+void ccvector_uchar_to_luaval(lua_State* L, const std::vector<unsigned char>& inValue)
+{
+	if (nullptr == L)
+		return;
+
+	lua_newtable(L);
+
+	int index = 1;
+	for (const unsigned char value : inValue)
+	{
+		lua_pushnumber(L, (lua_Number)index);
+		lua_pushnumber(L, (lua_Number)value);
+		lua_rawset(L, -3);
+		++index;
+	}
 }
 
 void quaternion_to_luaval(lua_State* L,const cocos2d::Quaternion& inValue)

@@ -25,8 +25,6 @@
 
 #include "base/CCController.h"
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-
 #include "base/CCEventDispatcher.h"
 #include "base/CCEventController.h"
 #include "base/CCDirector.h"
@@ -111,5 +109,3 @@ void Controller::onAxisEvent(int axisCode, float value, bool isAnalog)
 }
 
 NS_CC_END
-
-#endif // #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
