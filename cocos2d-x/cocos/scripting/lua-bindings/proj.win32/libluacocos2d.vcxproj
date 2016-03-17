@@ -40,7 +40,6 @@
     <ClCompile Include="..\auto\lua_cocos2dx_experimental_auto.cpp" />
     <ClCompile Include="..\auto\lua_cocos2dx_experimental_video_auto.cpp" />
     <ClCompile Include="..\auto\lua_cocos2dx_experimental_webview_auto.cpp" />
-    <ClCompile Include="..\auto\lua_cocos2dx_extension_auto.cpp" />
     <ClCompile Include="..\auto\lua_cocos2dx_navmesh_auto.cpp" />
     <ClCompile Include="..\auto\lua_cocos2dx_particles_auto.cpp" />
     <ClCompile Include="..\auto\lua_cocos2dx_physics3d_auto.cpp" />
@@ -68,7 +67,6 @@
     <ClCompile Include="..\manual\cocostudio\lua-cocos-studio-conversions.cpp" />
     <ClCompile Include="..\manual\cocostudio\lua_cocos2dx_coco_studio_manual.cpp" />
     <ClCompile Include="..\manual\cocostudio\lua_cocos2dx_csloader_manual.cpp" />
-    <ClCompile Include="..\manual\extension\lua_cocos2dx_extension_manual.cpp" />
     <ClCompile Include="..\manual\LuaBasicConversions.cpp" />
     <ClCompile Include="..\manual\navmesh\lua_cocos2dx_navmesh_conversions.cpp" />
     <ClCompile Include="..\manual\navmesh\lua_cocos2dx_navmesh_manual.cpp" />
@@ -116,7 +114,6 @@
     <ClInclude Include="..\auto\lua_cocos2dx_experimental_auto.hpp" />
     <ClInclude Include="..\auto\lua_cocos2dx_experimental_video_auto.hpp" />
     <ClInclude Include="..\auto\lua_cocos2dx_experimental_webview_auto.hpp" />
-    <ClInclude Include="..\auto\lua_cocos2dx_extension_auto.hpp" />
     <ClInclude Include="..\auto\lua_cocos2dx_navmesh_auto.hpp" />
     <ClInclude Include="..\auto\lua_cocos2dx_particles_auto.hpp" />
     <ClInclude Include="..\auto\lua_cocos2dx_physics3d_auto.hpp" />
@@ -144,7 +141,6 @@
     <ClInclude Include="..\manual\cocostudio\lua-cocos-studio-conversions.h" />
     <ClInclude Include="..\manual\cocostudio\lua_cocos2dx_coco_studio_manual.hpp" />
     <ClInclude Include="..\manual\cocostudio\lua_cocos2dx_csloader_manual.hpp" />
-    <ClInclude Include="..\manual\extension\lua_cocos2dx_extension_manual.h" />
     <ClInclude Include="..\manual\LuaBasicConversions.h" />
     <ClInclude Include="..\manual\navmesh\lua_cocos2dx_navmesh_conversions.h" />
     <ClInclude Include="..\manual\navmesh\lua_cocos2dx_navmesh_manual.h" />
