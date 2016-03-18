@@ -11,8 +11,6 @@ function Camera:init(space)
     self.perspective = 10
     self.offset = Vec(0, 0)
     self.dirty = true
-    
-    self.free = true
 end
    
 function Camera:update(deltaTime)
@@ -128,9 +126,9 @@ function Camera:followUpdate(deltaTime)
     local options = self.followOptions
     local speed = theControl.buttonBoost:isPressed() and 4 or 1
     
-    local axis = getAxisValue(KEY_UP_ARROW, KEY_DOWN_ARROW)
-    if axis ~= 0 then
-        local delta = axis * math.pi / 4 * deltaTime * speed
+    local y = theControl.trackRotate:getValue().y
+    if y ~= 0 then
+        local delta = y * math.pi / 4 * deltaTime * speed
         options.angle = clamp(options.angle + delta, 0, math.pi / 2)
         self:refreshFollowPosition()
     end

@@ -14,10 +14,11 @@ function CameraTarget:inputUpdate(deltaTime)
     
     local delta = theControl.trackMove:getValue()
     
-    local axis = getAxisValue(KEY_Q, KEY_E) + getAxisValue(KEY_LEFT_ARROW, KEY_RIGHT_ARROW)  
-    if axis ~= 0 then
+    local rotate = theControl.trackRotate:getValue()
+    local value = rotate.x ~= 0 and rotate.x or rotate.z
+    if value ~= 0 then
         local quat = self:getRotationQuat()
-        local angle = axis * math.pi * deltaTime / 16 * speed
+        local angle = -value * math.pi * deltaTime / 16 * speed
         quat = multQuat(yawPitchRoll(angle, 0, 0), quat)
         
         self:setRotationQuat(quat)
