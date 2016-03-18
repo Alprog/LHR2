@@ -6,7 +6,7 @@ function AnimationListView:instantinate()
 end
 
 function AnimationListView:init(scene)
-    ListView.init(self)
+    self.base.init(self)
     self.scene = scene
 end
 

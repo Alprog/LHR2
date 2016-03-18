@@ -4,7 +4,7 @@ require 'Debug.lua'
 Input = Class('Input')
 
 local function OnMouseMove(event)
-    Input.mousePos = Vec(event:getCursorX(), event:getCursorY())
+    theInput.mousePos = Vec(event:getCursorX(), event:getCursorY())
 end
 
 local function OnKeyPress(keyCode)
@@ -18,13 +18,7 @@ local function OnKeyPress(keyCode)
         theApp:toggleWidescreen()
     else
         theApp.sceneManager:onKeyPress(keyCode)
-    end
-    
-    Input.keys[keyCode] = true
-end
-
-local function OnKeyRelease(keyCode)
-    Input.keys[keyCode] = nil
+    end    
 end
 
 local function OnGPadDown(keyCode)
@@ -37,17 +31,28 @@ end
 
 function getAxisValue(positive, negative)
     local value = 0
-    if Input.keys[positive] then
+    if theInput.devices[1].values[positive] == 1 then
         value = value + 1
     end
-    if Input.keys[negative] then
+    if  theInput.devices[1].values[negative] == 1 then
        value = value - 1 
     end
     return value
 end
 
+function Input:getValue(deviceIndex, keyCode)
+    return self.devices[deviceIndex].values[keyCode] or 0
+end
+
+function Input:getPrevValue(deviceIndex, keyCode)
+    return self.devices[deviceIndex].prevValues[keyCode] or 0
+end
+
 function Input:init()
-    self.keys = {}
+    self.devices = {} 
+    self.devices[1] = Keyboard:create()
+    self.devices[2] = GamePad:create(0)
+    
     self.mousePos = Vector(0, 0)
     
     self.gamepad = cc.GamePad:create(0)
@@ -66,13 +71,9 @@ function Input:init()
 end
 
 function Input:update()
-    if self.gamepad:isPresent() then
-        local buttons = self.gamepad:getButtons()
-        local axis = self.gamepad:getAxis()
-        
-        --print(unpack(buttons))
-        --print(unpack(axis))
+    for device in iter(self.devices) do
+        device:update()
     end
 end
 
-Input:init()
+theInput = Input:create()

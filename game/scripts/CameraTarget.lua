@@ -7,16 +7,13 @@ end
 
 function CameraTarget:inputUpdate(deltaTime)
     local speed = 4
-    if Input.keys[cc.KeyCode.KEY_SHIFT] then
+    
+    if theControl.buttonBoost:isPressed() then
         speed = speed * 4
     end
     
-    local delta = Vector(
-        getAxisValue(KEY_D, KEY_A),
-        0,
-        getAxisValue(KEY_S, KEY_W)
-    )
-
+    local delta = theControl.trackMove:getValue()
+    
     local axis = getAxisValue(KEY_Q, KEY_E) + getAxisValue(KEY_LEFT_ARROW, KEY_RIGHT_ARROW)  
     if axis ~= 0 then
         local quat = self:getRotationQuat()

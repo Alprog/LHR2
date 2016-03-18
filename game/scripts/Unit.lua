@@ -10,7 +10,7 @@ local jumpTime = 0.5
 local rotationSpeed = math.pi * 2.5
 
 function Unit:init(modelName)
-    Object.init(self)
+    self.base.init(self)
     self:loadModel(modelName)
     self.healthPoints = Points:create(100)
     self.motionPoints = Points:create(3)

@@ -17,7 +17,7 @@ local defaultUV = { Vec(0, 0), Vec(1, 0), Vec(1, 1), Vec(0, 1) }
 local oppositeIndexes = { {3, 2}, {0, 3}, {1, 0}, {2, 1} }
 
 function Block:init(section, floor)
-    Object.init(self)
+    self.base.init(self)
     
     self.section = section
     self.floor = floor
@@ -30,7 +30,7 @@ function Block:init(section, floor)
 end
 
 function Block:onDeserialize()
-    Object.init(self)
+    self.base.init(self)
     self.scale = 0.05
 end
 
@@ -235,8 +235,8 @@ function Block:setHighlight(allowCorners, allowSides, affectNeighbors, camera)
         return
     end
     
-    local x = Input.mousePos.x / theApp.windowSize.width * 2 - 1
-    local y = Input.mousePos.y / theApp.windowSize.height * 2 - 1
+    local x = theInput.mousePos.x / theApp.windowSize.width * 2 - 1
+    local y = theInput.mousePos.y / theApp.windowSize.height * 2 - 1
     local mousePos = Vector(x, y, 0)
     
     local m = self:getNodeToWorldTransform()

@@ -2,7 +2,7 @@
 Inspector = Derive('Inspector', ListView)
 
 function Inspector:init()
-    ListView.init(self)
+    self.base.init(self)
     self.rowHeight = 15
 end
 

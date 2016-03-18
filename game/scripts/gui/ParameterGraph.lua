@@ -2,7 +2,7 @@
 ParameterGraph = Derive('ParameterGraph', PinBoard)
 
 function ParameterGraph:init()
-    PinBoard.init(self)
+    self.base.init(self)
     self.canvas = Canvas:create()
     self:addChild(self.canvas)
 end

@@ -67,7 +67,7 @@ function Arena:setTechnique(index)
 end
 
 function Arena:checkHover()
-    local object = self:getObjectFromScreenPos(Input.mousePos)
+    local object = self:getObjectFromScreenPos(theInput.mousePos)
     if self.hoveredObject ~= object then
         if self.hoveredObject then
             self.hoveredObject:onHover(false) 

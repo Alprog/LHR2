@@ -128,10 +128,10 @@ function EffectLab:inputUpdate(delta)
     local rotationSpeed = math.pi
     local rotation = self.model.rotation or 0
 
-    if Input.keys[cc.KeyCode.KEY_LEFT_ARROW] then
+    if theInput.devices[1].values[cc.KeyCode.KEY_LEFT_ARROW] == 1 then
         rotation = rotation + rotationSpeed * delta
     end
-    if Input.keys[cc.KeyCode.KEY_RIGHT_ARROW] then
+    if theInput.devices[1].values[cc.KeyCode.KEY_RIGHT_ARROW] == 1 then
         rotation = rotation - rotationSpeed * delta
     end
     

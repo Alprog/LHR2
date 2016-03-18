@@ -11,6 +11,8 @@ function Camera:init(space)
     self.perspective = 10
     self.offset = Vec(0, 0)
     self.dirty = true
+    
+    self.free = true
 end
    
 function Camera:update(deltaTime)
@@ -24,15 +26,11 @@ end
 
 function Camera:freeMoveUpdate(deltaTime)
     local speed = 10
-    if Input.keys[KEY_SHIFT] then
+    if theControl.buttonBoost:isPressed() then
         speed = speed * 2
     end
         
-    local delta = Vector(
-        getAxisValue(KEY_D, KEY_A),
-        getAxisValue(KEY_R, KEY_F),
-        getAxisValue(KEY_S, KEY_W)
-    )
+    local delta = theControl.trackMove:getValue()
     
     if delta.x ~= 0 or delta.y ~= 0 or delta.z ~= 0 then
         local vector = delta * speed * deltaTime
@@ -46,13 +44,15 @@ function Camera:freeRotationUpdate(deltaTime)
     local roll = 0
     
     local k = math.pi * deltaTime / 4
-    if Input.keys[cc.KeyCode.KEY_SHIFT] then
+    if theControl.buttonBoost:isPressed() then
         k = k * 4
     end
     
-    yaw = yaw + k * getAxisValue(KEY_LEFT_ARROW, KEY_RIGHT_ARROW)
-    pitch = pitch + k * getAxisValue(KEY_UP_ARROW, KEY_DOWN_ARROW)
-    roll = roll + k * getAxisValue(KEY_Q, KEY_E)
+    local rotate = theControl.trackRotate:getValue()
+    
+    yaw = yaw + k * rotate.x
+    pitch = pitch + k * rotate.y
+    roll = roll + k * rotate.z
         
     if yaw ~= 0 or pitch ~= 0 or roll ~= 0 then
         local rotation = self:getRotationQuat()
@@ -126,7 +126,7 @@ end
 
 function Camera:followUpdate(deltaTime)
     local options = self.followOptions
-    local speed = Input.keys[KEY_SHIFT] and 4 or 1
+    local speed = theControl.buttonBoost:isPressed() and 4 or 1
     
     local axis = getAxisValue(KEY_UP_ARROW, KEY_DOWN_ARROW)
     if axis ~= 0 then

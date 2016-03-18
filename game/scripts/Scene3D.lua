@@ -62,7 +62,7 @@ function Scene3D:render()
 end
 
 function Scene3D:checkHover()
-    local object = theRenderer:getObjectFromScreenPos(Input.mousePos)
+    local object = theRenderer:getObjectFromScreenPos(theInput.mousePos)
     if self.hoveredObject ~= object then
         if self.hoveredObject then
             --if self.hoveredObject.onHover then

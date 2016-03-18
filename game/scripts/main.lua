@@ -11,9 +11,9 @@ require 'App.lua'
 require 'SceneManager.lua'
 require 'PostProcessor.lua'
 require 'Scene.lua'
-
 require 'Vector.lua'
-require 'Input.lua'
+
+require 'input/init.lua'
 require 'Audio.lua'
 require 'Arena.lua'
 require 'Scene3D.lua'
