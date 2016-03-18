@@ -13,6 +13,8 @@ function Control:init(input)
     
     ----------------------
     
+    local a, b, x, y, z
+    
     a = InputButton:create()
     a:addOption(input.devices[KEYBOARD], KEY_D)
     a:addOption(input.devices[GAMEPAD], GamePad.Keys.DPad_Right)

@@ -41,13 +41,13 @@ end
 function Scene3D:update(deltaTime)
     self.tasks:update(deltaTime)  
     
-    if not a then
-    a = true
-    self.lightCamera.angle = (self.lightCamera.angle or 0) + deltaTime / 2
-    local a = self.lightCamera.angle
-    local dist = 7
-    self.lightCamera:setPosition3D(Vec(math.cos(a) * dist + 5, 5, math.sin(a) * dist + 5))
-    self.lightCamera:lookAt(Vector(5, 0, 5), Vector(0, 1, 0))
+    if not self.lock then
+        self.lock = true
+        self.lightCamera.angle = (self.lightCamera.angle or 0) + deltaTime / 2
+        local a = self.lightCamera.angle
+        local dist = 7
+        self.lightCamera:setPosition3D(Vec(math.cos(a) * dist + 5, 5, math.sin(a) * dist + 5))
+        self.lightCamera:lookAt(Vector(5, 0, 5), Vector(0, 1, 0))
     end
 end
 
