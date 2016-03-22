@@ -33,7 +33,6 @@ void main()
     
     d = min(d, shadow + (d - shadow) * 0.1);
     
-    
     vec4 diffuse = texture2D(wrapTexture, vec2(d, 0));
     gl_FragColor = albedo * diffuse;
 }

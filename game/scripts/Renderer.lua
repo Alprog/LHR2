@@ -119,7 +119,7 @@ function Renderer:renderScreenShadow()
     
     local state = self.rsState
     if not state then
-        state = createState('sprite', 'shadow')
+        state = createState('post', 'shadow')
         state:setUniformTexture('depthTexture', self.depthTexture)
         state:setUniformTexture('normalTexture', self.normalTexture)
         state:setUniformTexture('shadowMapTexture', self.auxTexture)
@@ -149,11 +149,10 @@ function Renderer:lighting()
     
     local state = self.lState
     if not state then
-        state = createState('sprite', 'halflambert')
+        state = createState('post', 'halflambert')
         state:setUniformTexture('albedoTexture', self.albedoTexture)
         state:setUniformTexture('normalTexture', self.normalTexture)
         state:setUniformTexture('normalTexture2', self.idsTexture)
-        state:setUniformTexture('depthTexture', self.depthTexture)
         state:setUniformTexture('wrapTexture', getTexture('wrap2.png'))
         self.lState = state
     end
@@ -176,7 +175,7 @@ function Renderer:temporalAA()
     
     local state = self.aaState
     if not state then
-        state = createState('sprite', 'temporalAA')
+        state = createState('post', 'temporalAA')
         self.aaState = state
     end
     state:setUniformTexture('mainTexture', self.secondaryTexture)

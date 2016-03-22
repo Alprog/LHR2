@@ -358,6 +358,8 @@ public:
 	*/
 	static void restore(long stateOverrideBits);
 
+	static StateBlock* getDefaultState() { return _defaultState; }
+
 	static StateBlock* _defaultState;
 
 protected:
