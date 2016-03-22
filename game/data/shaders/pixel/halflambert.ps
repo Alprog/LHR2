@@ -35,7 +35,6 @@ void main()
     
     vec4 diffuse = texture2D(wrapTexture, vec2(d, 0));
     gl_FragColor = albedo * diffuse;
-}
-
-
     
+    gl_FragColor.a = 0.5;
+}

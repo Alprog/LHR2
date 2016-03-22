@@ -308,7 +308,9 @@ end
 function createMaterial(vsName, psName)
     local program = getShader(vsName, psName)
     local state = cc.GLProgramState:create(program)
-    return cc.Material:createWithGLStateProgram(state)
+    local material = cc.Material:createWithGLStateProgram(state)
+    material.state = state
+    return material
 end
 
 function serializeToFile(t, path, name)

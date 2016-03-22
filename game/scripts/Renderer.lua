@@ -46,11 +46,11 @@ function Renderer:onResize(size)
     self.gBuffer:attachRenderTarget(3, self.velocityTexture)
     self.gBuffer:attachDepthStencil(self.depthTexture)
     
-    self.rsState = nil
-    self.vbState = nil
-    self.hbState = nil
-    self.lState = nil
-    self.aaState = nil
+    self.rsMaterial = nil
+    self.vbMaterial = nil
+    self.hbMaterial = nil
+    self.lMaterial = nil
+    self.aaMaterial = nil
 end
 
 function Renderer:render(scene)
@@ -102,37 +102,37 @@ function Renderer:blur(texture, tmpTexture)
     texture = texture or self.primaryTexture
     tmpTexture = tmpTexture or self.secondaryTexture
     
-    if not self.vbState then
-        self.vbState = createState('vblur', 'blur')
+    if not self.vbMaterial then
+        self.vbMaterial = createMaterial('vblur', 'blur')
     end
-    self.vbState:setUniformTexture('mainTexture', texture)
-    thePostProcessor:perform(self.vbState, tmpTexture)
+    self.vbMaterial.state:setUniformTexture('mainTexture', texture)
+    thePostProcessor:perform(self.vbMaterial, tmpTexture)
     
-    if not self.hbState then
-        self.hbState = createState('hblur', 'blur')
+    if not self.hbMaterial then
+        self.hbMaterial = createMaterial('hblur', 'blur')
     end
-    self.hbState:setUniformTexture('mainTexture', tmpTexture)
-    thePostProcessor:perform(self.hbState, texture)
+    self.hbMaterial.state:setUniformTexture('mainTexture', tmpTexture)
+    thePostProcessor:perform(self.hbMaterial, texture)
 end
 
 function Renderer:renderScreenShadow()
     
-    local state = self.rsState
-    if not state then
-        state = createState('post', 'shadow')
-        state:setUniformTexture('depthTexture', self.depthTexture)
-        state:setUniformTexture('normalTexture', self.normalTexture)
-        state:setUniformTexture('shadowMapTexture', self.auxTexture)
-        self.rsState = state
+    local material = self.rsMaterial
+    if not material then
+        material = createMaterial('post', 'shadow')
+        material.state:setUniformTexture('depthTexture', self.depthTexture)
+        material.state:setUniformTexture('normalTexture', self.normalTexture)
+        material.state:setUniformTexture('shadowMapTexture', self.auxTexture)
+        self.rsMaterial = material
     end
 
     local screenToWorld = cc.mat4.getInversed(self.scene.camera:getViewProjectionMatrix())
-    state:setUniformMat4('screenToWorld', screenToWorld)
-    state:setUniformMat4('worldToShadowMap', self.scene.lightCamera:getViewProjectionMatrix())
+    material.state:setUniformMat4('screenToWorld', screenToWorld)
+    material.state:setUniformMat4('worldToShadowMap', self.scene.lightCamera:getViewProjectionMatrix())
     local position = self.scene.lightCamera:getPosition3D()  
-    state:setUniformVec3('lightPosition', position)
+    material.state:setUniformVec3('lightPosition', position)
     
-    thePostProcessor:perform(state, self.primaryTexture)
+    thePostProcessor:perform(material, self.primaryTexture)
 end
 
 function Renderer:swapFields(a, b)
@@ -147,23 +147,23 @@ end
 function Renderer:lighting() 
     self:swapTextures()
     
-    local state = self.lState
-    if not state then
-        state = createState('post', 'halflambert')
-        state:setUniformTexture('albedoTexture', self.albedoTexture)
-        state:setUniformTexture('normalTexture', self.normalTexture)
-        state:setUniformTexture('normalTexture2', self.idsTexture)
-        state:setUniformTexture('wrapTexture', getTexture('wrap2.png'))
-        self.lState = state
+    local material = self.lMaterial
+    if not material then
+        material = createMaterial('post', 'halflambert')
+        material.state:setUniformTexture('albedoTexture', self.albedoTexture)
+        material.state:setUniformTexture('normalTexture', self.normalTexture)
+        material.state:setUniformTexture('normalTexture2', self.idsTexture)
+        material.state:setUniformTexture('wrapTexture', getTexture('wrap2.png'))
+        self.lMaterial = material
     end
     
-    state:setUniformTexture('shadowTexture', self.secondaryTexture)
+    material.state:setUniformTexture('shadowTexture', self.secondaryTexture)
 
     local m = self.scene.lightCamera:getNodeToWorldTransform()
     local dir = cc.mat4.transformVector(m, Vector(0, 0, 1))
-    state:setUniformVec3('lightDir', dir)
+    material.state:setUniformVec3('lightDir', dir)
 
-    thePostProcessor:perform(state, self.primaryTexture)
+    thePostProcessor:perform(material, self.primaryTexture)
 end
 
 function Renderer:renderTranparent()
@@ -173,17 +173,17 @@ end
 function Renderer:temporalAA()
     self:swapTextures()
     
-    local state = self.aaState
-    if not state then
-        state = createState('post', 'temporalAA')
-        self.aaState = state
+    local material = self.aaMaterial
+    if not material then
+        material = createMaterial('post', 'temporalAA')
+        self.aaMaterial = material
     end
-    state:setUniformTexture('mainTexture', self.secondaryTexture)
-    state:setUniformTexture('historyTexture', self.historyTexture)
-    state:setUniformTexture('velocityTexture', self.velocityTexture)
-    state:setUniformVec2('veloOffset', self.offset - self.prevOffset)
+    material.state:setUniformTexture('mainTexture', self.secondaryTexture)
+    material.state:setUniformTexture('historyTexture', self.historyTexture)
+    material.state:setUniformTexture('velocityTexture', self.velocityTexture)
+    material.state:setUniformVec2('veloOffset', self.offset - self.prevOffset)
         
-    thePostProcessor:perform(state, self.primaryTexture)
+    thePostProcessor:perform(material, self.primaryTexture)
 end
 
 function Renderer:getObjectFromScreenPos(pos)

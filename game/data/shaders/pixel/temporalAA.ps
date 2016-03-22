@@ -7,6 +7,11 @@ uniform sampler2D velocityTexture;
 uniform sampler2D historyTexture;
 uniform vec2 veloOffset;
 
+float getLuma(vec3 color)
+{
+    return color.r * 0.3 + color.g * 0.59 + color.b * 0.11;
+}
+
 void main()
 {	
 	vec4 mainColor = texture2D(mainTexture, v_texCoord);
@@ -19,9 +24,11 @@ void main()
     float power = clamp(v, 0.2, 1);
     power = clamp((historyColor.a - power) * 5, power, 1);
 
-    gl_FragColor = mix(historyColor, mainColor, power);
+    //float d = abs(getLuma(historyColor.rgb) - getLuma(mainColor.rgb));
+    //power = max(power, d);
     
-    //gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(1, 0, 0), power2);
+
+    gl_FragColor = mix(historyColor, mainColor, power);
     
     gl_FragColor.a = v;
 }
