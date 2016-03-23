@@ -10,6 +10,8 @@ end
 local function OnKeyPress(keyCode)
     if keyCode == cc.KeyCode.KEY_F1 then
         theApp:toggleStatistics()
+    elseif keyCode == cc.KeyCode.KEY_F7 then
+        theRenderer.temporalAAEnabled = not theRenderer.temporalAAEnabled
     elseif keyCode == cc.KeyCode.KEY_F10 then
         ToggleDebug()
     elseif keyCode == cc.KeyCode.KEY_F11 then

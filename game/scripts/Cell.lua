@@ -2,7 +2,7 @@
 Cell = Derive('Cell', Object)
 
 function Cell:init()
-    self.base.init(self)
+    Cell.base.init(self)
     
  
     local textureName = 'tiles/soil2.png'

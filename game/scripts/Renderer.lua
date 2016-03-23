@@ -5,19 +5,21 @@ require 'Halton.lua'
 Renderer = Class("Renderer")
 keepRefFields(Renderer)
 
-function Renderer:init()    
+function Renderer:init()
+    self.temporalAAEnabled = true
+    
     self.gBuffer = ccexp.FrameBuffer:create(1)       
     self:initShadowMap()
 end
 
 function Renderer:initShadowMap()
-    local size = cc.size(512, 512)
+    local size = cc.size(1024, 1024)
     self.shadowMapBuffer = ccexp.FrameBuffer:create(1)
     self.shadowMapBuffer:setClearColor(cc.WHITE)
     self.shadowMapBuffer:setSize(size.width, size.height)
     self.shadowMapTexture = self:createTexture(size, cc.DEPTH24_STENCIL8)
-    self.auxTexture = self:createTexture(size, cc.RG16F)
-    self.auxTexture2 = self:createTexture(size, cc.RG16F)
+    self.auxTexture = self:createTexture(size, cc.RG32F)
+    self.auxTexture2 = self:createTexture(size, cc.RG32F)
     self.shadowMapBuffer:attachRenderTarget(0, self.auxTexture)
     self.shadowMapBuffer:attachDepthStencil(self.shadowMapTexture)
 end
@@ -56,15 +58,20 @@ end
 function Renderer:render(scene)
     self.scene = scene
     
-    self:reprojectCamera()
+    if self.temporalAAEnabled then
+        self:reprojectCamera()
+    end
     
     self:renderGeometry()
     self:bakeShadows()
     self:lighting()
     self:renderTranparent()
     
-    self:temporalAA()
-    self:swapFields('primaryTexture', 'historyTexture')
+    if self.temporalAAEnabled then
+        self:temporalAA()
+    end
+    
+    self.scene = nil
 end
 
 function Renderer:reprojectCamera()
@@ -184,6 +191,7 @@ function Renderer:temporalAA()
     material.state:setUniformVec2('veloOffset', self.offset - self.prevOffset)
         
     thePostProcessor:perform(material, self.primaryTexture)
+    self:swapFields('primaryTexture', 'historyTexture')
 end
 
 function Renderer:getObjectFromScreenPos(pos)

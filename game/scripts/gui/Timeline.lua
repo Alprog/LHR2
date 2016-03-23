@@ -4,7 +4,7 @@ Timeline = Derive('Timeline', PinBoard)
 local pinHeight = 16
 
 function Timeline:init()
-    self.base.init(self)    
+    Timeline.base.init(self)    
     self.cursor = cc.Sprite:create('pixel.png')
     self:addChild(self.cursor)
     self.itemSelected = Event:create()

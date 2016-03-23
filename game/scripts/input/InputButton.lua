@@ -25,7 +25,7 @@ function InputButton:getPrevValue()
     local value = 0
     for i = 1, #self.options do
         local option = self.options[i]
-        value = math.max(value, option.device.values[option.keyCode] or 0)
+        value = math.max(value, option.device.prevValues[option.keyCode] or 0)
     end
     return value
 end

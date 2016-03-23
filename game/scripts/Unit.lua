@@ -10,7 +10,7 @@ local jumpTime = 0.5
 local rotationSpeed = math.pi * 2.5
 
 function Unit:init(modelName)
-    self.base.init(self)
+    Unit.base.init(self)
     self:loadModel(modelName)
     self.healthPoints = Points:create(100)
     self.motionPoints = Points:create(3)
@@ -37,6 +37,11 @@ function Unit:loadModel(name)
     state:setUniformVec2('u_id', self:getUniformId())
     local technique = cc.Technique:createWithGLProgramState(state)
     material:setTechnique(RenderMode.Default, technique)
+    
+    -- shadow map
+    state = createState('skinShadowMap', 'shadowMap')
+    technique = cc.Technique:createWithGLProgramState(state)
+    material:setTechnique(RenderMode.ShadowMap, technique)
     
     -- silhouette
     state = createState('fatskin', 'uColorMRT')

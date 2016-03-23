@@ -16,7 +16,7 @@ function Scene3D:init()
     self:scheduleUpdate()
     
     self.tasks = TaskManager:create()
-    self:initCamera()   
+    self:initCamera()
 end
 
 function Scene3D:initCamera()

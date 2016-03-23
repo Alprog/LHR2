@@ -33,7 +33,6 @@ function BattleScreen:init()
     --self:getChildByName('ArenaLayer'):addChild(self.arena)
     theApp.scene:addChild(self.arena)
     --self:keepObject(self.arena)
-    self:enableNodeEvents()
     
     battle:setArena(self.arena)
     battle:setScene(self)
@@ -61,10 +60,8 @@ function BattleScreen:init()
     self:updateUI()
 end
 
-function BattleScreen:onCleanup()
-    if theApp.running then
-        self.arena:removeFromParent()
-    end
+function BattleScreen:onKill()
+    self.arena:removeFromParent()
 end
 
 function BattleScreen:initUI()

@@ -17,7 +17,7 @@ local defaultUV = { Vec(0, 0), Vec(1, 0), Vec(1, 1), Vec(0, 1) }
 local oppositeIndexes = { {3, 2}, {0, 3}, {1, 0}, {2, 1} }
 
 function Block:init(section, floor)
-    self.base.init(self)
+    Block.base.init(self)
     
     self.section = section
     self.floor = floor
@@ -30,7 +30,7 @@ function Block:init(section, floor)
 end
 
 function Block:onDeserialize()
-    self.base.init(self)
+    Block.base.init(self)
     self.scale = 0.05
 end
 

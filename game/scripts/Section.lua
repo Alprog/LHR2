@@ -2,7 +2,7 @@
 require 'Block.lua'
 
 Section = Class('Section', cc.Node)
-Section.serializableFields = { 'floors', 'x' }
+Section.serializableFields = { 'floors' }
 
 function Section:init(level, x, z)
     self.level = level

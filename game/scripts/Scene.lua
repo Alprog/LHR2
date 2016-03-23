@@ -31,6 +31,9 @@ function Scene:onExit()
     self.enabled = false
 end
 
+function Scene:onKill() 
+end
+
 function Scene:removeBorders()
     local borders = self:getChildByName('Borders')
 	if borders then

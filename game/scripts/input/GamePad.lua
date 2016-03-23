@@ -31,7 +31,7 @@ GamePad.Keys =
 }
 
 function GamePad:init(id)
-    self.base.init(self)
+    GamePad.base.init(self)
     self.cObj = cc.GamePad:create(id)
     self.cObj:retain()
 end
@@ -49,8 +49,8 @@ function GamePad:update()
         local index = 101
         for i = 1, #axis do
             local value = axis[i]
-            self.values[index] = value > 0.1 and value or 0
-            self.values[index + 1] = value < -0.1 and -value or 0
+            self.values[index] = value > 0.2 and value or 0
+            self.values[index + 1] = value < -0.2 and -value or 0
             index = index + 2
         end        
     end    

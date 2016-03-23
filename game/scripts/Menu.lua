@@ -15,6 +15,7 @@ function Menu:onButtonClick(button)
         theApp.tasks:run(function()  
             theSceneManager:pop()
             theSceneManager:goTo(TitleScreen:create())
+            collectgarbage()
         end)
     end
     

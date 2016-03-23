@@ -12,8 +12,8 @@ end
 function TitleScreen:onButtonClick(button)
     local name = button:getName()
     if name == 'StartGameButton' then    
-        local battleScreen = BattleScreen:create()
-        theSceneManager:goTo(battleScreen)
+        local gameScreen = GameScreen:create()
+        theSceneManager:goTo(gameScreen)
     elseif name == 'SettingsButton' then
         local levelEditor = LevelEditor:create()
         theSceneManager:goTo(levelEditor)

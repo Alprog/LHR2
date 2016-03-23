@@ -2,7 +2,7 @@
 Keyboard = Derive('Keyboard', InputDevice)
 
 function Keyboard:init()
-    self.base.init(self)
+    Keyboard.base.init(self)
     
     self.events = {}
     self:regEvents()

@@ -8,7 +8,7 @@ function LevelEditor:init()
     
     self.scene3D = Scene3D:create()
     theApp.scene:addChild(self.scene3D)
-    self:enableNodeEvents()
+    --self:enableNodeEvents()
     
     self.projector = Projector:create(self:getChildByName('3DScreen'))
     self.projector:addSource(theRenderer, 'primaryTexture', 'opaque')
@@ -21,14 +21,6 @@ function LevelEditor:init()
     
     self.mapProjector = Projector:create(self:getChildByName('MapScreen'))
     self.mapProjector:addSource(theRenderer, 'auxTexture')
-     
-    local touchBeginPoint = nil
-    
-    local function onTouchBegan(touch, event)
-        local location = touch:getLocation()
-        touchBeginPoint = {x = location.x, y = location.y}
-        return true
-    end
     
     WithoutDebug(function()
         self.level = Level:create()
@@ -38,10 +30,8 @@ function LevelEditor:init()
     self:listenTouches()
 end
 
-function LevelEditor:onCleanup()
-    if theApp.running then
-        self.scene3D:removeFromParent()
-    end
+function LevelEditor:onKill()
+    self.scene3D:removeFromParent()
 end
 
 function LevelEditor:update(dt)
@@ -64,7 +54,7 @@ function LevelEditor:update(dt)
     end
 end
 
-function LevelEditor:render()
+function LevelEditor:render()   
     self.scene3D:render()
     self.projector:refreshScreen()
     Scene.render(self)
@@ -105,10 +95,6 @@ end
 function LevelEditor:onBlockKeyPress(block, keyCode)
     if keyCode == cc.KeyCode.KEY_SPACE then
         block:changeTexture()
-    elseif keyCode == cc.KeyCode.KEY_LEFT_BRACKET then
-        block:addScale(-0.01)
-    elseif keyCode == cc.KeyCode.KEY_RIGHT_BRACKET then
-        block:addScale(0.01)
     end
 end
 

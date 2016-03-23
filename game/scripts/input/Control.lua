@@ -11,6 +11,10 @@ function Control:init(input)
     self.buttonBoost = InputButton:create()
     self.buttonBoost:addOption(input.devices[KEYBOARD], KEY_SHIFT)
     
+    self.buttonSelect = InputButton:create()
+    self.buttonSelect:addOption(input.devices[KEYBOARD], KEY_TAB)
+    self.buttonSelect:addOption(input.devices[GAMEPAD], GamePad.Keys.Option)
+    
     ----------------------
     
     local a, b, x, y, z
