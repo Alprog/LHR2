@@ -5,15 +5,37 @@ Skybox = Class('Skybox', Object)
 
 function Skybox:init()
     
+    local points = {
+        Vector(-0.5, -0.5, -0.5),
+        Vector(0.5, -0.5, -0.5),
+        Vector(0.5, 0.5, -0.5),
+        Vector(-0.5, 0.5, -0.5),
+        Vector(-0.5, -0.5, 0.5),
+        Vector(0.5, -0.5, 0.5),
+        Vector(0.5, 0.5, 0.5),
+        Vector(-0.5, 0.5, 0.5)
+    }
+    
+
+    self:addSide('back', points, 1, 2, 3, 4)
+    self:addSide('right', points, 2, 6, 7, 3)
+    self:addSide('front', points, 6, 5, 8, 7)
+    self:addSide('left', points, 5, 1, 4, 8)
+    
+    self:addSide('up', points, 7, 8, 4, 3)
+    self:addSide('down', points, 2, 1, 5, 6)
+    
+    self:setScale(100)
+end
+
+function Skybox:addSide(name, p, i1, i2, i3, i4)
     local builder = MeshBuilder:create()
-    builder:addQuad(Vector(-0.5, -0.5, -0.5), Vector(0.5, -0.5, -0.5), Vector(0.5, 0.5, -0.5), Vector(-0.5, 0.5, -0.5))
+    builder:addQuad(p[i1], p[i2], p[i3], p[i4])
     local mesh = builder:build()
-    mesh:calculateAABB()
         
-    local state = createState('skybox', 'defaultMRT')
-    state:setUniformTexture('mainTexture', getTexture('skybox/back.png'))
+    local state = createState('skybox', 'skyboxMRT')
+    state:setUniformTexture('mainTexture', getTexture('skybox/'.. name ..'.png'))
     local material = cc.Material:createWithGLStateProgram(state)
-    material:getStateBlock():setDepthTest(true)
     material:getStateBlock():setCullFace(true)
     mesh:setMaterial(material)
     
@@ -21,13 +43,5 @@ function Skybox:init()
     sprite:addMesh(mesh)
     
     sprite:setCameraMask(cc.CameraFlag.Skybox)
-    
-    
-    print(dump(sprite:getContentSize()))
-    
     self:addChild(sprite)
-end
-
-function Skybox:addSection(name)
-    
 end
