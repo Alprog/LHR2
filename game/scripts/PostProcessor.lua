@@ -1,4 +1,6 @@
 
+require 'QuadMesh.lua'
+
 PostProcessor = NewClass('PostProcessor')
 
 function PostProcessor:init(app)
@@ -10,10 +12,8 @@ function PostProcessor:init(app)
     self.camera:setPosition3D(Vec(0, 0, -0.5))
     self.camera:retain()
     
-    local builder = MeshBuilder:create()
-    builder:addQuad(Vector(0, 0, 0), Vector(1, 0, 0), Vector(1, 1, 0), Vector(0, 1, 0))
     self.sprite = cc.Sprite3D:create()
-    self.sprite:addMesh(builder:build())
+    self.sprite:addMesh(getQuadMesh())
     self.sprite:retain()
 end
 

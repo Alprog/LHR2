@@ -56,7 +56,7 @@ end
 function App:run(sceneManager)
     self.director:setProjection(cc.DIRECTOR_PROJECTION2_D)
     self.director:setDisplayStats(self.settings.statistics)
-    self.director:setAnimationInterval(1.0 / 30)
+    self.director:setAnimationInterval(1.0 / 60)
     
     self.sceneManager = SceneManager:create(self)
     self.renderer = Renderer:create(self)

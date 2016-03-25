@@ -366,9 +366,6 @@ bool GLViewImpl::initWithRect(const std::string& viewName, Rect rect, float fram
 	
     _mainWindow = glfwCreateWindow(needWidth, neeHeight, _viewName.c_str(), _monitor, nullptr);
 
-	glfwSwapInterval(0);
-
-
     /*
     *  Note that the created window and context may differ from what you requested,
     *  as not all parameters and hints are
@@ -391,6 +388,7 @@ bool GLViewImpl::initWithRect(const std::string& viewName, Rect rect, float fram
     }
 
     glfwMakeContextCurrent(_mainWindow);
+	glfwSwapInterval(0);
 
     glfwSetMouseButtonCallback(_mainWindow, GLFWEventHandler::onGLFWMouseCallBack);
     glfwSetCursorPosCallback(_mainWindow, GLFWEventHandler::onGLFWMouseMoveCallBack);

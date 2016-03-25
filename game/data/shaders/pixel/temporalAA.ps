@@ -21,7 +21,7 @@ void main()
     
     vec4 historyColor = texture2D(historyTexture, v_texCoord - velocity / 2);
     
-    float power = clamp(v, 0.2, 1);
+    float power = clamp(v, 0.4, 1);
     power = clamp((historyColor.a - power) * 5, power, 1);
 
     //float d = abs(getLuma(historyColor.rgb) - getLuma(mainColor.rgb));

@@ -56,8 +56,6 @@ function Block:initGfx()
         return
     end
 
-    self.gfx = Carcase:create()
-    
     self.gfx = cc.Sprite3D:create()
     
     local meshes = self:createMeshes()
@@ -318,4 +316,13 @@ end
 function Block:getNeighbors()
     local section = self:getSection()
     return section:getLevel():getNeighbors(section.x, section.z, self.floor)
+end
+
+function Block:getHeight(x, z)
+    local h = self.heights
+    if x + z < 1 then
+        return h[3] + (h[2] - h[3]) * x + (h[0] - h[3]) * z
+    else
+        return h[1] + (h[0] - h[1]) * (1 - x) + (h[2] - h[1]) * (1 - z)        
+    end
 end

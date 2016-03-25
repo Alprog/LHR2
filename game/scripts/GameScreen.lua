@@ -40,16 +40,24 @@ function GameScreen:update(dt)
         self:playerUpdate(dt)
     else
         self.scene3D.camera:update(dt)
+        --self.scene3D.camera.free = true
         self.scene3D.target:update(dt)
     end
 end
 
 function GameScreen:playerUpdate(dt)
     local value = theControl.trackMove:getValue()
-    local position = self.warrior:getPosition3D()
-    position.x = position.x + value.x * dt
-    position.z = position.z + value.z * dt
-    self.warrior:setPosition3D(position)
+    local p = self.warrior:getPosition3D()
+    p.x = p.x + value.x * dt * 3
+    p.z = p.z + value.z * dt * 3
+    
+    local x, z = p.x + 0.5, p.z + 0.5
+    local block = self.level:getBlock(math.floor(x), math.floor(z), 1)
+    if block then
+        p.y = block:getHeight(x % 1, z % 1)
+    end
+    
+    self.warrior:setPosition3D(p)
 end
 
 function GameScreen:render()

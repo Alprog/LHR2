@@ -21,20 +21,16 @@ void main()
     
     vec3 l = normalize(lightDir);
 
-    shadow = shadow * 0.6 + 0.4;
+    shadow = shadow * 0.5 + 0.5;
     
     // prevent shadowing back-faces
-    float k = clamp(dot(gNormal, l) * 5, 0, 1);
-    shadow = mix(1, shadow, k);
+    float k = clamp(-dot(gNormal, l) * 5, 0, 1);
+    shadow = mix(shadow, 1, k);
        
     // half-lambert
     float d = dot(normal, l) / 2 + 0.5;
-    
-    
     d = min(d, shadow + (d - shadow) * 0.1);
     
-    vec4 diffuse = texture2D(wrapTexture, vec2(d, 0));
+    vec4 diffuse = vec4(d, d, d, 1); //texture2D(wrapTexture, vec2(d, 0));
     gl_FragColor = albedo * diffuse;
-    
-    gl_FragColor.a = 0.5;
 }

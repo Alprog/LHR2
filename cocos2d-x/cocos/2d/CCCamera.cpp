@@ -222,7 +222,7 @@ bool Camera::initPerspective(float fieldOfView, float aspectRatio, float nearPla
     _nearPlane = nearPlane;
     _farPlane = farPlane;
 	_offset = offset;
-    Mat4::createPerspective(10, _aspectRatio, _nearPlane, _farPlane, &_projection);
+    Mat4::createPerspective(_fieldOfView, _aspectRatio, _nearPlane, _farPlane, &_projection);
 	_projection.m[8] += _offset.x;
 	_projection.m[9] += _offset.y;
 	
@@ -377,7 +377,7 @@ void Camera::render(Node* scene, CameraFlag flag, int renderMode, experimental::
 	director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_VIEWPROJECTION);
 	director->loadVPMatrices(getViewMatrix(), getProjectionMatrix());
 	
-	clearBackground();
+	//clearBackground();
 	
 	auto parent = scene->getParent();
 	auto transform = parent ? parent->getNodeToWorldTransform() : Mat4::IDENTITY;

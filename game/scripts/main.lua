@@ -40,6 +40,7 @@ require 'Material.lua'
 require 'Level.lua'
 require 'Section.lua'
 require 'Renderer.lua'
+require 'Skybox.lua'
 
 require 'ContentPipeline.lua'
 contentPipeline()
@@ -53,8 +54,8 @@ cc.Technique.className = 'cc.Technique'
 cc.Pass.className = 'cc.Pass'
 
 local function main()
-    collectgarbage("setpause", 100)
-    collectgarbage("setstepmul", 5000)
+    --collectgarbage("setpause", 100)
+    --collectgarbage("setstepmul", 5000)
     math.randomseed(os.time())
        
     theApp = App:create("Little Humble RPG 2")

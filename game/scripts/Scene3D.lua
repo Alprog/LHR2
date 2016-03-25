@@ -36,6 +36,9 @@ function Scene3D:initCamera()
     
     self.lightCamera:setOrthographic(-7, 7, -7, 7, 0, 50)
     self.lightCamera.dirty = false
+    
+    self.skybox = Skybox:create()
+    self:addChild(self.skybox)
 end
 
 function Scene3D:update(deltaTime)

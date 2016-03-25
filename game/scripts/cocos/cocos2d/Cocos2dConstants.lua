@@ -560,6 +560,8 @@ cc.CameraFlag =
     USER8 = 256,
 }
 
+cc.CameraFlag.Skybox = cc.CameraFlag.USER1
+
 cc.CameraBackgroundBrush.BrushType = 
 {
     NONE = 0,

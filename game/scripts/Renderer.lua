@@ -8,12 +8,12 @@ keepRefFields(Renderer)
 function Renderer:init()
     self.temporalAAEnabled = true
     
-    self.gBuffer = ccexp.FrameBuffer:create(1)       
+    self.gBuffer = ccexp.FrameBuffer:create(1)
     self:initShadowMap()
 end
 
 function Renderer:initShadowMap()
-    local size = cc.size(1024, 1024)
+    local size = cc.size(512, 512)
     self.shadowMapBuffer = ccexp.FrameBuffer:create(1)
     self.shadowMapBuffer:setClearColor(cc.WHITE)
     self.shadowMapBuffer:setSize(size.width, size.height)
@@ -47,7 +47,7 @@ function Renderer:onResize(size)
     self.gBuffer:attachRenderTarget(2, self.idsTexture)
     self.gBuffer:attachRenderTarget(3, self.velocityTexture)
     self.gBuffer:attachDepthStencil(self.depthTexture)
-    
+        
     self.rsMaterial = nil
     self.vbMaterial = nil
     self.hbMaterial = nil
@@ -61,12 +61,14 @@ function Renderer:render(scene)
     if self.temporalAAEnabled then
         self:reprojectCamera()
     end
-    
+
     self:renderGeometry()
+    self:renderSkybox()
+    
     self:bakeShadows()
     self:lighting()
     self:renderTranparent()
-    
+        
     if self.temporalAAEnabled then
         self:temporalAA()
     end
@@ -92,6 +94,16 @@ end
 function Renderer:renderGeometry()
     self.gBuffer:clearFBO()
     self.scene.camera:render(self.scene, cc.CameraFlag.DEFAULT, RenderMode.Default, self.gBuffer)
+end
+
+function Renderer:renderSkybox()
+    local skybox = self.scene.skybox
+    if skybox then
+        local p = self.scene.camera:getPosition3D()
+        --skybox:setPosition3D(p)
+
+        self.scene.camera:render(skybox, cc.CameraFlag.Skybox, RenderMode.Default, self.gBuffer)
+    end
 end
 
 function Renderer:bakeShadows()
@@ -160,7 +172,7 @@ function Renderer:lighting()
         material.state:setUniformTexture('albedoTexture', self.albedoTexture)
         material.state:setUniformTexture('normalTexture', self.normalTexture)
         material.state:setUniformTexture('normalTexture2', self.idsTexture)
-        material.state:setUniformTexture('wrapTexture', getTexture('wrap2.png'))
+        material.state:setUniformTexture('wrapTexture', getTexture('wrap4.png'))
         self.lMaterial = material
     end
     
