@@ -148,6 +148,11 @@ function Camera:setWindowAspect()
     self:setAspect(aspect)
 end
 
+function Camera:setPerspective(perspective)
+    self.perspective = perspective
+    self.dirty = true
+end
+
 function Camera:setAspect(aspect)
     self.aspect = aspect
     self.dirty = true

@@ -48,7 +48,7 @@ function EffectLab:init()
     self:syncSelection()
     
     self.mdi:loadLayout(layoutPath)    
-    self:setModelFile('models/dark_templar_knight.c3b')
+    self:setModelFile('models/jrpg.c3b')
 end
 
 function EffectLab:syncSelection()

@@ -97,12 +97,15 @@ function Renderer:renderGeometry()
 end
 
 function Renderer:renderSkybox()
-    local skybox = self.scene.skybox
+local skybox = self.scene.skybox
     if skybox then
-        local p = self.scene.camera:getPosition3D()
-        --skybox:setPosition3D(p)
-
+        local camera = self.scene.camera
+        
+        local perspective = camera.perspective
+        camera:setPerspective(90)
         self.scene.camera:render(skybox, cc.CameraFlag.Skybox, RenderMode.Default, self.gBuffer)
+        camera:setPerspective(perspective)
+        camera:refreshView()
     end
 end
 
